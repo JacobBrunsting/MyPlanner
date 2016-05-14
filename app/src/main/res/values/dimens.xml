@@ -1,0 +1,15 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="list_vertical_margin">8dp</dimen>
+    <dimen name="text_element_horizontal_margin">12dp</dimen>
+    <dimen name="text_element_vertical_margin">8dp</dimen>
+    <dimen name="recycleview_element_margin">4dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="reminder_time_txt_width">80dp</dimen>
+    <dimen name="main_divider_height">4dp</dimen>
+    <dimen name="notes_tag_btn_text_size">3dp</dimen>
+    <dimen name="notes_tag_btn_height">30dp</dimen>
+
+</resources>

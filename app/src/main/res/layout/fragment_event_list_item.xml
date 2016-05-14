@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/recycleview_element_margin">
+
+    <TextView
+        android:id="@+id/event_title_txt"
+        android:text="TITLE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/text_element_horizontal_margin"
+        android:layout_marginTop="@dimen/text_element_vertical_margin"
+        android:layout_marginBottom="@dimen/text_element_vertical_margin"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:layout_toStartOf="@+id/event_time_txt"
+        android:layout_marginRight="@dimen/text_element_horizontal_margin" />
+    <TextView
+        android:id="@+id/event_time_txt"
+        android:text="12:00 AM - 12:00 AM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/text_element_horizontal_margin"
+        android:layout_marginTop="@dimen/text_element_vertical_margin"
+        android:layout_marginBottom="@dimen/text_element_vertical_margin"
+        android:layout_alignParentTop="true"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:maxLines="1"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/text_element_horizontal_margin"
+        android:layout_marginLeft="@dimen/text_element_horizontal_margin" />
+    <TextView
+        android:id="@+id/event_body_txt"
+        android:text="BODY__________________________________________________________________________________________________"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/text_element_horizontal_margin"
+        android:layout_marginEnd="@dimen/text_element_horizontal_margin"
+        android:layout_marginBottom="@dimen/text_element_vertical_margin"
+        android:layout_alignParentStart="true"
+        android:textSize="@dimen/abc_text_size_small_material"
+        android:layout_below="@+id/event_title_txt" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_divider_height"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/colorPrimary"
+        android:layout_below="@+id/event_body_txt"
+        android:adjustViewBounds="true"
+        android:backgroundTintMode="src_over" />
+
+</RelativeLayout>

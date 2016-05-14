@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout2">
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/create_event_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/create_event_nested_scroll_view"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/linearLayout">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:id="@+id/create_event_calendar_layout"
+                    android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                    <CalendarView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/create_event_date_selector"
+                        android:layout_centerInParent="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Date"
+                        android:id="@+id/create_event_date_selector_title_txt"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_marginLeft="@dimen/text_element_horizontal_margin" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                    <TimePicker
+                        android:id="@+id/create_event_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="DATE"
+                        android:id="@+id/create_event_date_txt"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_marginTop="80dp"
+                        android:layout_marginLeft="@dimen/text_element_horizontal_margin"
+                        android:layout_below="@+id/create_event_time_title_txt"
+                        android:layout_alignParentStart="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Start Time"
+                        android:id="@+id/create_event_time_title_txt"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_marginTop="@dimen/text_element_vertical_margin"
+                        android:layout_marginLeft="@dimen/text_element_horizontal_margin" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/text_element_vertical_margin">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/create_event_title_input"
+                        android:layout_alignParentEnd="true"
+                        android:singleLine="true"
+                        android:layout_marginLeft="@dimen/text_element_horizontal_margin"
+                        android:layout_marginRight="@dimen/text_element_horizontal_margin"
+                        android:hint="Title" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:minHeight="50dp"
+                        android:ems="10"
+                        android:id="@+id/create_event_body_input"
+                        android:layout_marginLeft="@dimen/text_element_horizontal_margin"
+                        android:layout_marginRight="@dimen/text_element_horizontal_margin"
+                        android:hint="Body" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Event Timed"
+                        android:id="@+id/create_event_timed_title"
+                        android:layout_marginLeft="@dimen/text_element_horizontal_margin"
+                        android:layout_alignParentTop="false"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginRight="@dimen/text_element_horizontal_margin"
+                        android:layout_centerVertical="true" />
+
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/create_event_timed_switch"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/create_event_timed_title"
+                        android:checked="false" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/create_event_duration_layout"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                    <TextView
+                        android:id="@+id/create_event_duration_colon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text=":"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:textSize="@dimen/abc_text_size_display_1_material"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true" />
+
+                    <NumberPicker
+                        android:id="@+id/create_event_duration_minutes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/create_event_duration_colon" />
+
+                    <NumberPicker
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/create_event_duration_hours"
+                        android:layout_alignParentTop="true"
+                        android:layout_toStartOf="@id/create_event_duration_colon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Duration"
+                        android:id="@+id/create_event_duration_title_txt"
+                        android:layout_marginLeft="@dimen/text_element_horizontal_margin"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="right"
+        android:background="@color/colorPrimary"
+        android:id="@+id/linearLayout2">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:id="@+id/create_event_cancel_btn"
+            style="@style/Widget.AppCompat.Button.Borderless" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/create_event_save_btn"
+            style="@style/Base.Widget.AppCompat.Button.Borderless" />
+    </LinearLayout>
+</RelativeLayout>
