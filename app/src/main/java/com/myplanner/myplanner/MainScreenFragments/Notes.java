@@ -5,12 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -155,7 +152,7 @@ public class Notes extends Fragment {
                 if (getItemViewType() == 0) {
                     noteFilterTagSelector = (Spinner) view.findViewById(R.id.note_filter_tag_selector);
                 } else {
-                    title = (TextView) view.findViewById(R.id.note_title_txt);
+                    title = (TextView) view.findViewById(R.id.create_note_title_edit_txt);
                     tag_holder = (LinearLayout) view.findViewById(R.id.note_button_holder_layout);
                     body = (TextView) view.findViewById(R.id.note_body_txt);
                     id = -1;

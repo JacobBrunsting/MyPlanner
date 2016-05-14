@@ -207,15 +207,13 @@ public class CreateEvent extends AppCompatActivity {
             eventDurationMills = 0;
         }
 
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, startYear);
         cal.set(Calendar.MONTH, startMonth);
         cal.set(Calendar.DATE, startDate);
         cal.set(Calendar.HOUR_OF_DAY, 0);//24 hour time here, so 0 is the first hour of the day
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.MILLISECOND, 0);
-
-        Log.i("CreateEvent12", "Date is " + cal.get(Calendar.MONTH) + " " + cal.get(Calendar.DATE));
 
         final long startMills = cal.getTimeInMillis() + newDayTimeMills;
         final long endMills = startMills + eventDurationMills;
@@ -224,7 +222,5 @@ public class CreateEvent extends AppCompatActivity {
 
         final PlannerEvent newEvent = new PlannerEvent(startMills, endMills, title, body, eventID);
         DataRetriever.getInstance().addEvent(newEvent);
-
-        Log.i("CreateEvent12", "newDayTimeMills is " + newDayTimeMills + " cal time " + cal.getTimeInMillis() + " start is " + startMills + " end is " + endMills);
     }
 }

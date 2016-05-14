@@ -21,7 +21,8 @@
         <activity android:name=".EditEvent" />
         <activity android:name=".CreateEvent" />
         <activity android:name=".CreateReminder" />
-        <activity android:name=".EditReminder"></activity>
+        <activity android:name=".EditReminder" />
+        <activity android:name=".CreateNote"></activity>
     </application>
 
 </manifest>

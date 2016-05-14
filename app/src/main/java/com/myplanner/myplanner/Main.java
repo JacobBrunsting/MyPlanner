@@ -428,7 +428,11 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
     // add a new note to the userData, and then show the changes
     private void addNote() {
-
+        Intent intentBundle = new Intent(Main.this, CreateEvent.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("ID", nextNoteID++);
+        intentBundle.putExtras(bundle);
+        startActivity(intentBundle);
     }
 
     // add a new reminder to the userData, and then show the changes
