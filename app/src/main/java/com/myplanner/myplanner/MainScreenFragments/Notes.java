@@ -38,7 +38,6 @@ public class Notes extends Fragment {
     NotesInterface mCallback;
     public interface NotesInterface {
         void noteClickedAction(int id);
-        void tagClickedAction(String tag);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -235,7 +234,7 @@ public class Notes extends Fragment {
                 holder.tag_holder.removeAllViews();
 
                 for (int i = 0; i < tags.get(itemNumber).size(); ++i) {
-                    Button newButton = new Button(getContext());
+                    final Button newButton = new Button(getContext());
                     newButton.setText(tags.get(itemNumber).get(i));
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     newButton.setLayoutParams(params);

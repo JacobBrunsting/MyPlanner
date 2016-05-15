@@ -66,7 +66,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     int nextEventID = 0;
     int nextNoteID = 0;
     int nextReminderID = 0;
-    int initialTabNumber = 0;
 
     // ---------------------------------------------------------------------------------------------
     // ------------------------------------ Override Functions -------------------------------------
@@ -133,8 +132,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             public void onPageScrollStateChanged(int state) {}
         });
 
-        Log.i("Main", "viewpager going to " + userData.getCurrentTab());
-
         int position = userData.getCurrentTab();
 
         viewPager.setCurrentItem(position);
@@ -152,30 +149,11 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         // retrieve the user data from the singleton class DataRetriever
         userData = DataRetriever.getInstance();
 
-        // testing only
-        ArrayList<String> tags = new ArrayList<>();
-        tags.add("tag1");
-        tags.add("tag2");
-        tags.add("tag3");
-        tags.add("tag4");
-        tags.add("tageerr5");
-        tags.add("tagsdf5");
-        tags.add("tagsdgseg5");
-        PlannerNote note1 = new PlannerNote(tags, "Note1", "Bodyuuuuuuhhhhhhhhhhxbxxhsguuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu", nextNoteID++);
-        ArrayList<String> tags2 = new ArrayList<>();
-        tags2.add("tag1");
-        tags2.add("tag2");
-        tags2.add("tag8");
-        tags2.add("tag9");
-        PlannerNote note2 = new PlannerNote(tags2, "Note2", "Bodhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhkkkkkkkkkkkkkkkkkkkkkkkkkvvvvvvvvvvvvvvvvvjjjy", nextNoteID++);
-        userData.addNote(note2);
-        userData.addNote(note1);
-        // end testing
         reloadData();
     }
 
@@ -329,13 +307,14 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         for (int i = 0; i < userData.getNumNotes(); ++i) {
             PlannerNote note = userData.getNote(i);
 
-            String title = note.getTitle();
-            ArrayList<String> tags = new ArrayList<>();
+            final String title = note.getTitle();
+            final ArrayList<String> tags = new ArrayList<>();
+            final String body = note.getBody();
+            final int id = note.getID();
             for (int t = 0; t < note.getNumTags(); ++t) {
-                tags.add(note.getTag(t));
+                final String newTag = note.getTag(t);
+                tags.add(newTag);
             }
-            String body = note.getBody();
-            int id = note.getID();
             notesFragment.addNoteInfo(title, tags, body, id);
         }
     }
@@ -428,7 +407,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
     // add a new note to the userData, and then show the changes
     private void addNote() {
-        Intent intentBundle = new Intent(Main.this, CreateEvent.class);
+        Intent intentBundle = new Intent(Main.this, CreateNote.class);
         Bundle bundle = new Bundle();
         bundle.putInt("ID", nextNoteID++);
         intentBundle.putExtras(bundle);
@@ -449,9 +428,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     //   is not, meaning the toolbar was clicked near where the date is shown
     private void toolbarClicked(){
         if (viewPager.getCurrentItem() == 0) {
-            Log.i("Main", "toolbar clicked on tab 0");
             DialogFragment calDialog = new CalendarDialogFragment();
-            Log.i("Main", "created dialog fragment");
             calDialog.show(getFragmentManager(), "DateSelect");
         }
     }
@@ -518,12 +495,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     //   fragment is clicked, and it opens an activity to edit the event that was clicked
     public void noteClickedAction(int noteID) {
         Log.i("Main", "Note with id " + noteID + "clicked");
-    }
-
-    // this is called whenever one of the elements in the RecyclerView layout in the Notes
-    //   fragment is clicked, and it opens an activity to edit the event that was clicked
-    public void tagClickedAction(String tagTitle) {
-        Log.i("Main", "Tag title clicked is " + tagTitle);
     }
 
     // ---------------------------------------------------------------------------------------------

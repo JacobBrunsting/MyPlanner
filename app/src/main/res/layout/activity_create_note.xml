@@ -58,7 +58,7 @@
                     android:layout_marginRight="@dimen/text_element_horizontal_margin"
                     android:id="@+id/scrollView" >
 
-                    <AutoCompleteTextView
+                    <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/abc_text_size_medium_material"

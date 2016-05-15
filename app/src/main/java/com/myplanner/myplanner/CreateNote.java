@@ -1,5 +1,6 @@
 package com.myplanner.myplanner;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,14 +8,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerNote;
 
 import java.util.ArrayList;
 
-public class CreateNote extends AppCompatActivity {
+public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFragment.addNoteTagDialogInterface {
     DataRetriever userData;
+    ArrayList<String> possibleTags = new ArrayList<>();
     ArrayList<String> tags = new ArrayList<>();
     int id;
 
@@ -25,6 +29,7 @@ public class CreateNote extends AppCompatActivity {
 
         Bundle passedData = getIntent().getExtras();
         id = passedData.getInt("ID");
+        possibleTags = (ArrayList<String>)passedData.getSerializable("possibleTags");
         userData = DataRetriever.getInstance();
 
         // configure the add tag button
@@ -84,6 +89,35 @@ public class CreateNote extends AppCompatActivity {
     }
 
     private void addTag() {
+        DialogFragment addTagDialog = new AddNoteTagDialogFragment();
+        addTagDialog.show(getSupportFragmentManager(), "AddNoteTagDialog");
 
+    }
+
+    // interface for AddNoteTagDialogFragment
+    public ArrayList<String> getPossibleTags() {
+        return possibleTags;
+    }
+
+    public void addNewTag(final String tag) {
+        if (!tags.contains(tag)) {
+            tags.add(tag);
+            final LinearLayout tagHolder = (LinearLayout) findViewById(R.id.note_button_holder_layout);
+            final Button newButton = new Button(getApplicationContext());
+            newButton.setText(tag);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            newButton.setLayoutParams(params);
+            newButton.setTextSize(getResources().getDimension(R.dimen.notes_tag_btn_text_size));
+
+            newButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tagHolder.removeView(newButton);
+                    tags.remove(tag);
+                }
+            });
+
+            tagHolder.addView(newButton);
+        }
     }
 }
