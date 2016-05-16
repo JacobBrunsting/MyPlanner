@@ -39,6 +39,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     final Events eventsFragment = new Events();
     final Notes notesFragment = new Notes();
     final Reminders remindersFragment = new Reminders();
+    final ArrayList<String> possibleTags = new ArrayList<>();
 
     final Calendar cal = Calendar.getInstance();
 
@@ -116,7 +117,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
             @Override
             public void onPageSelected(int position) {
-                Log.i("Main", "setting title to position " + position);
                 toolbar.setTitle(generateTitle(position));
                 if (position == 0) {
                     toolbar.getMenu().findItem(R.id.action_forward).setVisible(true);
@@ -126,6 +126,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
                     toolbar.getMenu().findItem(R.id.action_back).setVisible(false);
                 }
                 userData.setCurrentTab(position);
+                ((FloatingActionButton) findViewById(R.id.main_fab)).show();
             }
 
             @Override
@@ -314,6 +315,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             for (int t = 0; t < note.getNumTags(); ++t) {
                 final String newTag = note.getTag(t);
                 tags.add(newTag);
+                possibleTags.add(newTag);
             }
             notesFragment.addNoteInfo(title, tags, body, id);
         }
@@ -410,6 +412,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         Intent intentBundle = new Intent(Main.this, CreateNote.class);
         Bundle bundle = new Bundle();
         bundle.putInt("ID", nextNoteID++);
+        bundle.putSerializable("possibleTags", possibleTags);
         intentBundle.putExtras(bundle);
         startActivity(intentBundle);
     }

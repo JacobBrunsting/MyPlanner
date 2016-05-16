@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -26,8 +29,6 @@ public class Notes extends Fragment {
     private ArrayList<Boolean> hasCorrectTag = new ArrayList<>();
     private int numNotesPassedFilter = 0;
     private String currentTag = ""; // an empty tag means any tag is valid
-    String[] spinnerItems;
-    int numSpinnerItems;
 
     NoteRecycleViewAdapter adapter;
 
@@ -145,10 +146,12 @@ public class Notes extends Fragment {
             private Spinner noteFilterTagSelector;
             private int id;
 
-            private ViewHolder(View nview) {
+            private ViewHolder(View nview, int viewType) {
                 super(nview);
                 view = nview;
-                if (getItemViewType() == 0) {
+                Log.i("Notes", "ViewHolder created");
+                if (viewType == 0) {
+                    Log.i("Notes", "Spinner is " + view.findViewById(R.id.note_filter_tag_selector));
                     noteFilterTagSelector = (Spinner) view.findViewById(R.id.note_filter_tag_selector);
                 } else {
                     title = (TextView) view.findViewById(R.id.create_note_title_edit_txt);
@@ -189,13 +192,12 @@ public class Notes extends Fragment {
             } else {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_note_list_item, parent, false);
             }
-            return new ViewHolder(view);
+            return new ViewHolder(view, viewType);
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            if (position == 0) {// create the first filter menu
-                /*Spinner spinner = holder.noteFilterTagSelector;
+            if (getItemViewType(position) == 0) {// create the first filter menu
                 // generate the items in the spinner
                 int numItems = 1 + possibleTags.size();
                 final String[] listItems = new String[numItems];
@@ -206,17 +208,17 @@ public class Notes extends Fragment {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listItems);
                 holder.noteFilterTagSelector.setAdapter(adapter);
                 holder.noteFilterTagSelector.setPrompt(listItems[0]);
-                holder.noteFilterTagSelector.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                holder.noteFilterTagSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (position == 0) {
-                            changeFilterTag("");
-                        } else {
-                            changeFilterTag(listItems[position - 1]);
-                        }
-                        holder.noteFilterTagSelector.setPrompt(listItems[position]);
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        changeFilterTag((String) holder.noteFilterTagSelector.getItemAtPosition(position));
                     }
-                });*/
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
             } else {
                 // decriment the position to account for the first item being a non-note item
                 int itemNumber = position - 1;
@@ -260,12 +262,4 @@ public class Notes extends Fragment {
             return numNotesPassedFilter + 1;
         }
     }
-
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------- Local Adapter Required for Spinner -----------------------------
-    // ---------------------------------------------------------------------------------------------
-
-    //private class noteSpinnerAdapter extends ArrayAdapter {
-// use the possibleTags array to populate spinner
-   // }
 }

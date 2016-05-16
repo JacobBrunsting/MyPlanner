@@ -29,7 +29,7 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
 
         Bundle passedData = getIntent().getExtras();
         id = passedData.getInt("ID");
-        possibleTags = (ArrayList<String>)passedData.getSerializable("possibleTags");
+        possibleTags = (ArrayList<String>) passedData.getSerializable("possibleTags");
         userData = DataRetriever.getInstance();
 
         // configure the add tag button
