@@ -306,9 +306,11 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
     // generate the lists that store the data being shown to users on the notes screen
     private void generateNotesScreen() {
+        Log.i("Main", "Generating notes screen");
         notesFragment.clearNoteLists();
-
+        Log.i("Main", "There are " + userData.getNumNotes() + " notes");
         for (int i = 0; i < userData.getNumNotes(); ++i) {
+            Log.i("Main", "generating first note");
             PlannerNote note = userData.getNote(i);
 
             final String title = note.getTitle();

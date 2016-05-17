@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataRetriever {
-    List<PlannerEvent> events = new ArrayList<>();
-    List<PlannerNote> notes = new ArrayList<>();
-    List<PlannerReminder> reminders = new ArrayList<>();
+    private static List<PlannerEvent> events;
+    private static List<PlannerNote> notes;
+    private static List<PlannerReminder> reminders;
 
     int currentTab = 0;
 
@@ -25,6 +25,9 @@ public class DataRetriever {
 
     public static DataRetriever getInstance() {
         if (instance == null) {
+            events = new ArrayList<>();
+            notes = new ArrayList<>();
+            reminders = new ArrayList<>();
             instance = new DataRetriever();
             return instance;
         } else {

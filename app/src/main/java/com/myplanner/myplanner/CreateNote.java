@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerNote;
