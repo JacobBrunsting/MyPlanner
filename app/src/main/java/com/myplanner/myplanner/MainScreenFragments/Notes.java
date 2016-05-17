@@ -18,15 +18,16 @@ import android.widget.TextView;
 
 import com.myplanner.myplanner.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Notes extends Fragment {
-    private List<String> titles;
-    private List<List<String>> tags;
-    private List<String> bodies;
-    private List<Integer> ids;
-    private List<String> possibleTags;
-    private List<Boolean> hasCorrectTag;
+    private List<String> titles = new ArrayList<>();
+    private List<List<String>> tags = new ArrayList<>();
+    private List<String> bodies = new ArrayList<>();
+    private List<Integer> ids = new ArrayList<>();
+    private List<String> possibleTags = new ArrayList<>();
+    private List<Boolean> hasCorrectTag = new ArrayList<>();
     private int numNotesPassedFilter = 0;
     private String currentTag = ""; // an empty tag means any tag is valid
 
@@ -99,9 +100,11 @@ public class Notes extends Fragment {
         } else {
             hasCorrectTag.add(false);
         }
-        for (int i = 0; i < tagList.size(); ++i) {
-            if (!possibleTags.contains(tagList.get(i))) {
-                possibleTags.add(tagList.get(i));
+        if (tagList != null) {
+            for (int i = 0; i < tagList.size(); ++i) {
+                if (!possibleTags.contains(tagList.get(i))) {
+                    possibleTags.add(tagList.get(i));
+                }
             }
         }
     }
@@ -117,12 +120,14 @@ public class Notes extends Fragment {
     private void changeFilterTag(String newTag) {
         numNotesPassedFilter = 0;
         currentTag = newTag;
-        for (int i = 0; i < hasCorrectTag.size(); ++i) {
-            if (containsFilterTag(tags.get(i))) {
-                hasCorrectTag.set(i, true);
-                numNotesPassedFilter++;
-            } else {
-                hasCorrectTag.set(i, false);
+        if (hasCorrectTag != null) {
+            for (int i = 0; i < hasCorrectTag.size(); ++i) {
+                if (containsFilterTag(tags.get(i))) {
+                    hasCorrectTag.set(i, true);
+                    numNotesPassedFilter++;
+                } else {
+                    hasCorrectTag.set(i, false);
+                }
             }
         }
         adapter.notifyDataSetChanged();
@@ -198,11 +203,17 @@ public class Notes extends Fragment {
         public void onBindViewHolder(final ViewHolder holder, int position) {
             if (getItemViewType(position) == 0) {// create the first filter menu
                 // generate the items in the spinner
-                int numItems = 1 + possibleTags.size();
-                final String[] listItems = new String[numItems];
-                listItems[0] = getResources().getString(R.string.notes_no_filter_item);
-                for (int i = 1; i < numItems; ++i) {
-                    listItems[i] = possibleTags.get(i - 1);
+                String[] listItems;
+                if (possibleTags == null) {
+                    listItems = new String[1];
+                    listItems[0] = getResources().getString(R.string.notes_no_filter_item);
+                } else {
+                    int numItems = 1 + possibleTags.size();
+                    listItems = new String[numItems];
+                    listItems[0] = getResources().getString(R.string.notes_no_filter_item);
+                    for (int i = 1; i < numItems; ++i) {
+                        listItems[i] = possibleTags.get(i - 1);
+                    }
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listItems);
                 holder.noteFilterTagSelector.setAdapter(adapter);

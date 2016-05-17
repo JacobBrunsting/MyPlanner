@@ -12,13 +12,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.myplanner.myplanner.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Events extends Fragment {
-    private List<String> titles;
-    private List<String> times;
-    private List<String> bodies;
-    private List<Integer> ids;
+    private List<String> titles = new ArrayList<>();
+    private List<String> times = new ArrayList<>();
+    private List<String> bodies = new ArrayList<>();
+    private List<Integer> ids = new ArrayList<>();
 
     EventRecycleViewAdapter adapter;
 
@@ -68,10 +69,10 @@ public class Events extends Fragment {
     }
 
     public void clearEventLists() {
-        titles = null;
-        times = null;
-        bodies = null;
-        ids = null;
+        titles.clear();
+        times.clear();
+        bodies.clear();
+        ids.clear();
     }
 
     public void addEventInfo(String title, String time, String body, int id) {

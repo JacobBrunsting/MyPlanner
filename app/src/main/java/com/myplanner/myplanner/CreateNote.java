@@ -19,8 +19,8 @@ import java.util.List;
 
 public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFragment.addNoteTagDialogInterface {
     DataRetriever userData;
-    ArrayList<String> possibleTags;
-    List<String> tags;
+    ArrayList<String> possibleTags = new ArrayList<>();
+    List<String> tags = new ArrayList<>();
     int id;
 
     @Override

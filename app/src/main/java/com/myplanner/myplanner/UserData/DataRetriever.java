@@ -1,15 +1,14 @@
 package com.myplanner.myplanner.UserData;
 
-import android.os.Parcelable;
 import android.util.Log;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataRetriever {
-    List<PlannerEvent> events;
-    List<PlannerNote> notes;
-    List<PlannerReminder> reminders;
+    List<PlannerEvent> events = new ArrayList<>();
+    List<PlannerNote> notes = new ArrayList<>();
+    List<PlannerReminder> reminders = new ArrayList<>();
 
     int currentTab = 0;
 
@@ -42,6 +41,9 @@ public class DataRetriever {
     public PlannerEvent getEvent(int position) {return events.get(position);}
 
     public PlannerEvent getEventByID(int id) {
+        if (events == null) {
+            return null;
+        }
         for (int i = 0; i < events.size(); ++i) {
             if (events.get(i).id == id) {
                 return events.get(i);
@@ -50,11 +52,19 @@ public class DataRetriever {
         return null;
     }
 
-    public int getNumEvents() {return events.size();}
+    public int getNumEvents() {
+        if (events == null) {
+            return 0;
+        }
+        return events.size();
+    }
 
     public PlannerNote getNote(int position) {return notes.get(position);}
 
     public PlannerNote getNoteByID(int id) {
+        if (notes == null) {
+            return null;
+        }
         for (int i = 0; i < notes.size(); ++i) {
             if (notes.get(i).id == id) {
                 return notes.get(i);
@@ -63,11 +73,19 @@ public class DataRetriever {
         return null;
     }
 
-    public int getNumNotes() {return notes.size();}
+    public int getNumNotes() {
+        if (notes == null) {
+            return 0;
+        }
+        return notes.size();
+    }
 
     public PlannerReminder getReminder(int position) {return reminders.get(position);}
 
     public PlannerReminder getReminderByID(int id) {
+        if (reminders == null) {
+            return null;
+        }
         for (int i = 0; i < reminders.size(); ++i) {
             if (reminders.get(i).id == id) {
                 return reminders.get(i);
@@ -76,7 +94,12 @@ public class DataRetriever {
         return null;
     }
 
-    public int getNumReminders() {return reminders.size();}
+    public int getNumReminders() {
+        if (reminders == null) {
+            return 0;
+        }
+        return reminders.size();
+    }
 
     //----------------------------------------------------------------------------------------------
     //-------------------------------------- Filtered Getters --------------------------------------
@@ -84,9 +107,7 @@ public class DataRetriever {
 
     // gets a list of the events for some date
     public List<PlannerEvent> getDateEvents(int year, int month, int date) {
-        Log.i("DataRetriever", "getting events for date " + date);
-
-        List<PlannerEvent> dayEvents = null;
+        List<PlannerEvent> dayEvents = new ArrayList<>();
         int pos = 0;
         int newPos = 0;
 
@@ -145,7 +166,11 @@ public class DataRetriever {
 
     // gets a list of the notes for some tag
     public List<PlannerNote> getTagNotes(int year, List<String> tags) {
-        List<PlannerNote> tagNotes = null;
+        if (notes == null) {
+            return null;
+        }
+
+        List<PlannerNote> tagNotes = new ArrayList<>();
         int newPos = 0;
 
         for (int i = 0; i < notes.size(); ++i) {
@@ -165,7 +190,11 @@ public class DataRetriever {
 
     // gets a list of the reminders for some date
     public List<PlannerReminder> getDateReminders(int year, int month, int date) {
-        List<PlannerReminder> dayReminders = null;
+        if (reminders == null) {
+            return null;
+        }
+
+        List<PlannerReminder> dayReminders = new ArrayList<>();
         int pos = 0;
         int newPos = 0;
 
@@ -186,11 +215,12 @@ public class DataRetriever {
     public void setCurrentTab(int tab) {currentTab = tab;}
 
     public void addEvent(PlannerEvent event) {
-        Log.i("CreateEvent12dataretri", "Event recieved has id " + event.getID() + " and starts at " + event.getStartDate() + ", " + event.getStartHour() + ", " + event.getStartMinute());
+        if (events == null) {
+            events.add(event);
+            return;
+        }
         for (int k = 0; k < events.size(); ++k) {
             PlannerEvent e = events.get(k);
-            Log.i("CreateEvent12data pre", "pEvent number " + k + " has id " + e.getID() + " and starts at " + e.getStartDate() + " at hour " + e.getStartHour() + " at minute " + e.getStartMinute());
-            Log.i("CreateEvent12data pre", "         and ends at " + e.getEndDate() + " at hour " + e.getEndHour() + " at minute " + e.getEndMinute());
         }
 
         int insertPos = 0;
@@ -227,6 +257,11 @@ public class DataRetriever {
     }
 
     public void addReminder(PlannerReminder reminder) {
+        if (reminders == null) {
+            reminders.add(reminder);
+            return;
+        }
+
         int insertPos = 0;
 
         while (insertPos + 1 < reminders.size()
@@ -254,41 +289,44 @@ public class DataRetriever {
     // ---------------------------------------------------------------------------------------------
 
     public void removeEvent(int id) {
-        int i = 0;
+        if (events != null) {
+            int i = 0;
+            while (i < events.size()) {
+                if (events.get(i).id == id) {
+                    events.remove(i);
+                    return;
+                }
 
-        while (i < events.size()) {
-            if (events.get(i).id == id) {
-                events.remove(i);
-                return;
+                ++i;
             }
-
-            ++i;
         }
     }
 
     public void removeNote(int id) {
-        int i = 0;
+        if  (notes != null) {
+            int i = 0;
+            while (i < notes.size()) {
+                if (notes.get(i).id == id) {
+                    notes.remove(i);
+                    return;
+                }
 
-        while (i < notes.size()) {
-            if (notes.get(i).id == id) {
-                notes.remove(i);
-                return;
+                ++i;
             }
-
-            ++i;
         }
     }
 
     public void removeReminder(int id) {
-        int i = 0;
+        if (reminders != null) {
+            int i = 0;
+            while (i < reminders.size()) {
+                if (reminders.get(i).id == id) {
+                    reminders.remove(i);
+                    return;
+                }
 
-        while (i < reminders.size()) {
-            if (reminders.get(i).id == id) {
-                reminders.remove(i);
-                return;
+                ++i;
             }
-
-            ++i;
         }
     }
 

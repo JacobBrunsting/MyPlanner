@@ -12,11 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddNoteTagDialogFragment extends DialogFragment {
 
-    List<String> possibleTags;
+    List<String> possibleTags = new ArrayList<>();
     View dialogView;
 
     addNoteTagDialogInterface mCallback;

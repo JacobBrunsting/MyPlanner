@@ -234,71 +234,73 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
         // loop through all events in the day, and add them into the lists that hold the data
         //   displayed to the user
-        for (int i = 0; i < targetEvents.size(); ++i) {
-            final int startHour = targetEvents.get(i).getStartHour();
-            final int endHour = targetEvents.get(i).getEndHour();
-            final int startMinute = targetEvents.get(i).getStartMinute();
-            final int endMinute = targetEvents.get(i).getEndMinute();
+        if (targetEvents != null) {
+            for (int i = 0; i < targetEvents.size(); ++i) {
+                final int startHour = targetEvents.get(i).getStartHour();
+                final int endHour = targetEvents.get(i).getEndHour();
+                final int startMinute = targetEvents.get(i).getStartMinute();
+                final int endMinute = targetEvents.get(i).getEndMinute();
 
-            String timeString;
+                String timeString;
 
-            // convert from 24 hour time to 12 hour time, and attach the hour the event starts to
-            //   the time string
-            if (startHour > 12) {
-                timeString = (startHour - 12) + ":";
-            } else if (startHour == 0) {
-                timeString = "12:";
-            } else {
-                timeString = startHour + ":";
-            }
-
-            // attach the minute the event starts to the time string, ensuring there are enough 0's
-            if (startMinute > 9) {
-                timeString += startMinute;
-            } else if (startMinute > 0) {
-                timeString += "0" + startMinute;
-            } else {
-                timeString += "00";
-            }
-
-            // attach the AM/PM suffix for the start time to the time string
-            if (startHour >= 12) {
-                timeString += " PM";
-            } else {
-                timeString += " AM";
-            }
-
-            if (endHour != startHour || endMinute != startMinute) {
-                // add in the dash between the start time and end time
-                timeString += " - ";
-
-                // attach the hour the event ends to the time string
-                if (endHour > 12) {
-                    timeString += (endHour - 12) + ":";
-                } else if (endHour == 0) {
-                    timeString += "12:";
+                // convert from 24 hour time to 12 hour time, and attach the hour the event starts to
+                //   the time string
+                if (startHour > 12) {
+                    timeString = (startHour - 12) + ":";
+                } else if (startHour == 0) {
+                    timeString = "12:";
                 } else {
-                    timeString += endHour + ":";
+                    timeString = startHour + ":";
                 }
 
-                // attach the minute the event ends to the time string
-                if (endMinute > 9) {
-                    timeString += endMinute;
-                } else if (endMinute > 0) {
-                    timeString += "0" + endMinute;
+                // attach the minute the event starts to the time string, ensuring there are enough 0's
+                if (startMinute > 9) {
+                    timeString += startMinute;
+                } else if (startMinute > 0) {
+                    timeString += "0" + startMinute;
                 } else {
                     timeString += "00";
                 }
 
-                // attach the AM/PM suffix for the end time to the time string
-                if (endHour >= 12) {
+                // attach the AM/PM suffix for the start time to the time string
+                if (startHour >= 12) {
                     timeString += " PM";
                 } else {
                     timeString += " AM";
                 }
-            }
 
-            eventsFragment.addEventInfo(targetEvents.get(i).getTitle(), timeString, targetEvents.get(i).getMessage(), targetEvents.get(i).getID());
+                if (endHour != startHour || endMinute != startMinute) {
+                    // add in the dash between the start time and end time
+                    timeString += " - ";
+
+                    // attach the hour the event ends to the time string
+                    if (endHour > 12) {
+                        timeString += (endHour - 12) + ":";
+                    } else if (endHour == 0) {
+                        timeString += "12:";
+                    } else {
+                        timeString += endHour + ":";
+                    }
+
+                    // attach the minute the event ends to the time string
+                    if (endMinute > 9) {
+                        timeString += endMinute;
+                    } else if (endMinute > 0) {
+                        timeString += "0" + endMinute;
+                    } else {
+                        timeString += "00";
+                    }
+
+                    // attach the AM/PM suffix for the end time to the time string
+                    if (endHour >= 12) {
+                        timeString += " PM";
+                    } else {
+                        timeString += " AM";
+                    }
+                }
+
+                eventsFragment.addEventInfo(targetEvents.get(i).getTitle(), timeString, targetEvents.get(i).getMessage(), targetEvents.get(i).getID());
+            }
         }
     }
 
@@ -310,7 +312,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             PlannerNote note = userData.getNote(i);
 
             final String title = note.getTitle();
-            final List<String> tags = null;
+            final List<String> tags = new ArrayList<>();
             final String body = note.getBody();
             final int id = note.getID();
             for (int t = 0; t < note.getNumTags(); ++t) {

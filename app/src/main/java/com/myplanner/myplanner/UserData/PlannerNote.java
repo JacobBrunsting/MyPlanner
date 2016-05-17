@@ -1,12 +1,13 @@
 package com.myplanner.myplanner.UserData;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlannerNote {
     String title;
     String body;
-    List<String> tags;
+    List<String> tags = new ArrayList<>();
     int id;
 
     public PlannerNote(List<String> ntags, String ntitle, String nbody, int nID) {
@@ -25,14 +26,19 @@ public class PlannerNote {
     public String getBody() {return body;}
 
     public String getTag(int index) {
-        if (index < tags.size()) {
+        if (tags != null && index < tags.size()) {
             return tags.get(index);
         } else {
             return "";
         }
     }
 
-    public int getNumTags() {return tags.size();}
+    public int getNumTags() {
+        if (tags == null) {
+            return 0;
+        }
+        return tags.size();
+    }
 
     public int getID() {return id;}
 
