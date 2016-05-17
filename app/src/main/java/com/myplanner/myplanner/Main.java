@@ -26,6 +26,7 @@ import com.myplanner.myplanner.UserData.PlannerNote;
 import com.myplanner.myplanner.UserData.PlannerReminder;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Calendar;
 
 public class Main extends AppCompatActivity implements Events.EventInterface,
@@ -39,7 +40,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     final Events eventsFragment = new Events();
     final Notes notesFragment = new Notes();
     final Reminders remindersFragment = new Reminders();
-    final ArrayList<String> possibleTags = new ArrayList<>();
+    final ArrayList<String> possibleTags = new ArrayList<>(); // This is an arrayList so it is serializable
 
     final Calendar cal = Calendar.getInstance();
 
@@ -227,9 +228,9 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     // generate the lists that store the data being shown to the user on the event screen
     private void generateEventScreen() {
         // retrieve all events happening on the current date
-        ArrayList<PlannerEvent> targetEvents = userData.getDateEvents(curYear, curMonth, curDate);
+        List<PlannerEvent> targetEvents = userData.getDateEvents(curYear, curMonth, curDate);
 
-        eventsFragment.clearEventArrays();
+        eventsFragment.clearEventLists();
 
         // loop through all events in the day, and add them into the lists that hold the data
         //   displayed to the user
@@ -303,13 +304,13 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
     // generate the lists that store the data being shown to users on the notes screen
     private void generateNotesScreen() {
-        notesFragment.clearNoteArrays();
+        notesFragment.clearNoteLists();
 
         for (int i = 0; i < userData.getNumNotes(); ++i) {
             PlannerNote note = userData.getNote(i);
 
             final String title = note.getTitle();
-            final ArrayList<String> tags = new ArrayList<>();
+            final List<String> tags = null;
             final String body = note.getBody();
             final int id = note.getID();
             for (int t = 0; t < note.getNumTags(); ++t) {
@@ -323,7 +324,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
     // generate the lists that store the data being shown to users on the reminders screen
     private void generateRemindersScreen() {
-        remindersFragment.clearReminderArrays();
+        remindersFragment.clearReminderLists();
 
         for (int i = 0; i < userData.getNumReminders(); ++i) {
             PlannerReminder reminder = userData.getReminder(i);

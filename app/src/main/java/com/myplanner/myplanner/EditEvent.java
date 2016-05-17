@@ -19,7 +19,6 @@ import android.widget.TimePicker;
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerEvent;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class EditEvent extends AppCompatActivity {

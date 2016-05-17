@@ -12,13 +12,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.myplanner.myplanner.R;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Reminders extends Fragment {
-    private ArrayList<String> titles = new ArrayList<>();
-    private ArrayList<String> times = new ArrayList<>();
-    private ArrayList<String> dates = new ArrayList<>();
-    private ArrayList<String> bodies = new ArrayList<>();
-    private ArrayList<Integer> ids = new ArrayList<>();
+    private List<String> titles;
+    private List<String> times;
+    private List<String> dates;
+    private List<String> bodies;
+    private List<Integer> ids;
 
     ReminderRecycleViewAdapter adapter;
 
@@ -67,7 +68,7 @@ public class Reminders extends Fragment {
         }
     }
 
-    public void clearReminderArrays() {
+    public void clearReminderLists() {
         titles.clear();
         times.clear();
         dates.clear();

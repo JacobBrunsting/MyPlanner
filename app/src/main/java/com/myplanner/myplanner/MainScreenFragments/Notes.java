@@ -18,15 +18,15 @@ import android.widget.TextView;
 
 import com.myplanner.myplanner.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Notes extends Fragment {
-    private ArrayList<String> titles = new ArrayList<>();
-    private ArrayList<ArrayList<String>> tags = new ArrayList<>();
-    private ArrayList<String> bodies = new ArrayList<>();
-    private ArrayList<Integer> ids = new ArrayList<>();
-    private ArrayList<String> possibleTags = new ArrayList<>();
-    private ArrayList<Boolean> hasCorrectTag = new ArrayList<>();
+    private List<String> titles;
+    private List<List<String>> tags;
+    private List<String> bodies;
+    private List<Integer> ids;
+    private List<String> possibleTags;
+    private List<Boolean> hasCorrectTag;
     private int numNotesPassedFilter = 0;
     private String currentTag = ""; // an empty tag means any tag is valid
 
@@ -72,12 +72,13 @@ public class Notes extends Fragment {
     // ---------------------------------------------------------------------------------------------
 
     public void reloadData() {
+        changeFilterTag(currentTag);
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
     }
 
-    public void clearNoteArrays() {
+    public void clearNoteLists() {
         titles.clear();
         tags.clear();
         bodies.clear();
@@ -87,7 +88,7 @@ public class Notes extends Fragment {
         possibleTags.clear();
     }
 
-    public void addNoteInfo(String title, ArrayList<String> tagList, String body, int id) {
+    public void addNoteInfo(String title, List<String> tagList, String body, int id) {
         titles.add(title);
         tags.add(tagList);
         bodies.add(body);
@@ -127,7 +128,7 @@ public class Notes extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private boolean containsFilterTag(ArrayList<String> tagList) {
+    private boolean containsFilterTag(List<String> tagList) {
         return tagList.contains(currentTag) || currentTag.equals("");
     }
 
@@ -149,9 +150,7 @@ public class Notes extends Fragment {
             private ViewHolder(View nview, int viewType) {
                 super(nview);
                 view = nview;
-                Log.i("Notes", "ViewHolder created");
                 if (viewType == 0) {
-                    Log.i("Notes", "Spinner is " + view.findViewById(R.id.note_filter_tag_selector));
                     noteFilterTagSelector = (Spinner) view.findViewById(R.id.note_filter_tag_selector);
                 } else {
                     title = (TextView) view.findViewById(R.id.create_note_title_edit_txt);

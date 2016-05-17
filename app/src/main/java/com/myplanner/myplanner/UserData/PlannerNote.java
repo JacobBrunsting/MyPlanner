@@ -1,15 +1,15 @@
 package com.myplanner.myplanner.UserData;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class PlannerNote {
     String title;
     String body;
-    ArrayList<String> tags;
+    List<String> tags;
     int id;
 
-    public PlannerNote(ArrayList<String> ntags, String ntitle, String nbody, int nID) {
+    public PlannerNote(List<String> ntags, String ntitle, String nbody, int nID) {
         title = ntitle;
         body = nbody;
         tags = ntags;

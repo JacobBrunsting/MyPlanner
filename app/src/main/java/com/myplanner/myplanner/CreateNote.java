@@ -15,11 +15,12 @@ import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerNote;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFragment.addNoteTagDialogInterface {
     DataRetriever userData;
-    ArrayList<String> possibleTags = new ArrayList<>();
-    ArrayList<String> tags = new ArrayList<>();
+    ArrayList<String> possibleTags;
+    List<String> tags;
     int id;
 
     @Override
@@ -95,7 +96,7 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
     }
 
     // interface for AddNoteTagDialogFragment
-    public ArrayList<String> getPossibleTags() {
+    public List<String> getPossibleTags() {
         return possibleTags;
     }
 

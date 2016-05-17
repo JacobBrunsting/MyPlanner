@@ -4,12 +4,12 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class DataRetriever {
-    ArrayList<PlannerEvent> events = new ArrayList<>();
-    ArrayList<PlannerNote> notes = new ArrayList<>();
-    ArrayList<PlannerReminder> reminders = new ArrayList<>();
+    List<PlannerEvent> events;
+    List<PlannerNote> notes;
+    List<PlannerReminder> reminders;
 
     int currentTab = 0;
 
@@ -83,10 +83,10 @@ public class DataRetriever {
     // ---------------------------------------------------------------------------------------------
 
     // gets a list of the events for some date
-    public ArrayList<PlannerEvent> getDateEvents(int year, int month, int date) {
+    public List<PlannerEvent> getDateEvents(int year, int month, int date) {
         Log.i("DataRetriever", "getting events for date " + date);
 
-        ArrayList<PlannerEvent> dayEvents = new ArrayList<>();
+        List<PlannerEvent> dayEvents = null;
         int pos = 0;
         int newPos = 0;
 
@@ -144,8 +144,8 @@ public class DataRetriever {
     }
 
     // gets a list of the notes for some tag
-    public ArrayList<PlannerNote> getTagNotes(int year, ArrayList<String> tags) {
-        ArrayList<PlannerNote> tagNotes = new ArrayList<>();
+    public List<PlannerNote> getTagNotes(int year, List<String> tags) {
+        List<PlannerNote> tagNotes = null;
         int newPos = 0;
 
         for (int i = 0; i < notes.size(); ++i) {
@@ -164,8 +164,8 @@ public class DataRetriever {
     }
 
     // gets a list of the reminders for some date
-    public ArrayList<PlannerReminder> getDateReminders(int year, int month, int date) {
-        ArrayList<PlannerReminder> dayReminders = new ArrayList<>();
+    public List<PlannerReminder> getDateReminders(int year, int month, int date) {
+        List<PlannerReminder> dayReminders = null;
         int pos = 0;
         int newPos = 0;
 
@@ -201,8 +201,8 @@ public class DataRetriever {
             ++insertPos;
         }
 
-        // insert the event into the ArrayList. The items must be shifted manually because the add()
-        //   function in ArrayList may not preserve order.
+        // insert the event into the List. The items must be shifted manually because the add()
+        //   function in List may not preserve order.
         if (events.size() == 0) {
             events.add(event);
         } else {
@@ -234,8 +234,8 @@ public class DataRetriever {
             ++insertPos;
         }
 
-        // insert the reminder into the ArrayList. The items must be shifted manually because the
-        //   add() function in ArrayList may not preserve order.
+        // insert the reminder into the List. The items must be shifted manually because the
+        //   add() function in List may not preserve order. THIS MIGHT NOT ACTUALLY BE TRUE
         if (reminders.size() == 0) {
             reminders.add(reminder);
         } else {
