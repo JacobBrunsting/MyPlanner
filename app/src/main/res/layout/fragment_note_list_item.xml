@@ -29,7 +29,10 @@
         android:layout_marginTop="@dimen/text_element_vertical_margin"
         android:layout_marginBottom="@dimen/text_element_vertical_margin"
         android:layout_marginRight="@dimen/text_element_horizontal_margin"
-        android:layout_marginLeft="@dimen/text_element_horizontal_margin" />
+        android:layout_marginLeft="@dimen/text_element_horizontal_margin"
+        android:textAlignment="textStart"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"

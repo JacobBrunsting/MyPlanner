@@ -92,7 +92,7 @@ public class Notes extends Fragment {
         if (tagList != null) {
             for (int i = 0; i < tagList.size(); ++i) {
                 if (!possibleTags.contains(tagList.get(i))) {
-                    possibleTags.add(tagList.get(i));
+                    possibleTags = addAlphabetically(possibleTags, tagList.get(i));
                 }
             }
         }
@@ -109,7 +109,11 @@ public class Notes extends Fragment {
 
     private void changeFilterTag(String newTag) {
         if (!newTag.equals(currentTag)) {
-            currentTag = newTag;
+            if (newTag.equals(getResources().getString(R.string.notes_no_filter_item))) {
+                currentTag = "";
+            } else {
+                currentTag = newTag;
+            }
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
@@ -121,6 +125,26 @@ public class Notes extends Fragment {
             return currentTag.equals("");
         }
         return tagList.contains(currentTag) || currentTag.equals("");
+    }
+
+    private List<String> addAlphabetically(final List<String> list, final String string) {
+        int index = list.size();
+        if (index == 0) {
+            list.add(0, string);
+            return list;
+        }
+        list.add(index, list.get(index - 1));
+
+        for (; index > 0; --index) {
+            list.set(index, list.get(index - 1));
+            // if the current list item comes before the string alphabetically
+            if (list.get(index).compareToIgnoreCase(string) < 0) {
+                break;
+            }
+        }
+
+        list.set(index, string);
+        return list;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -189,18 +213,36 @@ public class Notes extends Fragment {
                 if (possibleTags == null) {
                     listItems = new String[1];
                     listItems[0] = getResources().getString(R.string.notes_no_filter_item);
-                } else {
+                } else if (currentTag.equals("")) {
                     int numItems = 1 + possibleTags.size();
                     listItems = new String[numItems];
                     listItems[0] = getResources().getString(R.string.notes_no_filter_item);
+                    // add all of the tags to the list used to populate the tag selector
                     for (int i = 1; i < numItems; ++i) {
                         listItems[i] = possibleTags.get(i - 1);
                     }
+                } else {
+                    int numItems = 1 + possibleTags.size();
+                    listItems = new String[numItems];
+                    listItems[0] = currentTag;
+                    listItems[1] = getResources().getString(R.string.notes_no_filter_item);
+
+                    int i = 2;
+                    // add all of the tags before the currently selected tag to the list used to
+                    //   populate the tag selector
+                    for (; i < numItems && !possibleTags.get(i - 2).equals(currentTag); ++i) {
+                        listItems[i] = possibleTags.get(i - 2);
+                    }
+                    // add in all of the tags after the currently selected tag to the list used to
+                    //   populate the tag selector
+                    for (; i < numItems; ++i) {
+                        listItems[i] = possibleTags.get(i - 1);
+                    }
+
                 }
                 ArrayAdapter<String> tagAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listItems);
                 hasItemBeenSelected = false;
                 holder.noteFilterTagSelector.setAdapter(tagAdapter);
-                holder.noteFilterTagSelector.setPrompt(listItems[0]);
                 holder.noteFilterTagSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -208,8 +250,9 @@ public class Notes extends Fragment {
                         //   selector is created, which we don't want
                         if (hasItemBeenSelected) {
                             changeFilterTag((String) holder.noteFilterTagSelector.getItemAtPosition(position));
+                        } else {
+                            hasItemBeenSelected = true;
                         }
-                        hasItemBeenSelected = true;
                     }
 
                     @Override
@@ -220,14 +263,16 @@ public class Notes extends Fragment {
             } else {
                 // decriment the position to account for the first item being a non-note item
                 int itemNumber = position - 1;
+
                 // increment the number once for every note that does not pass the filter because
                 //   only items that pass the filter should be shown, and the number of positions
                 //   is set by only counting items passing the filter
-                for (int i = 0; i < itemNumber; ++i) {
+                for (int i = 0; i <= itemNumber; ++i) {
                     if (!containsFilterTag(tags.get(i))) {
                         itemNumber++;
                     }
                 }
+
                 holder.title.setText(titles.get(itemNumber));
                 holder.body.setText(bodies.get(itemNumber));
                 holder.id = ids.get(itemNumber);
