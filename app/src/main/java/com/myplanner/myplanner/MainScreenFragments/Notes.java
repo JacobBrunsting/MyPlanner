@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -158,6 +161,7 @@ public class Notes extends Fragment {
             private View view;
             private TextView title;
             private LinearLayout tag_holder;
+            private HorizontalScrollView button_holder_scroll_view;
             private TextView body;
             private Spinner noteFilterTagSelector;
             private int id;
@@ -170,6 +174,7 @@ public class Notes extends Fragment {
                 } else {
                     title = (TextView) view.findViewById(R.id.create_note_title_edit_txt);
                     tag_holder = (LinearLayout) view.findViewById(R.id.note_button_holder_layout);
+                    button_holder_scroll_view = (HorizontalScrollView) view.findViewById(R.id.note_button_holder_scroll_view);
                     body = (TextView) view.findViewById(R.id.note_body_txt);
                     id = -1;
 
@@ -278,12 +283,29 @@ public class Notes extends Fragment {
                 holder.id = ids.get(itemNumber);
                 holder.tag_holder.removeAllViews();
 
-                for (int i = 0; i < tags.get(itemNumber).size(); ++i) {
+                final int numTags = tags.get(itemNumber).size();
+                final RelativeLayout.LayoutParams btnHolderParams;
+                // collapse the tag holder if there are no tags so there isn't an ugly gap
+                if (numTags == 0) {
+                    btnHolderParams = new RelativeLayout.LayoutParams(0, 0);
+                } else {
+                    btnHolderParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)getActivity().getResources().getDimension(R.dimen.notes_tag_btn_height));
+                }
+                btnHolderParams.addRule(RelativeLayout.BELOW, R.id.create_note_title_edit_txt);
+
+                holder.button_holder_scroll_view.setLayoutParams(btnHolderParams);
+
+                for (int i = 0; i < numTags; ++i) {
                     final Button newButton = new Button(getContext());
                     newButton.setText(tags.get(itemNumber).get(i));
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)getResources().getDimension(R.dimen.notes_tag_btn_height), (int)getResources().getDimension(R.dimen.notes_tag_btn_height));
                     newButton.setLayoutParams(params);
                     newButton.setTextSize(getResources().getDimension(R.dimen.notes_tag_btn_text_size));
+                    if (android.os.Build.VERSION.SDK_INT > 17) {
+                        newButton.setBackground(getResources().getDrawable(R.color.colorAccent, getActivity().getTheme()));
+                    } else {
+                        newButton.setBackground(getResources().getDrawable(R.color.colorAccent));
+                    }
 
                     final int index1 = itemNumber;
                     final int index2 = i;

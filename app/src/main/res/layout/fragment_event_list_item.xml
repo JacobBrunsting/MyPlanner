@@ -42,17 +42,16 @@
         android:layout_marginBottom="@dimen/text_element_vertical_margin"
         android:layout_alignParentStart="true"
         android:textSize="@dimen/abc_text_size_small_material"
-        android:layout_below="@+id/event_title_txt" />
+        android:layout_below="@+id/event_title_txt"
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_divider_height"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:background="@color/colorPrimary"
         android:layout_below="@+id/event_body_txt"
-        android:adjustViewBounds="true"
-        android:backgroundTintMode="src_over" />
+        android:adjustViewBounds="true"/>
 
 </RelativeLayout>

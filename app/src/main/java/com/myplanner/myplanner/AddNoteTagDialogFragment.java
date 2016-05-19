@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -62,6 +63,7 @@ public class AddNoteTagDialogFragment extends DialogFragment {
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, possibleTags);
         tagSelect.showDropDown();
         tagSelect.setAdapter(adapter);
+        tagSelect.requestFocus();
         tagSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -83,5 +85,8 @@ public class AddNoteTagDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+        // show the soft keyboard
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(tagSelect, InputMethodManager.SHOW_IMPLICIT);
     }
 }

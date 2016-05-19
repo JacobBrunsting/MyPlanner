@@ -21,25 +21,21 @@
     <TextView
         android:id="@+id/note_body_txt"
         android:text="lorum ipsum dolar est is sti situatoria si skfs ksk lsielskdkn ls kksks ksls fja a good boy say a s add ladd lsi liaaaa"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/abc_text_size_small_material"
-        android:layout_below="@+id/horizontalScrollView"
-        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/note_button_holder_scroll_view"
         android:layout_marginTop="@dimen/text_element_vertical_margin"
         android:layout_marginBottom="@dimen/text_element_vertical_margin"
         android:layout_marginRight="@dimen/text_element_horizontal_margin"
         android:layout_marginLeft="@dimen/text_element_horizontal_margin"
-        android:textAlignment="textStart"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" />
+        android:textAlignment="textStart" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="@dimen/notes_tag_btn_height"
-        android:id="@+id/horizontalScrollView"
+        android:id="@+id/note_button_holder_scroll_view"
         android:layout_below="@+id/create_note_title_edit_txt"
-        android:layout_alignParentStart="true"
         android:layout_marginLeft="@dimen/text_element_horizontal_margin"
         android:layout_marginRight="@dimen/text_element_horizontal_margin"
         android:scrollbarSize="0dp">
@@ -51,5 +47,15 @@
             android:id="@+id/note_button_holder_layout">
         </LinearLayout>
     </HorizontalScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_divider_height"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/colorPrimary"
+        android:layout_below="@+id/note_body_txt"
+        android:adjustViewBounds="true"
+        android:id="@+id/imageView2" />
 
 </RelativeLayout>

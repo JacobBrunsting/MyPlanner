@@ -56,15 +56,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/text_element_horizontal_margin"
                     android:layout_marginRight="@dimen/text_element_horizontal_margin"
-                    android:id="@+id/scrollView" >
+                    android:id="@+id/scrollView">
 
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/abc_text_size_medium_material"
                         android:id="@+id/create_note_body_edit_txt"
-                        android:inputType="textLongMessage"
-                        android:hint="@string/create_note_body_hint" />
+                        android:inputType="textMultiLine"
+                        android:hint="@string/create_note_body_hint"
+                        android:minLines="4"
+                        android:gravity="top|left"
+                        android:textAlignment="gravity"
+                        android:singleLine="false" />
                 </ScrollView>
 
                 <HorizontalScrollView
@@ -85,7 +89,9 @@
                             android:layout_width="@dimen/notes_tag_btn_height"
                             android:layout_height="@dimen/notes_tag_btn_height"
                             android:text="@string/note_add_tag_btn_text"
-                            android:id="@+id/create_note_add_tag_btn" />
+                            android:id="@+id/create_note_add_tag_btn"
+                            android:layout_gravity="center"
+                            android:background="@color/colorAccent" />
                     </LinearLayout>
                 </HorizontalScrollView>
 
