@@ -296,16 +296,9 @@ public class Notes extends Fragment {
                 holder.button_holder_scroll_view.setLayoutParams(btnHolderParams);
 
                 for (int i = 0; i < numTags; ++i) {
-                    final Button newButton = new Button(getContext());
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    final Button newButton = (Button) inflater.inflate(R.layout.button_tag_layout, null);
                     newButton.setText(tags.get(itemNumber).get(i));
-                    final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int)getResources().getDimension(R.dimen.notes_tag_btn_height), (int)getResources().getDimension(R.dimen.notes_tag_btn_height));
-                    newButton.setLayoutParams(params);
-                    newButton.setTextSize(getResources().getDimension(R.dimen.notes_tag_btn_text_size));
-                    if (android.os.Build.VERSION.SDK_INT > 17) {
-                        newButton.setBackground(getResources().getDrawable(R.color.colorAccent, getActivity().getTheme()));
-                    } else {
-                        newButton.setBackground(getResources().getDrawable(R.color.colorAccent));
-                    }
 
                     final int index1 = itemNumber;
                     final int index2 = i;
