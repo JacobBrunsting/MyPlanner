@@ -291,7 +291,7 @@ public class Notes extends Fragment {
                 } else {
                     btnHolderParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)getActivity().getResources().getDimension(R.dimen.notes_tag_btn_height));
                 }
-                btnHolderParams.addRule(RelativeLayout.BELOW, R.id.create_note_title_edit_txt);
+                btnHolderParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
                 holder.button_holder_scroll_view.setLayoutParams(btnHolderParams);
 
