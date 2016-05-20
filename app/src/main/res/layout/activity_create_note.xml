@@ -73,7 +73,7 @@
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/notes_tag_btn_height"
+                    android:layout_height="@dimen/notes_create_tag_btn_height"
                     android:id="@+id/horizontalScrollView"
                     android:layout_marginLeft="@dimen/text_element_horizontal_margin"
                     android:layout_marginRight="@dimen/text_element_horizontal_margin"
@@ -86,9 +86,10 @@
                         android:id="@+id/note_button_holder_layout">
 
                         <Button
-                            android:layout_width="@dimen/notes_tag_btn_height"
-                            android:layout_height="@dimen/notes_tag_btn_height"
+                            android:layout_width="@dimen/notes_create_tag_btn_height"
+                            android:layout_height="@dimen/notes_create_tag_btn_height"
                             android:text="@string/note_add_tag_btn_text"
+                            android:textSize="@dimen/notes_create_tag_btn_text_size"
                             android:id="@+id/create_note_add_tag_btn"
                             android:layout_gravity="center"
                             android:background="@color/colorAccent" />

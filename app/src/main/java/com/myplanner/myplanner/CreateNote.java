@@ -3,6 +3,7 @@ package com.myplanner.myplanner;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,11 +104,9 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
         if (!tags.contains(tag)) {
             tags.add(tag);
             final LinearLayout tagHolder = (LinearLayout) findViewById(R.id.note_button_holder_layout);
-            final Button newButton = new Button(getApplicationContext());
+            LayoutInflater inflater = getLayoutInflater();
+            final Button newButton = (Button) inflater.inflate(R.layout.button_create_tag_layout, null);
             newButton.setText(tag);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            newButton.setLayoutParams(params);
-            newButton.setTextSize(getResources().getDimension(R.dimen.notes_tag_btn_text_size));
 
             newButton.setOnClickListener(new View.OnClickListener() {
                 @Override
