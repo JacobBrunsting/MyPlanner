@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -285,6 +286,7 @@ public class Notes extends Fragment {
 
                 final int numTags = tags.get(itemNumber).size();
                 final RelativeLayout.LayoutParams btnHolderParams;
+                final int marginSize = (int) getActivity().getResources().getDimension(R.dimen.main_divider_height);
                 // collapse the tag holder if there are no tags so there isn't an ugly gap
                 if (numTags == 0) {
                     btnHolderParams = new RelativeLayout.LayoutParams(0, 0);
@@ -292,24 +294,26 @@ public class Notes extends Fragment {
                     btnHolderParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)getActivity().getResources().getDimension(R.dimen.notes_tag_btn_height));
                 }
                 btnHolderParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                btnHolderParams.setMargins(marginSize, 0, marginSize, 0);
 
                 holder.button_holder_scroll_view.setLayoutParams(btnHolderParams);
 
                 for (int i = 0; i < numTags; ++i) {
                     LayoutInflater inflater = getActivity().getLayoutInflater();
-                    final Button newButton = (Button) inflater.inflate(R.layout.button_tag_layout, null);
-                    newButton.setText(tags.get(itemNumber).get(i));
+                    final FrameLayout buttonLayout = (FrameLayout) inflater.inflate(R.layout.button_tag_layout, null);
+                    final Button button = ((Button)buttonLayout.findViewById(R.id.button));
+                    button.setText(tags.get(itemNumber).get(i));
 
                     final int index1 = itemNumber;
                     final int index2 = i;
-                    newButton.setOnClickListener(new View.OnClickListener() {
+                    button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             onTagClicked(tags.get(index1).get(index2));
                         }
                     });
 
-                    holder.tag_holder.addView(newButton);
+                    holder.tag_holder.addView(buttonLayout);
                 }
             }
         }

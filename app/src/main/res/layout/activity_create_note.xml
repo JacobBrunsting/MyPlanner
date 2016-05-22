@@ -85,14 +85,20 @@
                         android:layout_height="match_parent"
                         android:id="@+id/note_button_holder_layout">
 
-                        <Button
-                            android:layout_width="@dimen/notes_create_tag_btn_height"
-                            android:layout_height="@dimen/notes_create_tag_btn_height"
-                            android:text="@string/note_add_tag_btn_text"
-                            android:textSize="@dimen/notes_create_tag_btn_text_size"
-                            android:id="@+id/create_note_add_tag_btn"
-                            android:layout_gravity="center"
-                            android:background="@color/colorAccent" />
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <Button
+                                android:layout_width="@dimen/notes_create_tag_btn_height"
+                                android:layout_height="@dimen/notes_create_tag_btn_height"
+                                android:text="@string/note_add_tag_btn_text"
+                                android:textSize="@dimen/notes_create_tag_btn_text_size"
+                                android:id="@+id/create_note_add_tag_btn"
+                                android:layout_gravity="center"
+                                android:background="@color/colorAccent"
+                                android:layout_marginRight="@dimen/main_divider_height" />
+                        </FrameLayout>
                     </LinearLayout>
                 </HorizontalScrollView>
 

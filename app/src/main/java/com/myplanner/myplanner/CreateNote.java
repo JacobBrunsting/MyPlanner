@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.myplanner.myplanner.UserData.DataRetriever;
@@ -92,7 +93,6 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
     private void addTag() {
         DialogFragment addTagDialog = new AddNoteTagDialogFragment();
         addTagDialog.show(getSupportFragmentManager(), "AddNoteTagDialog");
-
     }
 
     // interface for AddNoteTagDialogFragment
@@ -105,18 +105,19 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
             tags.add(tag);
             final LinearLayout tagHolder = (LinearLayout) findViewById(R.id.note_button_holder_layout);
             LayoutInflater inflater = getLayoutInflater();
-            final Button newButton = (Button) inflater.inflate(R.layout.button_create_tag_layout, null);
-            newButton.setText(tag);
+            final FrameLayout buttonLayout = (FrameLayout) inflater.inflate(R.layout.button_create_tag_layout, null);
+            final Button button = (Button) buttonLayout.findViewById(R.id.button);
+            button.setText(tag);
 
-            newButton.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tagHolder.removeView(newButton);
+                    tagHolder.removeView(buttonLayout);
                     tags.remove(tag);
                 }
             });
 
-            tagHolder.addView(newButton);
+            tagHolder.addView(buttonLayout);
         }
     }
 }
