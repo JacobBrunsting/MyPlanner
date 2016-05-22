@@ -3,7 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/recycleview_element_margin">
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/white"
+        android:adjustViewBounds="true"
+        android:layout_marginLeft="@dimen/main_divider_height"
+        android:layout_marginRight="@dimen/main_divider_height"
+        android:layout_alignParentTop="true"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/space" />
 
     <TextView
         android:id="@+id/reminder_title_txt"
@@ -57,16 +70,13 @@
         android:textSize="@dimen/abc_text_size_small_material"
         android:layout_below="@+id/reminder_title_txt" />
 
-    <ImageView
+    <Space
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_divider_height"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
-        android:background="@color/colorPrimary"
-        android:layout_below="@+id/reminder_body_txt"
         android:adjustViewBounds="true"
-        android:backgroundTintMode="src_over"
-        android:id="@+id/imageView" />
+        android:id="@+id/space"
+        android:layout_below="@+id/reminder_body_txt" />
 
 </RelativeLayout>
