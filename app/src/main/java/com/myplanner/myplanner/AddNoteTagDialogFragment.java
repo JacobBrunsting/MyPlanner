@@ -81,7 +81,10 @@ public class AddNoteTagDialogFragment extends DialogFragment {
         acceptTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.addNewTag(tagSelect.getText().toString().toUpperCase());
+                final String tag = tagSelect.getText().toString().toUpperCase();
+                if (!tag.equals("")) {
+                    mCallback.addNewTag(tagSelect.getText().toString().toUpperCase());
+                }
                 dismiss();
             }
         });
