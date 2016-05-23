@@ -151,6 +151,19 @@ public class Notes extends Fragment {
         return list;
     }
 
+    private void addButtonLayoutAlphabetically(LinearLayout tagHolder, FrameLayout buttonHolder, String buttonTag) {
+        int index = 0;
+        for (; index < tagHolder.getChildCount(); ++index) {
+            // if the button we are looking at comes before the button we are inserting alphabetically
+            final FrameLayout currentButtonHolder = (FrameLayout) tagHolder.getChildAt(index);
+            final String holderTag = ((Button) currentButtonHolder.findViewById(R.id.button)).getText().toString();
+            if (buttonTag.compareToIgnoreCase(holderTag) < 0) {
+                break;
+            }
+        }
+        tagHolder.addView(buttonHolder, index);
+    }
+
     // ---------------------------------------------------------------------------------------------
     // -------------------------- Local Adapter Required for RecycleView ---------------------------
     // ---------------------------------------------------------------------------------------------
@@ -313,7 +326,7 @@ public class Notes extends Fragment {
                         }
                     });
 
-                    holder.tag_holder.addView(buttonLayout);
+                    addButtonLayoutAlphabetically(holder.tag_holder, buttonLayout, tags.get(itemNumber).get(i));
                 }
             }
         }
