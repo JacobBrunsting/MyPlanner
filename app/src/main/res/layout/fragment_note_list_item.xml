@@ -19,6 +19,17 @@
         android:layout_below="@+id/note_button_holder_scroll_view"
         android:layout_marginRight="@dimen/main_divider_height" />
 
+    <TextView
+        android:id="@+id/create_note_title_edit_txt"
+        android:text="TITLE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/note_button_holder_scroll_view"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/text_element_vertical_margin" />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="@dimen/notes_tag_btn_height"
@@ -36,17 +47,6 @@
             android:id="@+id/note_button_holder_layout">
         </LinearLayout>
     </HorizontalScrollView>
-
-    <TextView
-        android:id="@+id/create_note_title_edit_txt"
-        android:text="TITLE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/note_button_holder_scroll_view"
-        android:textSize="@dimen/abc_text_size_medium_material"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/text_element_vertical_margin" />
 
     <TextView
         android:id="@+id/note_body_txt"

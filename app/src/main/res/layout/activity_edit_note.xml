@@ -16,7 +16,7 @@
             android:fitsSystemWindows="true">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/edit_note_toolbar"
+                android:id="@+id/edit_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"/>
@@ -25,8 +25,67 @@
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/edit_note_nested_scroll_view"
+            android:id="@+id/nested_scroll_view"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/list_item"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/title_txt"
+                    android:text="TITLE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tag_holder_scroll_view"
+                    android:textSize="@dimen/abc_text_size_medium_material"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/text_element_vertical_margin" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/notes_tag_btn_height"
+                    android:id="@+id/tag_holder_scroll_view"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:scrollbarSize="0dp"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/main_divider_height"
+                    android:layout_marginRight="@dimen/main_divider_height">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/tag_holder_layout">
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/body_txt"
+                    android:text="lorum ipsum dolar est is sti situatoria si skfs ksk lsielskdkn ls kksks ksls fja a good boy say a s add ladd lsi liaaaa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/abc_text_size_small_material"
+                    android:layout_below="@+id/title_txt"
+                    android:layout_marginTop="@dimen/text_element_vertical_margin"
+                    android:layout_marginBottom="@dimen/text_element_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:textAlignment="textStart"/>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/main_divider_height"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/body_txt"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/space" />
+            </RelativeLayout>
             
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
@@ -45,14 +104,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            android:id="@+id/edit_note_cancel_btn"
+            android:id="@+id/cancel_btn"
             style="@style/Widget.AppCompat.Button.Borderless" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
-            android:id="@+id/edit_note_save_btn"
+            android:id="@+id/save_btn"
             style="@style/Base.Widget.AppCompat.Button.Borderless" />
     </LinearLayout>
 </RelativeLayout>
