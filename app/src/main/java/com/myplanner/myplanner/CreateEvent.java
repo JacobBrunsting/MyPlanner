@@ -81,7 +81,7 @@ public class CreateEvent extends AppCompatActivity {
                 final RelativeLayout calendarLayout = (RelativeLayout) findViewById(R.id.create_event_calendar_layout);
                 final int margin = ((int)getResources().getDimension(R.dimen.activity_vertical_margin)) * 2;
                 int offset = margin + calendarLayout.getHeight();
-                nestedScrollView.setScrollY(offset);
+                nestedScrollView.smoothScrollTo(0, offset);
 
                 startYear = year;
                 startMonth = month;
