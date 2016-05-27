@@ -3,6 +3,7 @@ package com.myplanner.myplanner;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +44,12 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
                 addTag();
             }
         });
+
+        // set up the toolbar
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.create_note_toolbar);
+        toolbar.setTitle("Create Note");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // configure the bottom buttons
         final Button cancelBtn = (Button) findViewById(R.id.create_note_cancel_btn);
