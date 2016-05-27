@@ -14,7 +14,7 @@
         android:lines="1"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/accept_note_tag_btn"
-        android:layout_marginRight="@dimen/text_element_horizontal_margin"
+        android:layout_marginEnd="@dimen/text_element_horizontal_margin"
         android:completionThreshold="1"
         android:maxLines="1"
         android:singleLine="true" />
