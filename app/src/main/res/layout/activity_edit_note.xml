@@ -16,7 +16,7 @@
             android:fitsSystemWindows="true">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/edit_toolbar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"/>
@@ -37,7 +37,9 @@
                 <EditText
                     android:id="@+id/title_edit_text"
                     android:text="TITLE"
-                    android:inputType="none"
+                    android:hint="Title"
+                    android:inputType="textAutoCorrect"
+                    android:enabled="false"
                     android:background="@android:color/transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,7 +89,9 @@
                     android:text="lorum iti situatoria si skfs ksk ladd lsi liaaaa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
+                    android:hint="Body"
+                    android:inputType="textAutoCorrect"
+                    android:enabled="false"
                     android:background="@android:color/transparent"
                     android:textSize="@dimen/abc_text_size_small_material"
                     android:layout_below="@+id/title_edit_text"

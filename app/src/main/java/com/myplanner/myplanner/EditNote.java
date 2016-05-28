@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerNote;
@@ -58,9 +60,14 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
         for (int i = 0; i < note.getNumTags(); ++i) {
             addNewTag(note.getTag(i));
         }
+        if (tags.isEmpty()) {
+            setTagHolderVisible(false);
+        } else {
+            setTagHolderVisible(true);
+        }
 
         // set up the toolbar
-        toolbar = (Toolbar) findViewById(R.id.create_note_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("View Note");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -100,28 +107,32 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        int itemId = item.getItemId();
 
-        switch (id) {
+        switch (itemId) {
             case R.id.enter_edit_mode_menu_button:
                 menu.findItem(R.id.exit_edit_mode_menu_button).setVisible(true);
                 menu.findItem(R.id.enter_edit_mode_menu_button).setVisible(false);
-                titleEditText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-                bodyEditText.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+                titleEditText.setEnabled(true);
+                bodyEditText.setEnabled(true);
                 bottomButtonHolder.setVisibility(View.VISIBLE);
                 addTagBtn.setVisibility(View.VISIBLE);
+                setTagHolderVisible(true);
                 toolbar.setTitle("Edit Note");
-                invalidateOptionsMenu();
+                toolbar.invalidate();
                 break;
             case R.id.exit_edit_mode_menu_button:
                 menu.findItem(R.id.exit_edit_mode_menu_button).setVisible(false);
                 menu.findItem(R.id.enter_edit_mode_menu_button).setVisible(true);
-                titleEditText.setInputType(InputType.TYPE_NULL);
-                bodyEditText.setInputType(InputType.TYPE_NULL);
+                titleEditText.setEnabled(false);
+                bodyEditText.setEnabled(false);
                 bottomButtonHolder.setVisibility(View.INVISIBLE);
-                addTagBtn.setVisibility(View.VISIBLE);
+                addTagBtn.setVisibility(View.GONE);
+                if (tags.isEmpty()) {
+                    setTagHolderVisible(false);
+                }
                 toolbar.setTitle("View Note");
-                invalidateOptionsMenu();
+                toolbar.invalidate();
                 saveChanges();
                 break;
             case R.id.delete_menu_button:
@@ -154,6 +165,7 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
     }
 
     public void addNewTag(final String tag) {
+        tagHolder.setVisibility(View.VISIBLE);
         if (!tags.contains(tag)) {
             tags.add(tag);
             LayoutInflater inflater = getLayoutInflater();
@@ -164,12 +176,28 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tagHolder.removeView(buttonLayout);
-                    tags.remove(tag);
+                    // only allow tag removal in edit mode (where the add tag button is visible)
+                    if (addTagBtn.getVisibility() == View.VISIBLE) {
+                        tagHolder.removeView(buttonLayout);
+                        tags.remove(tag);
+                    }
                 }
             });
 
             tagHolder.addView(buttonLayout);
         }
+    }
+
+    private void setTagHolderVisible(boolean visible) {
+        ViewGroup.LayoutParams params = tagHolder.getLayoutParams();
+
+        if (visible) {
+            params.height = (int) getResources().getDimension(R.dimen.notes_create_tag_btn_height);
+        } else {
+            params.height = 0;
+        }
+
+        tagHolder.setLayoutParams(params);
+        tagHolder.invalidate();
     }
 }

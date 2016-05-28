@@ -502,7 +502,15 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     // this is called whenever one of the elements in the RecyclerView layout in the Notes
     //   fragment is clicked, and it opens an activity to edit the event that was clicked
     public void noteClickedAction(int noteID) {
-        Log.i("Main", "Note with id " + noteID + "clicked");
+        if (userData.getNoteByID(noteID) != null) {
+            // start the edit note activity to create a new note from the old data
+            Intent intentBundle = new Intent(Main.this, EditNote.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", noteID);
+            bundle.putSerializable("possibleTags", possibleTags);
+            intentBundle.putExtras(bundle);
+            startActivity(intentBundle);
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
