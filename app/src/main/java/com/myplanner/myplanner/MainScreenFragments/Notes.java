@@ -298,17 +298,12 @@ public class Notes extends Fragment {
 
                 final int numTags = tags.get(itemNumber).size();
                 final RelativeLayout.LayoutParams btnHolderParams;
-                final int marginSize = (int) getActivity().getResources().getDimension(R.dimen.main_divider_height);
-                // collapse the tag holder if there are no tags so there isn't an ugly gap
+                // hide the tag holder if there are no tags so there isn't an ugly gap
                 if (numTags == 0) {
-                    btnHolderParams = new RelativeLayout.LayoutParams(0, 0);
+                    holder.button_holder_scroll_view.setVisibility(View.GONE);
                 } else {
-                    btnHolderParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)getActivity().getResources().getDimension(R.dimen.notes_tag_btn_height));
+                    holder.button_holder_scroll_view.setVisibility(View.VISIBLE);
                 }
-                btnHolderParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                btnHolderParams.setMargins(marginSize, 0, marginSize, 0);
-
-                holder.button_holder_scroll_view.setLayoutParams(btnHolderParams);
 
                 for (int i = 0; i < numTags; ++i) {
                     LayoutInflater inflater = getActivity().getLayoutInflater();

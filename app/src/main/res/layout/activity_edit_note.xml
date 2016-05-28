@@ -8,7 +8,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout2"
+        android:layout_above="@+id/bottom_menu_button_holder"
         android:layout_alignParentTop="true">
         <android.support.design.widget.AppBarLayout
             android:layout_width="fill_parent"
@@ -34,9 +34,11 @@
                 android:id="@+id/list_item"
                 android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/title_txt"
+                <EditText
+                    android:id="@+id/title_edit_text"
                     android:text="TITLE"
+                    android:inputType="none"
+                    android:background="@android:color/transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tag_holder_scroll_view"
@@ -47,7 +49,7 @@
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/notes_tag_btn_height"
+                    android:layout_height="@dimen/notes_create_tag_btn_height"
                     android:id="@+id/tag_holder_scroll_view"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
@@ -60,17 +62,35 @@
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:id="@+id/tag_holder_layout">
+                        android:id="@+id/button_holder_layout">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <Button
+                                android:layout_width="@dimen/notes_create_tag_btn_height"
+                                android:layout_height="@dimen/notes_create_tag_btn_height"
+                                android:text="@string/note_add_tag_btn_text"
+                                android:textSize="@dimen/notes_create_tag_btn_text_size"
+                                android:id="@+id/add_tag_btn"
+                                android:visibility="gone"
+                                android:layout_gravity="center"
+                                android:background="@color/colorAccent"
+                                android:layout_marginRight="@dimen/main_divider_height" />
+                        </FrameLayout>
                     </LinearLayout>
                 </HorizontalScrollView>
 
-                <TextView
-                    android:id="@+id/body_txt"
-                    android:text="lorum ipsum dolar est is sti situatoria si skfs ksk lsielskdkn ls kksks ksls fja a good boy say a s add ladd lsi liaaaa"
+                <EditText
+                    android:id="@+id/body_edit_text"
+                    android:text="lorum iti situatoria si skfs ksk ladd lsi liaaaa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:background="@android:color/transparent"
                     android:textSize="@dimen/abc_text_size_small_material"
-                    android:layout_below="@+id/title_txt"
+                    android:layout_below="@+id/title_edit_text"
                     android:layout_marginTop="@dimen/text_element_vertical_margin"
                     android:layout_marginBottom="@dimen/text_element_vertical_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -82,7 +102,7 @@
                     android:layout_height="@dimen/main_divider_height"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/body_txt"
+                    android:layout_below="@+id/body_edit_text"
                     android:adjustViewBounds="true"
                     android:id="@+id/space" />
             </RelativeLayout>
@@ -95,9 +115,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:visibility="invisible"
         android:gravity="end"
         android:background="@color/colorPrimary"
-        android:id="@+id/linearLayout2">
+        android:id="@+id/bottom_menu_button_holder">
 
 
         <Button

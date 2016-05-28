@@ -15,4 +15,10 @@
         android:title="Exit Edit Mode"
         android:visible="false"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/delete_menu_button"
+        android:icon="@drawable/ic_delete_black_48dp"
+        android:title="Delete"
+        app:showAsAction="ifRoom"/>
 </menu>
