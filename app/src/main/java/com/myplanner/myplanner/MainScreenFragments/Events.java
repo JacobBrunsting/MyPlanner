@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Events extends Fragment {
-    private List<String> titles = new ArrayList<>();
-    private List<String> times = new ArrayList<>();
-    private List<String> bodies = new ArrayList<>();
-    private List<Integer> ids = new ArrayList<>();
+    private final List<String> titles = new ArrayList<>();
+    private final List<String> times = new ArrayList<>();
+    private final List<String> bodies = new ArrayList<>();
+    private final List<Integer> ids = new ArrayList<>();
 
     EventRecycleViewAdapter adapter;
 
@@ -44,11 +44,10 @@ public class Events extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView rv = (RecyclerView) inflater.inflate(R.layout.basic_recyclerview, container, false);
+        final RecyclerView rv = (RecyclerView) inflater.inflate(R.layout.basic_recyclerview, container, false);
         adapter = new EventRecycleViewAdapter();
         rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
         rv.setAdapter(adapter);
-        Log.i("Events", "View created");
         return rv;
     }
 
@@ -83,12 +82,11 @@ public class Events extends Fragment {
     }
 
     // ---------------------------------------------------------------------------------------------
-    // --------------------------- Local Class Required for RecycleView ----------------------------
+    // ----------------------------------- RecyclerView Adapter ------------------------------------
     // ---------------------------------------------------------------------------------------------
 
     class EventRecycleViewAdapter extends RecyclerView.Adapter<EventRecycleViewAdapter.ViewHolder> {
 
-        // class to store the information for one element in the RecycleView
         class ViewHolder extends RecyclerView.ViewHolder {
             private final View view;
             private final TextView title;

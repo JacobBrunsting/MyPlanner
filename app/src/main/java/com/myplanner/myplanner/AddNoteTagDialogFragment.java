@@ -22,11 +22,19 @@ public class AddNoteTagDialogFragment extends DialogFragment {
     List<String> possibleTags = new ArrayList<>();
     View dialogView;
 
+    // ---------------------------------------------------------------------------------------------
+    // ----------------------------------------- Interface -----------------------------------------
+    // ---------------------------------------------------------------------------------------------
+
     addNoteTagDialogInterface mCallback;
     public interface addNoteTagDialogInterface {
         List<String> getPossibleTags();
         void addNewTag(String tag);
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------------ Override Functions -------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     public void onAttach(Context context) {
@@ -38,7 +46,7 @@ public class AddNoteTagDialogFragment extends DialogFragment {
         if (dialogView != null) {
             setUpDialog();
         }
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
     }
 
@@ -60,6 +68,10 @@ public class AddNoteTagDialogFragment extends DialogFragment {
         super.onDetach();
         mCallback = null;
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------------- Private Functions -------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     private void setUpDialog() {
         final AutoCompleteTextView tagSelect = (AutoCompleteTextView) dialogView.findViewById(R.id.add_note_tag_txt_view);

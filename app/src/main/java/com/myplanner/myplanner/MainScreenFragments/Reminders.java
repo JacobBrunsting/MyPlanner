@@ -16,11 +16,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Reminders extends Fragment {
-    private List<String> titles = new ArrayList<>();
-    private List<String> times = new ArrayList<>();
-    private List<String> dates = new ArrayList<>();
-    private List<String> bodies = new ArrayList<>();
-    private List<Integer> ids = new ArrayList<>();
+    private final List<String> titles = new ArrayList<>();
+    private final List<String> times = new ArrayList<>();
+    private final List<String> dates = new ArrayList<>();
+    private final List<String> bodies = new ArrayList<>();
+    private final List<Integer> ids = new ArrayList<>();
 
     ReminderRecycleViewAdapter adapter;
 
@@ -38,14 +38,14 @@ public class Reminders extends Fragment {
     // ---------------------------------------------------------------------------------------------
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(final Context context) {
         super.onAttach(context);
         mCallback = (ReminderInterface) context;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView rv = (RecyclerView) inflater.inflate(R.layout.basic_recyclerview, container, false);
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        final RecyclerView rv = (RecyclerView) inflater.inflate(R.layout.basic_recyclerview, container, false);
         adapter = new ReminderRecycleViewAdapter();
         rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
         rv.setAdapter(adapter);
@@ -77,7 +77,7 @@ public class Reminders extends Fragment {
         ids.clear();
     }
 
-    public void addReminderInfo(String title, String time, String date, String body, int id) {
+    public void addReminderInfo(final String title, final String time, final String date, final String body, final int id) {
         titles.add(title);
         times.add(time);
         dates.add(date);
@@ -86,7 +86,7 @@ public class Reminders extends Fragment {
     }
 
     // ---------------------------------------------------------------------------------------------
-    // --------------------------- Local Class Required for RecycleView ----------------------------
+    // ----------------------------------- RecyclerView Adapter ------------------------------------
     // ---------------------------------------------------------------------------------------------
 
     class ReminderRecycleViewAdapter extends RecyclerView.Adapter<ReminderRecycleViewAdapter.ViewHolder> {
@@ -100,7 +100,7 @@ public class Reminders extends Fragment {
             private final TextView body;
             private int id;
 
-            private ViewHolder(View nview) {
+            private ViewHolder(final View nview) {
                 super(nview);
                 view = nview;
                 title = (TextView) view.findViewById(R.id.reminder_title_txt);
@@ -123,13 +123,13 @@ public class Reminders extends Fragment {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_reminder_list_item, parent, false);
+        public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_reminder_list_item, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.title.setText(titles.get(position));
             holder.time.setText(times.get(position));
             holder.date.setText(dates.get(position));

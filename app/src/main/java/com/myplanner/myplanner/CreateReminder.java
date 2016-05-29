@@ -19,31 +19,64 @@ import com.myplanner.myplanner.UserData.PlannerReminder;
 import java.util.Calendar;
 
 public class CreateReminder extends AppCompatActivity {
-    CalendarView dateSelect;
-    TimePicker startTime;
-    EditText titleEditTxt;
-    EditText bodyEditTxt;
+    private CalendarView dateSelect;
+    private TimePicker startTime;
+    private EditText titleEditTxt;
+    private EditText bodyEditTxt;
+    private int reminderID;
+    private int reminderYear;
+    private int reminderMonth;
+    private int reminderDate;
 
-    final int millsPerHour = 3600000;
-    final int millsPerMinute = 60000;
+    // ---------------------------------------------------------------------------------------------
+    // -------------------------------------- Public Functions -------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
-    int reminderID;
-    int reminderYear;
-    int reminderMonth;
-    int reminderDate;
+    public void insertReminder() {
+        final int MILLS_PER_HOUR = 3600000;
+        final int MILLS_PER_MINUTE = 60000;
+        final int newDayTimeMills = startTime.getCurrentHour() * MILLS_PER_HOUR + startTime.getCurrentMinute() * MILLS_PER_MINUTE;
+
+        // create a calendar object at the reminder time
+        final Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, reminderYear);
+        cal.set(Calendar.MONTH, reminderMonth);
+        cal.set(Calendar.DATE, reminderDate);
+        cal.set(Calendar.HOUR_OF_DAY, 0);//24 hour time here, so 0 is the first hour of the day
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        // use the calendar object to get the time in mills
+        final long reminderMills = cal.getTimeInMillis() + newDayTimeMills;
+
+        final String title = titleEditTxt.getText().toString();
+        final String body = bodyEditTxt.getText().toString();
+        final PlannerReminder newReminder = new PlannerReminder(reminderMills, title, body, reminderID);
+        DataRetriever.getInstance().addReminder(newReminder);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------------ Override Functions -------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_reminder);
 
-        // get the date information
+        // get the information passed from the previous activity
         Bundle passedData = getIntent().getExtras();
-
         reminderID = passedData.getInt("ID");
         final long dateInMills = passedData.getLong("dateInMills");
 
-        // save the editable elements
+        // get the initial date
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(dateInMills);
+        reminderYear = cal.get(Calendar.YEAR);
+        reminderMonth = cal.get(Calendar.MONTH);
+        reminderDate = cal.get(Calendar.DATE);
+
+        // get the editable elements of the activity
         dateSelect = (CalendarView) findViewById(R.id.create_reminder_date_selector);
         startTime = (TimePicker) findViewById(R.id.create_reminder_start_time);
         titleEditTxt = (EditText) findViewById(R.id.create_reminder_title_input);
@@ -55,14 +88,7 @@ public class CreateReminder extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // get the initial date
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(dateInMills);
-        reminderYear = cal.get(Calendar.YEAR);
-        reminderMonth = cal.get(Calendar.MONTH);
-        reminderDate = cal.get(Calendar.DATE);
-
-        // set up the date selector, making it skip to the time select when a date is chosen
+        // set up the date selector, making it skip to the time selector when a date is chosen
         dateSelect.setDate(dateInMills);
         dateSelect.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -79,17 +105,15 @@ public class CreateReminder extends AppCompatActivity {
             }
         });
 
-        // configure the bottom buttons
+        // configure the bottom bar buttons
         final Button cancelBtn = (Button) findViewById(R.id.create_reminder_cancel_btn);
         final Button saveBtn = (Button) findViewById(R.id.create_reminder_save_btn);
-
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,40 +124,19 @@ public class CreateReminder extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.create_reminder_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        final int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
                 finish();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    public void insertReminder() {
-        final int newDayTimeMills = startTime.getCurrentHour() * millsPerHour + startTime.getCurrentMinute() * millsPerMinute;
-
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, reminderYear);
-        cal.set(Calendar.MONTH, reminderMonth);
-        cal.set(Calendar.DATE, reminderDate);
-        cal.set(Calendar.HOUR_OF_DAY, 0);//24 hour time here, so 0 is the first hour of the day
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        final long reminderMills = cal.getTimeInMillis() + newDayTimeMills;
-        final String title = titleEditTxt.getText().toString();
-        final String body = bodyEditTxt.getText().toString();
-
-        final PlannerReminder newReminder = new PlannerReminder(reminderMills, title, body, reminderID);
-        DataRetriever.getInstance().addReminder(newReminder);
     }
 }

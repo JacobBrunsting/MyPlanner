@@ -14,15 +14,19 @@ import com.myplanner.myplanner.R;
 public class CalendarDialogFragment extends DialogFragment {
     CalendarView dateSelector = null;
 
+    // ---------------------------------------------------------------------------------------------
+    // ----------------------------------------- Interface -----------------------------------------
+    // ---------------------------------------------------------------------------------------------
+
     CalendarInterface mCallback;
     public interface CalendarInterface {
         void onDateSelected(int year, int month, int date);
         long getCurrentSelectedDate();
     }
 
-    static CalendarDialogFragment getInstance() {
-        return new CalendarDialogFragment();
-    }
+    // ---------------------------------------------------------------------------------------------
+    // ----------------------------- DialogFragment Override Functions -----------------------------
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     public void onAttach(Context context) {
@@ -39,7 +43,7 @@ public class CalendarDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_calendar_dialog, container, false);
+        final View view = inflater.inflate(R.layout.fragment_calendar_dialog, container, false);
         dateSelector = (CalendarView) view.findViewById(R.id.calendarView);
 
         // set up the date selector if mCallback is not null, meaning onAttach has been called
@@ -56,6 +60,11 @@ public class CalendarDialogFragment extends DialogFragment {
         mCallback = null;
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------------- Private functions -------------------------------------
+    // ---------------------------------------------------------------------------------------------
+
+    // create the on date selected action for the calendar
     private void setupDateSelector() {
         dateSelector.setDate(mCallback.getCurrentSelectedDate());
         dateSelector.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {

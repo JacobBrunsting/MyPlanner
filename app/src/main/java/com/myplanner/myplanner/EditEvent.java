@@ -22,46 +22,35 @@ import com.myplanner.myplanner.UserData.PlannerEvent;
 import java.util.Calendar;
 
 public class EditEvent extends AppCompatActivity {
-    //----------------------------------------------------------------------------------------------
-    //------------------------------------------ Constants -----------------------------------------
-    //----------------------------------------------------------------------------------------------
-
-    final int millsPerHour = 3600000;
-    final int millsPerMinute = 60000;
-    final String[] months = {"January", "February", "March", "April", "May", "June", "July",
+    private final int millsPerHour = 3600000;
+    private final int millsPerMinute = 60000;
+    private final String[] months = {"January", "February", "March", "April", "May", "June", "July",
             "August", "September", "October", "November", "December"};
 
-    final DataRetriever userData = DataRetriever.getInstance();
-
-    //----------------------------------------------------------------------------------------------
-    //------------------------------------ Class-Wide Variables ------------------------------------
-    //----------------------------------------------------------------------------------------------
-
-    long startMills;
-    long endMills;
-    String title;
-    String body;
-    int id;
-
-    TimePicker startTime;
-    NumberPicker durationHours;
-    NumberPicker durationMinutes;
-    EditText titleEditTxt;
-    EditText bodyEditTxt;
-    Switch eventTimedSwitch;
-
-    int oldDayTimeMills;
+    private final DataRetriever userData = DataRetriever.getInstance();
+    private long startMills;
+    private long endMills;
+    private String title;
+    private String body;
+    private int id;
+    private TimePicker startTime;
+    private NumberPicker durationHours;
+    private NumberPicker durationMinutes;
+    private EditText titleEditTxt;
+    private EditText bodyEditTxt;
+    private Switch eventTimedSwitch;
+    private int oldDayTimeMills;
 
     //----------------------------------------------------------------------------------------------
     //------------------------------------- Override Functions -------------------------------------
     //----------------------------------------------------------------------------------------------
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
 
-        // save the editable elements
+        // get the elements of the activity
         startTime = (TimePicker) findViewById(R.id.edit_event_start_time);
         durationHours = (NumberPicker) findViewById(R.id.edit_event_duration_hours);
         durationMinutes = (NumberPicker) findViewById(R.id.edit_event_duration_minutes);
@@ -70,7 +59,7 @@ public class EditEvent extends AppCompatActivity {
         eventTimedSwitch = (Switch) findViewById(R.id.edit_event_timed_switch);
         final RelativeLayout durationLayout = (RelativeLayout) findViewById(R.id.edit_event_duration_layout);
 
-        // get the id of the event being edited
+        // get the id of the event being edited from the previous activity
         Bundle passedData = getIntent().getExtras();
         id = passedData.getInt("id");
 
@@ -159,8 +148,6 @@ public class EditEvent extends AppCompatActivity {
         durationHours.setDisplayedValues(validHourValues);
         durationMinutes.setDisplayedValues(validMinuteValues);
 
-        Log.i("EditEventDuration", "hour displayed is " + durationHours.getValue());
-
         // make the hour count increase/decrease when the minute selector loops completely around
         durationMinutes.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -177,9 +164,11 @@ public class EditEvent extends AppCompatActivity {
             }
         });
 
+        // show the option to change the duration of the event only if the event being edited had
+        //   some duration
         if (startMills == endMills) {
             durationLayout.setEnabled(false);
-            durationLayout.setVisibility(View.INVISIBLE);
+            durationLayout.setVisibility(View.GONE);
             eventTimedSwitch.setChecked(false);
         } else {
             durationLayout.setEnabled(true);
@@ -196,17 +185,15 @@ public class EditEvent extends AppCompatActivity {
         final String dateText = months[startCal.get(Calendar.MONTH)] + " " + startCal.get(Calendar.DATE);
         eventDate.setText(dateText);
 
-        // configure the bottom buttons
+        // configure the bottom bar buttons
         final Button cancelBtn = (Button) findViewById(R.id.edit_event_cancel_btn);
         final Button saveBtn = (Button) findViewById(R.id.edit_event_save_btn);
-
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,15 +205,14 @@ public class EditEvent extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.edit_event_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
             case R.id.edit_event_delete_menu_button:
                 removeOldEvent();
@@ -236,16 +222,15 @@ public class EditEvent extends AppCompatActivity {
                 finish();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     //----------------------------------------------------------------------------------------------
-    //-------------------------------------- Local Functions ---------------------------------------
+    //------------------------------------- Private Functions --------------------------------------
     //----------------------------------------------------------------------------------------------
 
     // insert an event into the userData
-    public void insertEvent() {
+    private void insertEvent() {
         final int newDayTimeMills = startTime.getCurrentHour() * millsPerHour + startTime.getCurrentMinute() * millsPerMinute;
         final int dayTimeChangeMills = newDayTimeMills - oldDayTimeMills;
         int eventDurationMills = (99 - durationHours.getValue()) * millsPerHour + (59 - durationMinutes.getValue()) * millsPerMinute;
@@ -254,7 +239,6 @@ public class EditEvent extends AppCompatActivity {
             eventDurationMills = 0;
         }
 
-        Log.i("EditEvent", "Event duration mills is " + eventDurationMills);
         // take the original event start time, and increment it by the difference between the old
         //   start time and the new start time (this method is easier than trying to get the time in
         //   milliseconds from the date and time and stuff)
@@ -267,14 +251,14 @@ public class EditEvent extends AppCompatActivity {
         userData.addEvent(newEvent);
     }
 
-    // delete the event being edited so it can be replaced or perminantely deleted
-    public void removeOldEvent() {
+    // delete the event being edited
+    private void removeOldEvent() {
         userData.removeEvent(id);
     }
 
     // go back to the home screen
-    public void returnToHome() {
-        Intent intentBundle = new Intent(EditEvent.this, Main.class);
+    private void returnToHome() {
+        final Intent intentBundle = new Intent(EditEvent.this, Main.class);
         startActivity(intentBundle);
     }
 }

@@ -26,14 +26,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Notes extends Fragment {
+    private final String NO_FILTER_TAG = "";
+
     private List<String> titles = new ArrayList<>();
     private List<List<String>> tags = new ArrayList<>();
     private List<String> bodies = new ArrayList<>();
     private List<Integer> ids = new ArrayList<>();
     private List<String> possibleTags = new ArrayList<>();
-    private String currentTag = ""; // an empty tag means any tag is valid
+    private String currentTag = NO_FILTER_TAG;
     private NoteRecycleViewAdapter adapter;
-    private boolean hasItemBeenSelected; // an ugly flag that is neccesary
+    private boolean hasItemBeenSelected; // an ugly flag that is necessary
 
     // ---------------------------------------------------------------------------------------------
     // ----------------------------------------- Interface -----------------------------------------
@@ -42,6 +44,41 @@ public class Notes extends Fragment {
     NotesInterface mCallback;
     public interface NotesInterface {
         void noteClickedAction(int id);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------------- Public Functions --------------------------------------
+    // ---------------------------------------------------------------------------------------------
+
+    public void reloadData() {
+        changeFilterTag(currentTag);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void clearNoteLists() {
+        titles.clear();
+        tags.clear();
+        bodies.clear();
+        ids.clear();
+        possibleTags.clear();
+    }
+
+    public void addNoteInfo(String title, List<String> tagList, String body, int id) {
+        titles.add(title);
+        tags.add(tagList);
+        bodies.add(body);
+        ids.add(id);
+        if (tagList != null) {
+            // add every tag to the list of possible tags, in alphabetical order, if it is not
+            //   already in the list
+            for (int i = 0; i < tagList.size(); ++i) {
+                if (!possibleTags.contains(tagList.get(i))) {
+                    possibleTags = addAlphabetically(possibleTags, tagList.get(i));
+                }
+            }
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -70,40 +107,7 @@ public class Notes extends Fragment {
     }
 
     // ---------------------------------------------------------------------------------------------
-    // --------------------------------- Functions Called by Main ----------------------------------
-    // ---------------------------------------------------------------------------------------------
-
-    public void reloadData() {
-        changeFilterTag(currentTag);
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    public void clearNoteLists() {
-        titles.clear();
-        tags.clear();
-        bodies.clear();
-        ids.clear();
-        possibleTags.clear();
-    }
-
-    public void addNoteInfo(String title, List<String> tagList, String body, int id) {
-        titles.add(title);
-        tags.add(tagList);
-        bodies.add(body);
-        ids.add(id);
-        if (tagList != null) {
-            for (int i = 0; i < tagList.size(); ++i) {
-                if (!possibleTags.contains(tagList.get(i))) {
-                    possibleTags = addAlphabetically(possibleTags, tagList.get(i));
-                }
-            }
-        }
-    }
-
-    // ---------------------------------------------------------------------------------------------
-    // --------------------------------- Private Helper Functions ----------------------------------
+    // ------------------------------------ Private Functions --------------------------------------
     // ---------------------------------------------------------------------------------------------
 
     private void onTagClicked(String tag) {
@@ -113,7 +117,7 @@ public class Notes extends Fragment {
     private void changeFilterTag(String newTag) {
         if (!newTag.equals(currentTag)) {
             if (newTag.equals(getResources().getString(R.string.notes_no_filter_item))) {
-                currentTag = "";
+                currentTag = NO_FILTER_TAG;
             } else {
                 currentTag = newTag;
             }
@@ -125,9 +129,9 @@ public class Notes extends Fragment {
 
     private boolean containsFilterTag(List<String> tagList) {
         if (tagList == null || tagList.size() == 0) {
-            return currentTag.equals("");
+            return currentTag.equals(NO_FILTER_TAG);
         }
-        return tagList.contains(currentTag) || currentTag.equals("");
+        return tagList.contains(currentTag) || currentTag.equals(NO_FILTER_TAG);
     }
 
     private List<String> addAlphabetically(final List<String> list, final String string) {
@@ -164,12 +168,11 @@ public class Notes extends Fragment {
     }
 
     // ---------------------------------------------------------------------------------------------
-    // -------------------------- Local Adapter Required for RecycleView ---------------------------
+    // ----------------------------------- RecyclerView Adapter ------------------------------------
     // ---------------------------------------------------------------------------------------------
 
     class NoteRecycleViewAdapter extends RecyclerView.Adapter<NoteRecycleViewAdapter.ViewHolder> {
 
-        // class to store the information for one element in the RecycleView
         class ViewHolder extends RecyclerView.ViewHolder {
             private View view;
             private TextView title;
@@ -225,32 +228,44 @@ public class Notes extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            if (getItemViewType(position) == 0) {// create the first filter menu
+            if (getItemViewType(position) == 0) {// create the tag filter item
                 // generate the items in the spinner
                 String[] listItems;
                 if (possibleTags == null) {
+                    // if there are no tags on any of the notes, just put the 'no filter' option
+                    //   in the spinner
                     listItems = new String[1];
                     listItems[0] = getResources().getString(R.string.notes_no_filter_item);
-                } else if (currentTag.equals("")) {
-                    int numItems = 1 + possibleTags.size();
+                } else if (currentTag.equals(NO_FILTER_TAG)) {
+                    // if the current tag is NO_FILTER_TAG, we want the first item in the spinner to
+                    //   be the no filter item, and the rest of the items to be the possible tags
+                    final int numItems = 1 + possibleTags.size();
                     listItems = new String[numItems];
                     listItems[0] = getResources().getString(R.string.notes_no_filter_item);
+
                     // add all of the tags to the list used to populate the tag selector
                     for (int i = 1; i < numItems; ++i) {
                         listItems[i] = possibleTags.get(i - 1);
                     }
                 } else {
-                    int numItems = 1 + possibleTags.size();
+                    // if the current tag is an actual tag, then we want the first option to be the
+                    //   current tag, the second to be the 'no filter' option, and the rest to be
+                    //   the other tags
+                    final int numItems = 1 + possibleTags.size();
                     listItems = new String[numItems];
+
+                    // set the first item to the currently selected tag, and the second item to the
+                    //   no filter button
                     listItems[0] = currentTag;
                     listItems[1] = getResources().getString(R.string.notes_no_filter_item);
 
-                    int i = 2;
                     // add all of the tags before the currently selected tag to the list used to
                     //   populate the tag selector
+                    int i = 2;
                     for (; i < numItems && !possibleTags.get(i - 2).equals(currentTag); ++i) {
                         listItems[i] = possibleTags.get(i - 2);
                     }
+
                     // add in all of the tags after the currently selected tag to the list used to
                     //   populate the tag selector
                     for (; i < numItems; ++i) {
@@ -258,14 +273,15 @@ public class Notes extends Fragment {
                     }
 
                 }
-                ArrayAdapter<String> tagAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listItems);
-                hasItemBeenSelected = false;
+                final ArrayAdapter<String> tagAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listItems);
                 holder.noteFilterTagSelector.setAdapter(tagAdapter);
+                hasItemBeenSelected = false;
                 holder.noteFilterTagSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         // this is required because onItemSelected is called immediately when the
-                        //   selector is created, which we don't want
+                        //   selector is created, which we don't want, so we have a flag to make
+                        //   sure the first onItemSelected call is ignored
                         if (hasItemBeenSelected) {
                             changeFilterTag((String) holder.noteFilterTagSelector.getItemAtPosition(position));
                         } else {
@@ -279,12 +295,11 @@ public class Notes extends Fragment {
                     }
                 });
             } else {
-                // decriment the position to account for the first item being a non-note item
+                // decrement the position to account for the first item being the tag filter
                 int itemNumber = position - 1;
 
-                // increment the number once for every note that does not pass the filter because
-                //   only items that pass the filter should be shown, and the number of positions
-                //   is set by only counting items passing the filter
+                // increment the number once for every note that does not pass the filter, because
+                //   only items that pass the filter should be shown, so we skip over all fails
                 for (int i = 0; i <= itemNumber; ++i) {
                     if (!containsFilterTag(tags.get(i))) {
                         itemNumber++;
@@ -296,9 +311,9 @@ public class Notes extends Fragment {
                 holder.id = ids.get(itemNumber);
                 holder.tag_holder.removeAllViews();
 
-                final int numTags = tags.get(itemNumber).size();
                 // collapse the tag holder if there are no tags so there isn't an ugly gap
                 final ViewGroup.LayoutParams btnHolderParams = holder.button_holder_scroll_view.getLayoutParams();
+                final int numTags = tags.get(itemNumber).size();
                 if (numTags == 0) {
                     btnHolderParams.height = 0;
                 } else {
@@ -306,12 +321,15 @@ public class Notes extends Fragment {
                 }
                 holder.button_holder_scroll_view.setLayoutParams(btnHolderParams);
 
+                // create a button for every tag attached to the note, and put it in the button
+                //   holder
                 for (int i = 0; i < numTags; ++i) {
                     LayoutInflater inflater = getActivity().getLayoutInflater();
                     final FrameLayout buttonLayout = (FrameLayout) inflater.inflate(R.layout.button_tag_layout, null);
                     final Button button = ((Button)buttonLayout.findViewById(R.id.button));
                     button.setText(tags.get(itemNumber).get(i));
 
+                    // change the filter to the tag attached to the selected button when clicked
                     final int index1 = itemNumber;
                     final int index2 = i;
                     button.setOnClickListener(new View.OnClickListener() {
@@ -330,13 +348,15 @@ public class Notes extends Fragment {
         public int getItemCount() {
             // the extra 1 is for the filter item which is always in the list
             int count = 1;
-            // loop through all of the items, and check if any of their tags pass the filter, ]
+
+            // loop through all of the items, and check if any of their tags pass the filter,
             //   incrementing count if they do
             for (int i = 0; i < tags.size(); ++i) {
                 if (containsFilterTag(tags.get(i))) {
                     count++;
                 }
             }
+
             return count;
         }
     }

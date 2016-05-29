@@ -20,92 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFragment.addNoteTagDialogInterface {
-    DataRetriever userData;
-    ArrayList<String> possibleTags = new ArrayList<>();
-    List<String> tags = new ArrayList<>();
-    int id;
+    private DataRetriever userData;
+    private ArrayList<String> possibleTags = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();
+    private int id;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_note);
-
-        Bundle passedData = getIntent().getExtras();
-        id = passedData.getInt("ID");
-        possibleTags = (ArrayList<String>) passedData.getSerializable("possibleTags");
-        userData = DataRetriever.getInstance();
-
-        // configure the add tag button
-        final Button addTagBtn = (Button) findViewById(R.id.create_note_add_tag_btn);
-
-        addTagBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTag();
-            }
-        });
-
-        // set up the toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.create_note_toolbar);
-        toolbar.setTitle("Create Note");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // configure the bottom buttons
-        final Button cancelBtn = (Button) findViewById(R.id.create_note_cancel_btn);
-        final Button saveBtn = (Button) findViewById(R.id.create_note_save_btn);
-
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                insertNote();
-                finish();
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_note_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void insertNote() {
-        final String title = ((EditText)findViewById(R.id.create_note_title_edit_txt)).getText().toString();
-        final String body = ((EditText)findViewById(R.id.create_note_body_edit_txt)).getText().toString();
-        final PlannerNote note = new PlannerNote(tags, title, body, id);
-        userData.addNote(note);
-    }
-
-    private void addTag() {
-        DialogFragment addTagDialog = new AddNoteTagDialogFragment();
-        addTagDialog.show(getSupportFragmentManager(), "AddNoteTagDialog");
-    }
-
-    // interface for AddNoteTagDialogFragment
-    public List<String> getPossibleTags() {
-        return possibleTags;
-    }
+    // ---------------------------------------------------------------------------------------------
+    // -------------------------------------- Public Functions -------------------------------------
+    // ---------------------------------------------------------------------------------------------
 
     public void addNewTag(final String tag) {
         if (!tags.contains(tag)) {
@@ -126,5 +48,94 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
 
             tagHolder.addView(buttonLayout);
         }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // ----------------------- AddNoteTagDialogFragment Interface Functions ------------------------
+    // ---------------------------------------------------------------------------------------------
+
+    public List<String> getPossibleTags() {
+        return possibleTags;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------------ Override Functions -------------------------------------
+    // ---------------------------------------------------------------------------------------------
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_note);
+
+        // retrieve the data passed from the previous activity
+        Bundle passedData = getIntent().getExtras();
+        id = passedData.getInt("ID");
+        possibleTags = (ArrayList<String>) passedData.getSerializable("possibleTags");
+        userData = DataRetriever.getInstance();
+
+        // configure the add tag button
+        final Button addTagBtn = (Button) findViewById(R.id.create_note_add_tag_btn);
+        addTagBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTag();
+            }
+        });
+
+        // set up the toolbar
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.create_note_toolbar);
+        toolbar.setTitle("Create Note");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // configure the bottom bar buttons
+        final Button cancelBtn = (Button) findViewById(R.id.create_note_cancel_btn);
+        final Button saveBtn = (Button) findViewById(R.id.create_note_save_btn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertNote();
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.create_note_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        final int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // ------------------------------------- Private Functions -------------------------------------
+    // ---------------------------------------------------------------------------------------------
+
+    private void insertNote() {
+        final String title = ((EditText)findViewById(R.id.create_note_title_edit_txt)).getText().toString();
+        final String body = ((EditText)findViewById(R.id.create_note_body_edit_txt)).getText().toString();
+        final PlannerNote note = new PlannerNote(tags, title, body, id);
+        userData.addNote(note);
+    }
+
+    private void addTag() {
+        DialogFragment addTagDialog = new AddNoteTagDialogFragment();
+        addTagDialog.show(getSupportFragmentManager(), "AddNoteTagDialog");
     }
 }
