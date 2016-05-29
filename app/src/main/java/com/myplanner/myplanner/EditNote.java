@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerNote;
@@ -189,7 +191,8 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
     }
 
     private void setTagHolderVisible(boolean visible) {
-        ViewGroup.LayoutParams params = tagHolder.getLayoutParams();
+        HorizontalScrollView tagHolderScrollView = (HorizontalScrollView) findViewById(R.id.tag_holder_scroll_view);
+        ViewGroup.LayoutParams params = tagHolderScrollView.getLayoutParams();
 
         if (visible) {
             params.height = (int) getResources().getDimension(R.dimen.notes_create_tag_btn_height);
@@ -197,7 +200,6 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
             params.height = 0;
         }
 
-        tagHolder.setLayoutParams(params);
-        tagHolder.invalidate();
+        tagHolderScrollView.setLayoutParams(params);
     }
 }
