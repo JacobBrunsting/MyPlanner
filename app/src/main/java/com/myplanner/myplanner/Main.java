@@ -31,26 +31,22 @@ import java.util.Calendar;
 public class Main extends AppCompatActivity implements Events.EventInterface,
         Reminders.ReminderInterface, Notes.NotesInterface, CalendarDialogFragment.CalendarInterface {
     private final int NUM_FRAGMENTS = 3;
-    private final String[] titles = {"Events", "Notes", "Reminders"};
+    private final String[] TITLES = {"Events", "Notes", "Reminders"};
+    private final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"};
+
     private final Events eventsFragment = new Events();
     private final Notes notesFragment = new Notes();
     private final Reminders remindersFragment = new Reminders();
-    private final ArrayList<String> possibleTags = new ArrayList<>(); // This is an arrayList so it is serializable
-
+    private final ArrayList<String> possibleTags = new ArrayList<>();
     private final Calendar cal = Calendar.getInstance();
-
-    private final String[] months = {"January", "February", "March", "April", "May", "June", "July",
-            "August", "September", "October", "November", "December"};
-
     private int curDate = cal.get(Calendar.DATE);
     private int curMonth = cal.get(Calendar.MONTH);
     private int curYear = cal.get(Calendar.YEAR);
-
     private TabLayout tabs;
     private Toolbar toolbar;
     private ViewPager viewPager;
     private DataRetriever userData;
-
     private int nextEventID = 0;
     private int nextNoteID = 0;
     private int nextReminderID = 0;
@@ -207,7 +203,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         curMonth = month;
         curYear = year;
 
-        reloadData();
+        reloadData(0);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -397,10 +393,12 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         // remove the previously generated data
         eventsFragment.clearEventLists();
 
+        final List<PlannerEvent> targetEvents = userData.getDateEvents(curYear, curMonth, curDate);
+
         // generate the new data
-        for (int i = 0; i < userData.getNumEvents(); ++i) {
+        for (int i = 0; i < targetEvents.size(); ++i) {
             // retrieve some of the properties of the event from the DataRetriever
-            final PlannerEvent event = userData.getEvent(i);
+            final PlannerEvent event = targetEvents.get(i);
             final int startHour = event.getStartHour();
             final int endHour = event.getEndHour();
             final int startMinute = event.getStartMinute();
@@ -530,7 +528,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
                 timeString += " AM";
             }
 
-            String dateString = months[reminder.getMonth()] + " " + reminder.getDate() + ", " + reminder.getYear();
+            String dateString = MONTHS[reminder.getMonth()] + " " + reminder.getDate() + ", " + reminder.getYear();
             remindersFragment.addReminderInfo(reminder.getTitle(), timeString, dateString, reminder.getMessage(), reminder.getID());
         }
     }
@@ -539,7 +537,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     private String generateTitle(final int position) {
         switch (position) {
             case 0:
-                return months[curMonth] + " " + curDate + " " +  curYear;
+                return MONTHS[curMonth] + " " + curDate + " " +  curYear;
             case 1:
                 return "Notes";
             case 2:
@@ -571,6 +569,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         @Override
         public int getCount() {return NUM_FRAGMENTS;}
         @Override
-        public CharSequence getPageTitle(int position) {return titles[position];}
+        public CharSequence getPageTitle(int position) {return TITLES[position];}
     }
 }
