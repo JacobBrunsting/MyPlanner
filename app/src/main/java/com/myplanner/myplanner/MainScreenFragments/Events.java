@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,9 +96,9 @@ public class Events extends Fragment {
             private ViewHolder(View nview) {
                 super(nview);
                 view = nview;
-                title = (TextView) view.findViewById(R.id.event_title_txt);
-                time = (TextView) view.findViewById(R.id.event_time_txt);
-                body = (TextView) view.findViewById(R.id.event_body_txt);
+                title = (TextView) view.findViewById(R.id.title_text);
+                time = (TextView) view.findViewById(R.id.time_text);
+                body = (TextView) view.findViewById(R.id.body_text);
                 id = -1;
 
                 view.setOnClickListener(new View.OnClickListener() {

@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -221,7 +220,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         setContentView(R.layout.activity_main);
 
         // set up the toolbar
-        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,15 +230,15 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         });
 
         // set up the ViewPager that contains the fragments
-        viewPager = (ViewPager) findViewById(R.id.main_viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new LocalPageAdapter(getSupportFragmentManager()));
 
         // set up the tabs
-        tabs = (TabLayout) findViewById(R.id.main_tabs);
+        tabs = (TabLayout) findViewById(R.id.tab_layout);
         tabs.setupWithViewPager(viewPager);
 
         // configure the fab
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.main_fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -262,14 +261,14 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             public void onPageSelected(int position) {
                 toolbar.setTitle(generateTitle(position));
                 if (position == 0) {
-                    toolbar.getMenu().findItem(R.id.action_forward).setVisible(true);
-                    toolbar.getMenu().findItem(R.id.action_back).setVisible(true);
+                    toolbar.getMenu().findItem(R.id.forward_button).setVisible(true);
+                    toolbar.getMenu().findItem(R.id.back_button).setVisible(true);
                 } else {
-                    toolbar.getMenu().findItem(R.id.action_forward).setVisible(false);
-                    toolbar.getMenu().findItem(R.id.action_back).setVisible(false);
+                    toolbar.getMenu().findItem(R.id.forward_button).setVisible(false);
+                    toolbar.getMenu().findItem(R.id.back_button).setVisible(false);
                 }
                 userData.setCurrentTab(position);
-                ((FloatingActionButton) findViewById(R.id.main_fab)).show();
+                ((FloatingActionButton) findViewById(R.id.fab)).show();
             }
 
             @Override
@@ -279,15 +278,17 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         int position = userData.getCurrentTab();
 
         viewPager.setCurrentItem(position);
+        userData.setCurrentTab(position);
+
+        // set up the toolbar based on the tab number
         toolbar.setTitle(generateTitle(position));
         if (position == 0) {
-            toolbar.getMenu().findItem(R.id.action_forward).setVisible(true);
-            toolbar.getMenu().findItem(R.id.action_back).setVisible(true);
+            toolbar.getMenu().findItem(R.id.forward_button).setVisible(true);
+            toolbar.getMenu().findItem(R.id.back_button).setVisible(true);
         } else {
-            toolbar.getMenu().findItem(R.id.action_forward).setVisible(false);
-            toolbar.getMenu().findItem(R.id.action_back).setVisible(false);
+            toolbar.getMenu().findItem(R.id.forward_button).setVisible(false);
+            toolbar.getMenu().findItem(R.id.back_button).setVisible(false);
         }
-        userData.setCurrentTab(position);
 
         return true;
     }
@@ -304,16 +305,14 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
-            case R.id.action_forward:
+            case R.id.forward_button:
                 nextDate();
                 return true;
-            case R.id.action_back:
+            case R.id.back_button:
                 previousDate();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -357,7 +356,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
                 // adjust the toolbar accordingly
                 if (toolbar == null) {
-                    toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+                    toolbar = (Toolbar) findViewById(R.id.toolbar);
                 }
                 toolbar.setTitle(generateTitle(viewPager.getCurrentItem()));
 
@@ -370,7 +369,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
                 // adjust the toolbar accordingly
                 if (toolbar == null) {
-                    toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+                    toolbar = (Toolbar) findViewById(R.id.toolbar);
                 }
                 toolbar.setTitle(generateTitle(viewPager.getCurrentItem()));
 
@@ -383,7 +382,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
                 // adjust the toolbar accordingly
                 if (toolbar == null) {
-                    toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+                    toolbar = (Toolbar) findViewById(R.id.toolbar);
                 }
                 toolbar.setTitle(generateTitle(viewPager.getCurrentItem()));
 

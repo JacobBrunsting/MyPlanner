@@ -32,7 +32,7 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
     public void addNewTag(final String tag) {
         if (!tags.contains(tag)) {
             tags.add(tag);
-            final LinearLayout tagHolder = (LinearLayout) findViewById(R.id.note_button_holder_layout);
+            final LinearLayout tagHolder = (LinearLayout) findViewById(R.id.tag_holder);
             LayoutInflater inflater = getLayoutInflater();
             final FrameLayout buttonLayout = (FrameLayout) inflater.inflate(R.layout.button_create_tag_layout, null);
             final Button button = (Button) buttonLayout.findViewById(R.id.button);
@@ -74,7 +74,7 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
         userData = DataRetriever.getInstance();
 
         // configure the add tag button
-        final Button addTagBtn = (Button) findViewById(R.id.create_note_add_tag_btn);
+        final Button addTagBtn = (Button) findViewById(R.id.add_tag_button);
         addTagBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,14 +83,14 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
         });
 
         // set up the toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.create_note_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Create Note");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // configure the bottom bar buttons
-        final Button cancelBtn = (Button) findViewById(R.id.create_note_cancel_btn);
-        final Button saveBtn = (Button) findViewById(R.id.create_note_save_btn);
+        final Button cancelBtn = (Button) findViewById(R.id.cancel_button);
+        final Button saveBtn = (Button) findViewById(R.id.save_button);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,8 +128,8 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
     // ---------------------------------------------------------------------------------------------
 
     private void insertNote() {
-        final String title = ((EditText)findViewById(R.id.create_note_title_edit_txt)).getText().toString();
-        final String body = ((EditText)findViewById(R.id.create_note_body_edit_txt)).getText().toString();
+        final String title = ((EditText)findViewById(R.id.title_edit_text)).getText().toString();
+        final String body = ((EditText)findViewById(R.id.body_edit_text)).getText().toString();
         final PlannerNote note = new PlannerNote(tags, title, body, id);
         userData.addNote(note);
     }

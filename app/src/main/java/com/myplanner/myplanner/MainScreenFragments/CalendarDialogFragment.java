@@ -4,7 +4,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class CalendarDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         final View view = inflater.inflate(R.layout.fragment_calendar_dialog, container, false);
-        dateSelector = (CalendarView) view.findViewById(R.id.calendarView);
+        dateSelector = (CalendarView) view.findViewById(R.id.date_selector);
 
         // set up the date selector if mCallback is not null, meaning onAttach has been called
         if (mCallback != null) {

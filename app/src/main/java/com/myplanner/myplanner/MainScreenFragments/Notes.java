@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -186,12 +183,12 @@ public class Notes extends Fragment {
                 super(nview);
                 view = nview;
                 if (viewType == 0) {
-                    noteFilterTagSelector = (Spinner) view.findViewById(R.id.note_filter_tag_selector);
+                    noteFilterTagSelector = (Spinner) view.findViewById(R.id.tag_selector);
                 } else {
-                    title = (TextView) view.findViewById(R.id.create_note_title_edit_txt);
-                    tag_holder = (LinearLayout) view.findViewById(R.id.note_button_holder_layout);
-                    button_holder_scroll_view = (HorizontalScrollView) view.findViewById(R.id.note_button_holder_scroll_view);
-                    body = (TextView) view.findViewById(R.id.note_body_txt);
+                    title = (TextView) view.findViewById(R.id.title_edit_text);
+                    tag_holder = (LinearLayout) view.findViewById(R.id.tag_holder);
+                    button_holder_scroll_view = (HorizontalScrollView) view.findViewById(R.id.tag_layout);
+                    body = (TextView) view.findViewById(R.id.body_text);
                     id = -1;
 
                     view.setOnClickListener(new View.OnClickListener() {

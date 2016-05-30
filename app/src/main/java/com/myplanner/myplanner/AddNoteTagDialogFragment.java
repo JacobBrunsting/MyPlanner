@@ -7,7 +7,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -74,7 +73,7 @@ public class AddNoteTagDialogFragment extends DialogFragment {
     // ---------------------------------------------------------------------------------------------
 
     private void setUpDialog() {
-        final AutoCompleteTextView tagSelect = (AutoCompleteTextView) dialogView.findViewById(R.id.add_note_tag_txt_view);
+        final AutoCompleteTextView tagSelect = (AutoCompleteTextView) dialogView.findViewById(R.id.tag_edit_text);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, possibleTags);
         tagSelect.showDropDown();
         tagSelect.setAdapter(adapter);
@@ -91,7 +90,7 @@ public class AddNoteTagDialogFragment extends DialogFragment {
             }
         });
 
-        final Button acceptTag = (Button) dialogView.findViewById(R.id.accept_note_tag_btn);
+        final Button acceptTag = (Button) dialogView.findViewById(R.id.accept_tag_button);
         acceptTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

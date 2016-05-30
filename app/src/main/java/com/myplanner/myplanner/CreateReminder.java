@@ -77,13 +77,13 @@ public class CreateReminder extends AppCompatActivity {
         reminderDate = cal.get(Calendar.DATE);
 
         // get the editable elements of the activity
-        dateSelect = (CalendarView) findViewById(R.id.create_reminder_date_selector);
-        startTime = (TimePicker) findViewById(R.id.create_reminder_start_time);
-        titleEditTxt = (EditText) findViewById(R.id.create_reminder_title_input);
-        bodyEditTxt = (EditText) findViewById(R.id.create_reminder_body_input);
+        dateSelect = (CalendarView) findViewById(R.id.date_selector);
+        startTime = (TimePicker) findViewById(R.id.time_selector);
+        titleEditTxt = (EditText) findViewById(R.id.title_edit_text);
+        bodyEditTxt = (EditText) findViewById(R.id.body_edit_text);
 
         // set up the toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.create_reminder_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Create Reminder");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -93,8 +93,8 @@ public class CreateReminder extends AppCompatActivity {
         dateSelect.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                final NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.create_reminder_nested_scroll_view);
-                final RelativeLayout calendarLayout = (RelativeLayout) findViewById(R.id.create_reminder_calendar_layout);
+                final NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
+                final RelativeLayout calendarLayout = (RelativeLayout) findViewById(R.id.date_selector_layout);
                 final int margin = ((int)getResources().getDimension(R.dimen.activity_vertical_margin)) * 2;
                 int offset = margin + calendarLayout.getHeight();
                 nestedScrollView.smoothScrollTo(0, offset);
@@ -106,8 +106,8 @@ public class CreateReminder extends AppCompatActivity {
         });
 
         // configure the bottom bar buttons
-        final Button cancelBtn = (Button) findViewById(R.id.create_reminder_cancel_btn);
-        final Button saveBtn = (Button) findViewById(R.id.create_reminder_save_btn);
+        final Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
+        final Button saveBtn = (Button) findViewById(R.id.save_btn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

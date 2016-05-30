@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_back"
+        android:id="@+id/back_button"
         android:icon="@drawable/ic_arrow_back_black_48dp"
         android:title="Previous Day"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_forward"
+        android:id="@+id/forward_button"
         android:icon="@drawable/ic_arrow_forward_black_48dp"
         android:title="Next Day"
-        app:showAsAction="ifRoom"/>
-    <item android:id="@+id/action_settings"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/settings_button"
         android:title="Settings"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

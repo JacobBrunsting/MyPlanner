@@ -1,29 +1,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin">
 
     <AutoCompleteTextView
+        android:id="@+id/tag_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/add_note_tag_txt_view"
+        android:layout_alignParentStart="true"
         android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/text_element_horizontal_margin"
+        android:layout_toStartOf="@+id/accept_tag_button"
+        android:completionThreshold="1"
         android:hint="@string/add_note_tag_hint"
         android:lines="1"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/accept_note_tag_btn"
-        android:layout_marginEnd="@dimen/text_element_horizontal_margin"
-        android:completionThreshold="1"
         android:maxLines="1"
         android:singleLine="true" />
 
     <Button
+        android:id="@+id/accept_tag_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/accept_note_tag_btn"
-        android:text="@string/accept_note_tag_btn_txt"/>
+        android:layout_alignParentTop="true"
+        android:text="@string/accept_note_tag_btn_txt" />
 </RelativeLayout>

@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/enter_edit_mode_menu_button"
+        android:id="@+id/enter_edit_mode_button"
         android:icon="@drawable/ic_mode_edit_black_48dp"
         android:title="Enter Edit Mode"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/exit_edit_mode_menu_button"
+        android:id="@+id/exit_edit_mode_button"
         android:icon="@drawable/ic_clear_black_48dp"
         android:title="Exit Edit Mode"
         android:visible="false"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/delete_menu_button"
+        android:id="@+id/delete_button"
         android:icon="@drawable/ic_delete_black_48dp"
         android:title="Delete"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 </menu>

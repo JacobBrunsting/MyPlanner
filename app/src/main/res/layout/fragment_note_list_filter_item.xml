@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_divider_height"
-        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/filter_layout"
         android:layout_alignParentEnd="true"
-        android:background="@android:color/white"
-        android:adjustViewBounds="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/main_divider_height"
         android:layout_marginLeft="@dimen/main_divider_height"
         android:layout_marginRight="@dimen/main_divider_height"
-        android:id="@+id/imageView2"
-        android:layout_alignBottom="@+id/fragment_note_list_filter_item"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/main_divider_height" />
+        android:adjustViewBounds="true"
+        android:background="@android:color/white" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/filter_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fragment_note_list_filter_item">
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tag:"
-            android:id="@+id/textView"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/text_element_vertical_margin"
             android:layout_marginBottom="@dimen/text_element_vertical_margin"
-            android:layout_marginRight="@dimen/text_element_horizontal_margin" />
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/text_element_horizontal_margin"
+            android:layout_marginTop="@dimen/text_element_vertical_margin"
+            android:text="Tag:" />
 
         <Spinner
+            android:id="@+id/tag_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/note_filter_tag_selector"
-            android:spinnerMode="dropdown"
+            android:layout_marginBottom="@dimen/text_element_vertical_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/text_element_vertical_margin"
-            android:layout_marginBottom="@dimen/text_element_vertical_margin" />
+            android:spinnerMode="dropdown" />
     </LinearLayout>
 
 </RelativeLayout>

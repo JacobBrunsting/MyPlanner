@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary">
@@ -8,75 +7,75 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_above="@+id/space"
         android:layout_alignParentEnd="true"
-        android:background="@android:color/white"
-        android:adjustViewBounds="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/main_divider_height"
         android:layout_marginRight="@dimen/main_divider_height"
-        android:layout_alignParentTop="true"
-        android:id="@+id/imageView"
-        android:layout_above="@+id/space" />
+        android:adjustViewBounds="true"
+        android:background="@android:color/white" />
 
     <TextView
-        android:id="@+id/reminder_title_txt"
-        android:text="TITLE"
+        android:id="@+id/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/text_element_vertical_margin"
+        android:layout_marginRight="@dimen/text_element_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/text_element_vertical_margin"
-        android:layout_marginBottom="@dimen/text_element_vertical_margin"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:textSize="@dimen/abc_text_size_medium_material"
-        android:layout_toStartOf="@+id/reminder_date_txt"
-        android:layout_marginRight="@dimen/text_element_horizontal_margin" />
+        android:layout_toStartOf="@+id/date_text"
+        android:text="TITLE"
+        android:textSize="@dimen/abc_text_size_medium_material" />
 
     <TextView
+        android:id="@+id/date_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="April 25, 2016"
-        android:id="@+id/reminder_date_txt"
+        android:layout_alignBaseline="@+id/time_text"
         android:layout_marginLeft="@dimen/text_element_horizontal_margin"
-        android:textSize="@dimen/abc_text_size_caption_material"
         android:layout_marginRight="@dimen/text_element_horizontal_margin"
-        android:layout_alignBaseline="@+id/reminder_time_txt"
-        android:layout_toStartOf="@+id/reminder_time_txt" />
+        android:layout_toStartOf="@+id/time_text"
+        android:text="April 25, 2016"
+        android:textSize="@dimen/abc_text_size_caption_material" />
 
     <TextView
-        android:id="@+id/reminder_time_txt"
-        android:text="12:00 AM"
+        android:id="@+id/time_text"
         android:layout_width="@dimen/reminder_time_txt_width"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/text_element_vertical_margin"
-        android:layout_marginBottom="@dimen/text_element_vertical_margin"
-        android:layout_alignParentTop="true"
-        android:textSize="@dimen/abc_text_size_medium_material"
-        android:maxLines="1"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="@dimen/text_element_horizontal_margin"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/text_element_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/text_element_horizontal_margin"
-        android:textAlignment="textEnd" />
+        android:layout_marginRight="@dimen/text_element_horizontal_margin"
+        android:layout_marginTop="@dimen/text_element_vertical_margin"
+        android:maxLines="1"
+        android:text="12:00 AM"
+        android:textAlignment="textEnd"
+        android:textSize="@dimen/abc_text_size_medium_material" />
+
     <TextView
-        android:id="@+id/reminder_body_txt"
-        android:text="BODY__________________________________________________________________________________________________"
+        android:id="@+id/body_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/text_element_vertical_margin"
         android:layout_alignParentStart="true"
-        android:textSize="@dimen/abc_text_size_small_material"
-        android:layout_below="@+id/reminder_title_txt" />
+        android:layout_below="@+id/title_text"
+        android:layout_marginBottom="@dimen/text_element_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:text="BODY__________________________________________________________________________________________________"
+        android:textSize="@dimen/abc_text_size_small_material" />
 
     <Space
+        android:id="@+id/space"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_divider_height"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:adjustViewBounds="true"
-        android:id="@+id/space"
-        android:layout_below="@+id/reminder_body_txt" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/body_text"
+        android:adjustViewBounds="true" />
 
 </RelativeLayout>

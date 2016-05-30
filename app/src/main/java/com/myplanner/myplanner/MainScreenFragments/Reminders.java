@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.myplanner.myplanner.R;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Reminders extends Fragment {
@@ -103,10 +102,10 @@ public class Reminders extends Fragment {
             private ViewHolder(final View nview) {
                 super(nview);
                 view = nview;
-                title = (TextView) view.findViewById(R.id.reminder_title_txt);
-                time = (TextView) view.findViewById(R.id.reminder_time_txt);
-                date = (TextView) view.findViewById(R.id.reminder_date_txt);
-                body = (TextView) view.findViewById(R.id.reminder_body_txt);
+                title = (TextView) view.findViewById(R.id.title_text);
+                time = (TextView) view.findViewById(R.id.time_text);
+                date = (TextView) view.findViewById(R.id.date_text);
+                body = (TextView) view.findViewById(R.id.body_text);
                 id = -1;
 
                 view.setOnClickListener(new View.OnClickListener() {

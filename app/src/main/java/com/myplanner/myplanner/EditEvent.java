@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,13 +50,13 @@ public class EditEvent extends AppCompatActivity {
         setContentView(R.layout.activity_edit_event);
 
         // get the elements of the activity
-        startTime = (TimePicker) findViewById(R.id.edit_event_start_time);
-        durationHours = (NumberPicker) findViewById(R.id.edit_event_duration_hours);
-        durationMinutes = (NumberPicker) findViewById(R.id.edit_event_duration_minutes);
-        titleEditTxt = (EditText) findViewById(R.id.edit_event_title_input);
-        bodyEditTxt = (EditText) findViewById(R.id.edit_event_body_input);
-        eventTimedSwitch = (Switch) findViewById(R.id.edit_event_timed_switch);
-        final RelativeLayout durationLayout = (RelativeLayout) findViewById(R.id.edit_event_duration_layout);
+        startTime = (TimePicker) findViewById(R.id.time_picker);
+        durationHours = (NumberPicker) findViewById(R.id.duration_hour_selector);
+        durationMinutes = (NumberPicker) findViewById(R.id.duration_minute_selector);
+        titleEditTxt = (EditText) findViewById(R.id.title_edit_text);
+        bodyEditTxt = (EditText) findViewById(R.id.body_edit_text);
+        eventTimedSwitch = (Switch) findViewById(R.id.timed_switch);
+        final RelativeLayout durationLayout = (RelativeLayout) findViewById(R.id.duration_layout);
 
         // get the id of the event being edited from the previous activity
         Bundle passedData = getIntent().getExtras();
@@ -80,7 +79,7 @@ public class EditEvent extends AppCompatActivity {
         oldDayTimeMills = startCal.get(Calendar.HOUR_OF_DAY) * millsPerHour + startCal.get(Calendar.MINUTE) * millsPerMinute;
 
         // set up the toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.edit_event_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Edit Event");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -181,13 +180,13 @@ public class EditEvent extends AppCompatActivity {
         bodyEditTxt.setText(body);
 
         // set up the text that tells the user what date the event starts
-        final TextView eventDate = (TextView) findViewById(R.id.edit_event_date_txt);
+        final TextView eventDate = (TextView) findViewById(R.id.date_title_text);
         final String dateText = months[startCal.get(Calendar.MONTH)] + " " + startCal.get(Calendar.DATE);
         eventDate.setText(dateText);
 
         // configure the bottom bar buttons
-        final Button cancelBtn = (Button) findViewById(R.id.edit_event_cancel_btn);
-        final Button saveBtn = (Button) findViewById(R.id.edit_event_save_btn);
+        final Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
+        final Button saveBtn = (Button) findViewById(R.id.save_btn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,7 +213,7 @@ public class EditEvent extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.edit_event_delete_menu_button:
+            case R.id.delete_button:
                 removeOldEvent();
                 returnToHome();
                 break;

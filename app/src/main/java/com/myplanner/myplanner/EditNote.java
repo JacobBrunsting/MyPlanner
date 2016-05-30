@@ -4,7 +4,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +14,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerNote;
@@ -87,9 +84,9 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
         // store the elements of the activity
         titleEditText = (EditText) findViewById(R.id.title_edit_text);
         bodyEditText = (EditText) findViewById(R.id.body_edit_text);
-        tagHolder = (LinearLayout) findViewById(R.id.button_holder_layout);
-        bottomButtonHolder = (LinearLayout) findViewById(R.id.bottom_menu_button_holder);
-        addTagBtn = (Button) findViewById(R.id.add_tag_btn);
+        tagHolder = (LinearLayout) findViewById(R.id.tag_holder);
+        bottomButtonHolder = (LinearLayout) findViewById(R.id.bottom_menu_layout);
+        addTagBtn = (Button) findViewById(R.id.add_tag_button);
 
         // get the information passed from the previous activity
         Bundle passedData = getIntent().getExtras();
@@ -152,10 +149,10 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
         int itemId = item.getItemId();
 
         switch (itemId) {
-            case R.id.enter_edit_mode_menu_button:
+            case R.id.enter_edit_mode_button:
                 // change the icon displayed on the toolbar
-                menu.findItem(R.id.exit_edit_mode_menu_button).setVisible(true);
-                menu.findItem(R.id.enter_edit_mode_menu_button).setVisible(false);
+                menu.findItem(R.id.exit_edit_mode_button).setVisible(true);
+                menu.findItem(R.id.enter_edit_mode_button).setVisible(false);
 
                 // make the text fields editable
                 titleEditText.setEnabled(true);
@@ -171,10 +168,10 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
                 toolbar.setTitle("Edit Note");
                 toolbar.invalidate();
                 break;
-            case R.id.exit_edit_mode_menu_button:
+            case R.id.exit_edit_mode_button:
                 // change the icon displayed on the toolbar
-                menu.findItem(R.id.exit_edit_mode_menu_button).setVisible(false);
-                menu.findItem(R.id.enter_edit_mode_menu_button).setVisible(true);
+                menu.findItem(R.id.exit_edit_mode_button).setVisible(false);
+                menu.findItem(R.id.enter_edit_mode_button).setVisible(true);
 
                 // make the text fields view-only
                 titleEditText.setEnabled(false);
@@ -193,7 +190,7 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
                 toolbar.invalidate();
                 saveChanges();
                 break;
-            case R.id.delete_menu_button:
+            case R.id.delete_button:
                 userData.removeNote(id);
                 finish();
                 break;

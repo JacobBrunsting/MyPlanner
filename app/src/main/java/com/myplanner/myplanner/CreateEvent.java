@@ -4,7 +4,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,17 +49,17 @@ public class CreateEvent extends AppCompatActivity {
         final long dateInMills = passedData.getLong("dateInMills");
 
         // save the editable elements
-        dateSelect = (CalendarView) findViewById(R.id.create_event_date_selector);
-        startTime = (TimePicker) findViewById(R.id.create_event_start_time);
-        durationHours = (NumberPicker) findViewById(R.id.create_event_duration_hours);
-        durationMinutes = (NumberPicker) findViewById(R.id.create_event_duration_minutes);
-        titleEditTxt = (EditText) findViewById(R.id.create_event_title_input);
-        bodyEditTxt = (EditText) findViewById(R.id.create_event_body_input);
-        eventTimedSwitch = (Switch) findViewById(R.id.create_event_timed_switch);
-        final RelativeLayout durationLayout = (RelativeLayout) findViewById(R.id.create_event_duration_layout);
+        dateSelect = (CalendarView) findViewById(R.id.date_selector);
+        startTime = (TimePicker) findViewById(R.id.time_selector);
+        durationHours = (NumberPicker) findViewById(R.id.duration_hour_selector);
+        durationMinutes = (NumberPicker) findViewById(R.id.duration_minute_selector);
+        titleEditTxt = (EditText) findViewById(R.id.title_edit_text);
+        bodyEditTxt = (EditText) findViewById(R.id.body_edit_text);
+        eventTimedSwitch = (Switch) findViewById(R.id.timed_switch);
+        final RelativeLayout durationLayout = (RelativeLayout) findViewById(R.id.duration_layout);
 
         // set up the toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.create_event_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Create Event");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -77,8 +76,8 @@ public class CreateEvent extends AppCompatActivity {
         dateSelect.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                final NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.create_event_nested_scroll_view);
-                final RelativeLayout calendarLayout = (RelativeLayout) findViewById(R.id.create_event_calendar_layout);
+                final NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
+                final RelativeLayout calendarLayout = (RelativeLayout) findViewById(R.id.date_selector_layout);
                 final int margin = ((int)getResources().getDimension(R.dimen.activity_vertical_margin)) * 2;
                 int offset = margin + calendarLayout.getHeight();
                 nestedScrollView.smoothScrollTo(0, offset);
@@ -161,8 +160,8 @@ public class CreateEvent extends AppCompatActivity {
         eventTimedSwitch.setChecked(false);
 
         // configure the bottom buttons
-        final Button cancelBtn = (Button) findViewById(R.id.create_event_cancel_btn);
-        final Button saveBtn = (Button) findViewById(R.id.create_event_save_btn);
+        final Button cancelBtn = (Button) findViewById(R.id.cancel_button);
+        final Button saveBtn = (Button) findViewById(R.id.save_button);
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -43,9 +43,9 @@ public class EditReminder extends AppCompatActivity {
         setContentView(R.layout.activity_edit_reminder);
 
         // save the editable elements
-        startTime = (TimePicker) findViewById(R.id.edit_reminder_start_time);
-        titleEditTxt = (EditText) findViewById(R.id.edit_reminder_title_input);
-        bodyEditTxt = (EditText) findViewById(R.id.edit_reminder_body_input);
+        startTime = (TimePicker) findViewById(R.id.start_time_picker);
+        titleEditTxt = (EditText) findViewById(R.id.title_edit_text);
+        bodyEditTxt = (EditText) findViewById(R.id.body_edit_text);
 
         // get the id of the reminder being edited
         Bundle passedData = getIntent().getExtras();
@@ -65,7 +65,7 @@ public class EditReminder extends AppCompatActivity {
         oldDayTimeMills = cal.get(Calendar.HOUR_OF_DAY) * MILLS_PER_HOUR + cal.get(Calendar.MINUTE) * MILLS_PER_MINUTE;
 
         // set up the toolbar
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.edit_reminder_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Edit Reminder");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -79,13 +79,13 @@ public class EditReminder extends AppCompatActivity {
         bodyEditTxt.setText(body);
 
         // set up the text that tells the user what date the reminder starts
-        final TextView reminderDate = (TextView) findViewById(R.id.edit_reminder_date_txt);
+        final TextView reminderDate = (TextView) findViewById(R.id.date_title_text);
         final String dateText = MONTHS[cal.get(Calendar.MONTH)] + " " + cal.get(Calendar.DATE);
         reminderDate.setText(dateText);
 
         // configure the bottom bar buttons
-        final Button cancelBtn = (Button) findViewById(R.id.edit_reminder_cancel_btn);
-        final Button saveBtn = (Button) findViewById(R.id.edit_reminder_save_btn);
+        final Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
+        final Button saveBtn = (Button) findViewById(R.id.save_btn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +112,7 @@ public class EditReminder extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.edit_reminder_delete_menu_button:
+            case R.id.delete_button:
                 removeOldReminder();
                 returnToHome();
                 break;
