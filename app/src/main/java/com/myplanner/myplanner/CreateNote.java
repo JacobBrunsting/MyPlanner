@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -38,14 +40,31 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
             final Button button = (Button) buttonLayout.findViewById(R.id.button);
             button.setText(tag);
 
+            final Animation fadeIn = new AlphaAnimation(0, 1);
+            fadeIn.setDuration(200);
+            button.startAnimation(fadeIn);
+
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tagHolder.removeView(buttonLayout);
-                    tags.remove(tag);
+                    final Animation fadeOut = new AlphaAnimation(1, 0);
+                    fadeOut.setDuration(200);
+                    fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            tagHolder.removeView(buttonLayout);
+                            tags.remove(tag);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {}
+                    });
+                    button.startAnimation(fadeOut);
                 }
             });
-
             tagHolder.addView(buttonLayout);
         }
     }

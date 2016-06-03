@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -46,18 +48,30 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
             final FrameLayout buttonLayout = (FrameLayout) inflater.inflate(R.layout.button_create_tag_layout, null);
             final Button button = (Button) buttonLayout.findViewById(R.id.button);
             button.setText(tag);
-
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // only allow tag removal in edit mode (where the add tag button is visible)
                     if (addTagBtn.getVisibility() == View.VISIBLE) {
-                        tagHolder.removeView(buttonLayout);
-                        tags.remove(tag);
+                        final Animation fadeOut = new AlphaAnimation(1, 0);
+                        fadeOut.setDuration(200);
+                        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {}
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                tagHolder.removeView(buttonLayout);
+                                tags.remove(tag);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {}
+                        });
+                        button.startAnimation(fadeOut);
                     }
                 }
             });
-
             tagHolder.addView(buttonLayout);
         }
     }
@@ -228,11 +242,29 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
         final ViewGroup.LayoutParams params = tagHolderScrollView.getLayoutParams();
 
         if (visible) {
-            params.height = (int) getResources().getDimension(R.dimen.notes_create_tag_btn_height);
-        } else {
-            params.height = 0;
-        }
+            final Animation fadeIn = new AlphaAnimation(0, 1);
+            fadeIn.setDuration(200);
 
-        tagHolderScrollView.setLayoutParams(params);
+            params.height = (int) getResources().getDimension(R.dimen.notes_create_tag_btn_height);
+            tagHolderScrollView.setLayoutParams(params);
+            tagHolderScrollView.startAnimation(fadeIn);
+        } else {
+            final Animation fadeOut = new AlphaAnimation(1, 0);
+            fadeOut.setDuration(200);
+            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    params.height = 0;
+                    tagHolderScrollView.setLayoutParams(params);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+            tagHolderScrollView.startAnimation(fadeOut);
+        }
     }
 }
