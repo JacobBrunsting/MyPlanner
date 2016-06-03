@@ -46,7 +46,7 @@ public class AddNoteTagDialogFragment extends DialogFragment {
             setUpDialog();
         }
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        imm.showSoftInput(getActivity().getCurrentFocus(), InputMethodManager.SHOW_FORCED);
     }
 
     @Nullable
@@ -66,6 +66,10 @@ public class AddNoteTagDialogFragment extends DialogFragment {
     public void onDetach() {
         super.onDetach();
         mCallback = null;
+        // google's soft keyboard functions are terrible, hence, we have this mess
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(getActivity().getCurrentFocus(), InputMethodManager.SHOW_FORCED);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     // ---------------------------------------------------------------------------------------------
