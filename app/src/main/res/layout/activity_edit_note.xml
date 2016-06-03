@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                app:layout_scrollFlags="scroll|enterAlways"/>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.NestedScrollView
@@ -29,9 +29,9 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
 
                 <EditText
                     android:id="@+id/title_edit_text"
@@ -46,7 +46,8 @@
                     android:hint="Title"
                     android:inputType="textAutoCorrect"
                     android:text="TITLE"
-                    android:textSize="@dimen/abc_text_size_medium_material" />
+                    android:textColor="@drawable/edit_note_text_color"
+                    android:textSize="@dimen/abc_text_size_medium_material"/>
 
                 <HorizontalScrollView
                     android:id="@+id/tag_holder_scroll_view"
@@ -78,7 +79,7 @@
                                 android:background="@color/colorAccent"
                                 android:text="@string/note_add_tag_btn_text"
                                 android:textSize="@dimen/notes_create_tag_btn_text_size"
-                                android:visibility="gone" />
+                                android:visibility="gone"/>
                         </FrameLayout>
                     </LinearLayout>
                 </HorizontalScrollView>
@@ -98,7 +99,8 @@
                     android:inputType="textAutoCorrect"
                     android:text="lorum iti situatoria si skfs ksk ladd lsi liaaaa"
                     android:textAlignment="textStart"
-                    android:textSize="@dimen/abc_text_size_small_material" />
+                    android:textColor="@drawable/edit_note_text_color"
+                    android:textSize="@dimen/abc_text_size_small_material"/>
 
                 <Space
                     android:id="@+id/space"
@@ -107,7 +109,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/body_edit_text"
-                    android:adjustViewBounds="true" />
+                    android:adjustViewBounds="true"/>
             </RelativeLayout>
 
         </android.support.v4.widget.NestedScrollView>
@@ -129,13 +131,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="Cancel" />
+            android:text="Cancel"/>
 
         <Button
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:text="Save" />
+            android:text="Save"/>
     </LinearLayout>
 </RelativeLayout>
