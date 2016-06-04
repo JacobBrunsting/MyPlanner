@@ -248,7 +248,7 @@ public class Notes extends Fragment {
                     // if the current tag is an actual tag, then we want the first option to be the
                     //   current tag, the second to be the 'no filter' option, and the rest to be
                     //   the other tags
-                    final int numItems = 1 + possibleTags.size();
+                    final int numItems = Math.max(1 + possibleTags.size(), 2);
                     listItems = new String[numItems];
 
                     // set the first item to the currently selected tag, and the second item to the

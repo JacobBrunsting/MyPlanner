@@ -11,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerNote;
@@ -191,9 +194,8 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
                 titleEditText.setEnabled(false);
                 bodyEditText.setEnabled(false);
 
-                // hide the save, cancel, and add tag buttons
+                // hide the save, and cancel buttons
                 bottomButtonHolder.setVisibility(View.INVISIBLE);
-                addTagBtn.setVisibility(View.GONE);
 
                 // collapse the tag holder if there are no tags to show
                 if (tags.isEmpty()) {
@@ -239,32 +241,51 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
     //   elements up, if it is false
     private void setTagHolderVisible(final boolean visible) {
         final HorizontalScrollView tagHolderScrollView = (HorizontalScrollView) findViewById(R.id.tag_holder_scroll_view);
-        final ViewGroup.LayoutParams params = tagHolderScrollView.getLayoutParams();
 
-        if (visible) {
-            final Animation fadeIn = new AlphaAnimation(0, 1);
-            fadeIn.setDuration(200);
+        if (visible && (tagHolderScrollView.getVisibility() == View.GONE || tagHolderScrollView.getVisibility() == View.INVISIBLE)) {
+            tagHolderScrollView.setVisibility(View.VISIBLE);
+            addTagBtn.setVisibility(View.VISIBLE);
 
-            params.height = (int) getResources().getDimension(R.dimen.notes_create_tag_btn_height);
-            tagHolderScrollView.setLayoutParams(params);
-            tagHolderScrollView.startAnimation(fadeIn);
-        } else {
-            final Animation fadeOut = new AlphaAnimation(1, 0);
-            fadeOut.setDuration(200);
-            fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            final float marginChange = getResources().getDimension(R.dimen.notes_edit_title_top_margin)
+                                     - getResources().getDimension(R.dimen.activity_vertical_margin);
+            final Animation shiftAnimation = CustomAnimation.shiftViewVertical(marginChange, 500, titleEditText);
+            shiftAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {}
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    params.height = 0;
-                    tagHolderScrollView.setLayoutParams(params);
+                    final Animation fadeAnimation = CustomAnimation.fadeView(1, 200, tagHolderScrollView);
+                    tagHolderScrollView.startAnimation(fadeAnimation);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            titleEditText.startAnimation(shiftAnimation);
+        } else if (!visible && tagHolderScrollView.getVisibility() == View.VISIBLE){
+            final Animation fadeAnimation = CustomAnimation.fadeView(0, 200, tagHolderScrollView);
+            fadeAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    tagHolderScrollView.setVisibility(View.GONE);
+                    addTagBtn.setVisibility(View.GONE);
+
+                    final float marginChange = -(getResources().getDimension(R.dimen.notes_edit_title_top_margin)
+                                             - getResources().getDimension(R.dimen.activity_vertical_margin));
+                    final Animation shiftAnimation = CustomAnimation.shiftViewVertical(marginChange, 500, titleEditText);
+                    titleEditText.startAnimation(shiftAnimation);
                 }
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {}
             });
-            tagHolderScrollView.startAnimation(fadeOut);
+            tagHolderScrollView.startAnimation(fadeAnimation);
         }
     }
 }
