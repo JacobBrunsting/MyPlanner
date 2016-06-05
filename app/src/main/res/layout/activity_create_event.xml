@@ -161,8 +161,9 @@
                 <RelativeLayout
                     android:id="@+id/duration_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    >
 
                     <TextView
                         android:id="@+id/colon"

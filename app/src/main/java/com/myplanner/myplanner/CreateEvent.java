@@ -1,12 +1,17 @@
 package com.myplanner.myplanner;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -21,21 +26,23 @@ import com.myplanner.myplanner.UserData.PlannerEvent;
 import java.util.Calendar;
 
 public class CreateEvent extends AppCompatActivity {
-    CalendarView dateSelect;
-    TimePicker startTime;
-    NumberPicker durationHours;
-    NumberPicker durationMinutes;
-    EditText titleEditTxt;
-    EditText bodyEditTxt;
-    Switch eventTimedSwitch;
+    private NestedScrollView scrollView;
+    private CalendarView dateSelect;
+    private TimePicker startTime;
+    private NumberPicker durationHours;
+    private NumberPicker durationMinutes;
+    private EditText titleEditTxt;
+    private EditText bodyEditTxt;
+    private Switch eventTimedSwitch;
 
-    final int millsPerHour = 3600000;
-    final int millsPerMinute = 60000;
+    private final int millsPerHour = 3600000;
+    private final int millsPerMinute = 60000;
 
-    int eventID;
-    int startYear;
-    int startMonth;
-    int startDate;
+    private int eventID;
+    private int startYear;
+    private int startMonth;
+    private int startDate;
+    private float durationContainerHeight = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,7 @@ public class CreateEvent extends AppCompatActivity {
         final long dateInMills = passedData.getLong("dateInMills");
 
         // save the editable elements
+        scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
         dateSelect = (CalendarView) findViewById(R.id.date_selector);
         startTime = (TimePicker) findViewById(R.id.time_selector);
         durationHours = (NumberPicker) findViewById(R.id.duration_hour_selector);
@@ -76,11 +84,10 @@ public class CreateEvent extends AppCompatActivity {
         dateSelect.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                final NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
                 final RelativeLayout calendarLayout = (RelativeLayout) findViewById(R.id.date_selector_layout);
                 final int margin = ((int)getResources().getDimension(R.dimen.activity_vertical_margin)) * 2;
                 int offset = margin + calendarLayout.getHeight();
-                nestedScrollView.smoothScrollTo(0, offset);
+                scrollView.smoothScrollTo(0, offset);
 
                 startYear = year;
                 startMonth = month;
@@ -93,11 +100,12 @@ public class CreateEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (eventTimedSwitch.isChecked()) {
-                    durationLayout.setEnabled(true);
-                    durationLayout.setVisibility(View.VISIBLE);
+                    if (durationContainerHeight == -1) {
+                        durationContainerHeight = durationLayout.getHeight();
+                    }
+                    showDurationLayout(durationLayout);
                 } else {
-                    durationLayout.setEnabled(false);
-                    durationLayout.setVisibility(View.INVISIBLE);
+                    hideDurationLayout(durationLayout);
                 }
             }
         });
@@ -154,10 +162,6 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
 
-        // make the event default to being untimed
-        durationLayout.setEnabled(false);
-        durationLayout.setVisibility(View.INVISIBLE);
-        eventTimedSwitch.setChecked(false);
 
         // configure the bottom buttons
         final Button cancelBtn = (Button) findViewById(R.id.cancel_button);
@@ -177,6 +181,22 @@ public class CreateEvent extends AppCompatActivity {
                 finish();
             }
         });
+
+        // get the height of the duration layout, and the collapse it (TODO: make this less ugly)
+        ViewTreeObserver onViewCreatedObserver = durationLayout.getViewTreeObserver();
+        if(onViewCreatedObserver.isAlive()) {
+            onViewCreatedObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (durationContainerHeight == -1) {
+                        durationContainerHeight = durationLayout.getHeight();
+                        hideDurationLayout(durationLayout);
+                        eventTimedSwitch.setChecked(false);
+                    }
+                }
+            });
+        }
+
     }
 
     @Override
@@ -221,5 +241,46 @@ public class CreateEvent extends AppCompatActivity {
 
         final PlannerEvent newEvent = new PlannerEvent(startMills, endMills, title, body, eventID);
         DataRetriever.getInstance().addEvent(newEvent);
+    }
+
+    private void hideDurationLayout(final RelativeLayout durationLayout) {
+        final Animation fadeAnimation = CustomAnimation.fadeView(0, 200, durationLayout);
+        fadeAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                durationLayout.setVisibility(View.INVISIBLE);
+                final float shiftAmount = -durationContainerHeight;
+                final Animation shiftAnimation = CustomAnimation.adjustHeight(shiftAmount, 500, durationLayout);
+                durationLayout.startAnimation(shiftAnimation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        durationLayout.startAnimation(fadeAnimation);
+    }
+
+    private void showDurationLayout(final RelativeLayout durationLayout) {
+        final float shiftAmount = durationContainerHeight;
+        final Animation shiftAnimation = CustomAnimation.adjustHeight(shiftAmount, 500, durationLayout);
+        shiftAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                durationLayout.setVisibility(View.VISIBLE);
+                scrollView.smoothScrollTo(0, (int) durationLayout.getY() + durationLayout.getHeight());
+                final Animation fadeAnimation = CustomAnimation.fadeView(1, 200, durationLayout);
+                durationLayout.startAnimation(fadeAnimation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        durationLayout.startAnimation(shiftAnimation);
     }
 }
