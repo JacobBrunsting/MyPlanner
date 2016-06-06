@@ -100,9 +100,6 @@ public class CreateEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (eventTimedSwitch.isChecked()) {
-                    if (durationContainerHeight == -1) {
-                        durationContainerHeight = durationLayout.getHeight();
-                    }
                     showDurationLayout(durationLayout);
                 } else {
                     hideDurationLayout(durationLayout);
@@ -183,7 +180,7 @@ public class CreateEvent extends AppCompatActivity {
         });
 
         // get the height of the duration layout, and the collapse it (TODO: make this less ugly)
-        ViewTreeObserver onViewCreatedObserver = durationLayout.getViewTreeObserver();
+        final ViewTreeObserver onViewCreatedObserver = durationLayout.getViewTreeObserver();
         if(onViewCreatedObserver.isAlive()) {
             onViewCreatedObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
@@ -193,10 +190,12 @@ public class CreateEvent extends AppCompatActivity {
                         hideDurationLayout(durationLayout);
                         eventTimedSwitch.setChecked(false);
                     }
+                    if (onViewCreatedObserver.isAlive()) {
+                        onViewCreatedObserver.removeOnGlobalLayoutListener(this);
+                    }
                 }
             });
         }
-
     }
 
     @Override
@@ -264,6 +263,9 @@ public class CreateEvent extends AppCompatActivity {
     }
 
     private void showDurationLayout(final RelativeLayout durationLayout) {
+        if (durationContainerHeight == -1) {
+            durationContainerHeight = durationLayout.getHeight();
+        }
         final float shiftAmount = durationContainerHeight;
         final Animation shiftAnimation = CustomAnimation.adjustHeight(shiftAmount, 500, durationLayout);
         shiftAnimation.setAnimationListener(new Animation.AnimationListener() {

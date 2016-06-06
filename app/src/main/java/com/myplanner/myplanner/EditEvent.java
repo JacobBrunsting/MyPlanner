@@ -1,12 +1,17 @@
 package com.myplanner.myplanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -32,6 +37,7 @@ public class EditEvent extends AppCompatActivity {
     private String title;
     private String body;
     private int id;
+    private RelativeLayout durationLayout;
     private TimePicker startTime;
     private NumberPicker durationHours;
     private NumberPicker durationMinutes;
@@ -39,6 +45,7 @@ public class EditEvent extends AppCompatActivity {
     private EditText bodyEditTxt;
     private Switch eventTimedSwitch;
     private int oldDayTimeMills;
+    private int durationContainerHeight = -1;
 
     //----------------------------------------------------------------------------------------------
     //------------------------------------- Override Functions -------------------------------------
@@ -56,7 +63,7 @@ public class EditEvent extends AppCompatActivity {
         titleEditTxt = (EditText) findViewById(R.id.title_edit_text);
         bodyEditTxt = (EditText) findViewById(R.id.body_edit_text);
         eventTimedSwitch = (Switch) findViewById(R.id.timed_switch);
-        final RelativeLayout durationLayout = (RelativeLayout) findViewById(R.id.duration_layout);
+        durationLayout = (RelativeLayout) findViewById(R.id.duration_layout);
 
         // get the id of the event being edited from the previous activity
         Bundle passedData = getIntent().getExtras();
@@ -93,11 +100,9 @@ public class EditEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (eventTimedSwitch.isChecked()) {
-                    durationLayout.setEnabled(true);
-                    durationLayout.setVisibility(View.VISIBLE);
+                    showDurationLayout(durationLayout);
                 } else {
-                    durationLayout.setEnabled(false);
-                    durationLayout.setVisibility(View.INVISIBLE);
+                    hideDurationLayout(durationLayout);
                 }
             }
         });
@@ -163,18 +168,6 @@ public class EditEvent extends AppCompatActivity {
             }
         });
 
-        // show the option to change the duration of the event only if the event being edited had
-        //   some duration
-        if (startMills == endMills) {
-            durationLayout.setEnabled(false);
-            durationLayout.setVisibility(View.GONE);
-            eventTimedSwitch.setChecked(false);
-        } else {
-            durationLayout.setEnabled(true);
-            durationLayout.setVisibility(View.VISIBLE);
-            eventTimedSwitch.setChecked(true);
-        }
-
         // set up the text inputs
         titleEditTxt.setText(title);
         bodyEditTxt.setText(body);
@@ -201,6 +194,30 @@ public class EditEvent extends AppCompatActivity {
                 finish();
             }
         });
+
+        // get the height of the duration layout, and the collapse it if required (TODO: make this less ugly)
+        final ViewTreeObserver onViewCreatedObserver = durationLayout.getViewTreeObserver();
+        if(onViewCreatedObserver.isAlive()) {
+            onViewCreatedObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (durationContainerHeight == -1) {
+                        durationContainerHeight = durationLayout.getHeight();
+                        // show the option to change the duration of the event only if the event being edited had
+                        //   some duration
+                        if (startMills == endMills) {
+                            eventTimedSwitch.setChecked(false);
+                            hideDurationLayout(durationLayout);
+                        } else {
+                            eventTimedSwitch.setChecked(true);
+                        }
+                    }
+                    if (onViewCreatedObserver.isAlive()) {
+                        onViewCreatedObserver.removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -259,5 +276,49 @@ public class EditEvent extends AppCompatActivity {
     private void returnToHome() {
         final Intent intentBundle = new Intent(EditEvent.this, Main.class);
         startActivity(intentBundle);
+    }
+
+    private void hideDurationLayout(final RelativeLayout durationLayout) {
+        final Animation fadeAnimation = CustomAnimation.fadeView(0, 200, durationLayout);
+        fadeAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                durationLayout.setVisibility(View.INVISIBLE);
+                final float shiftAmount = -durationContainerHeight;
+                final Animation shiftAnimation = CustomAnimation.adjustHeight(shiftAmount, 500, durationLayout);
+                durationLayout.startAnimation(shiftAnimation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        durationLayout.startAnimation(fadeAnimation);
+    }
+
+    private void showDurationLayout(final RelativeLayout durationLayout) {
+        if (durationContainerHeight == -1) {
+            durationContainerHeight = durationLayout.getHeight();
+        }
+        final float shiftAmount = durationContainerHeight;
+        final Animation shiftAnimation = CustomAnimation.adjustHeight(shiftAmount, 500, durationLayout);
+        shiftAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                durationLayout.setVisibility(View.VISIBLE);
+                ((NestedScrollView) findViewById(R.id.scroll_view)).smoothScrollTo(0, (int) durationLayout.getY() + durationLayout.getHeight());
+                final Animation fadeAnimation = CustomAnimation.fadeView(1, 200, durationLayout);
+                durationLayout.startAnimation(fadeAnimation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        durationLayout.startAnimation(shiftAnimation);
     }
 }
