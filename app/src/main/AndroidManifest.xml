@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <application
         android:allowBackup="true"
@@ -24,6 +25,6 @@
         <activity android:name=".EditReminder" />
         <activity android:name=".CreateNote" />
         <activity android:name=".EditNote"></activity>
+        <receiver android:name=".NotificationCreator$NotificationReceiver"/>
     </application>
-
 </manifest>

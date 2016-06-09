@@ -1,9 +1,19 @@
 package com.myplanner.myplanner;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +23,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 
+import com.myplanner.myplanner.MainScreenFragments.Reminders;
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerReminder;
 
@@ -27,6 +38,7 @@ public class CreateReminder extends AppCompatActivity {
     private int reminderYear;
     private int reminderMonth;
     private int reminderDate;
+    private Notification notification;
 
     // ---------------------------------------------------------------------------------------------
     // -------------------------------------- Public Functions -------------------------------------
@@ -53,6 +65,10 @@ public class CreateReminder extends AppCompatActivity {
         final String body = bodyEditTxt.getText().toString();
         final PlannerReminder newReminder = new PlannerReminder(reminderMills, title, body, reminderID);
         DataRetriever.getInstance().addReminder(newReminder);
+Log.i("CreateReminder", "Diff is " + ((reminderMills - System.currentTimeMillis()) / 1000) + " seconds");
+        // create the notification
+        final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        NotificationCreator.addNotification(alarmManager, reminderID, title, body, R.drawable.ic_add_black_24dp, reminderMills, getApplicationContext());
     }
 
     // ---------------------------------------------------------------------------------------------

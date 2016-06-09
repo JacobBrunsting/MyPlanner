@@ -241,6 +241,12 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
                 FABOnClicked();
             }
         });
+
+        // open to a certain tab if required
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            final int tab = getIntent().getExtras().getInt("tab");
+            viewPager.setCurrentItem(tab);
+        }
     }
 
     // set the toolbar to follow the main_menu layout

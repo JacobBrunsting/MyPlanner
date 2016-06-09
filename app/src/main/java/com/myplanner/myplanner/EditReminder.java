@@ -1,5 +1,7 @@
 package com.myplanner.myplanner;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -141,6 +143,11 @@ public class EditReminder extends AppCompatActivity {
 
         final PlannerReminder newReminder = new PlannerReminder(timeMills, title, body, id);
         userData.addReminder(newReminder);
+
+        // update the notification (the ID of each notification is the reminder ID)
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(id);
+
     }
 
     // delete the reminder being edited
