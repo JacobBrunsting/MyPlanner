@@ -39,10 +39,8 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     public static final String NEXT_REMINDER_ID_TAG = "nextReminderID";
 
     private final int NUM_FRAGMENTS = 3;
-    private final String[] TITLES = {
-            getResources().getString(R.string.events_tab_title),
-            getResources().getString(R.string.notes_tab_title),
-            getResources().getString(R.string.reminders_tab_title)};
+    // these values are overwritten in onCreate with the string resource values
+    private final String[] TITLES = {"Events", "Reminders", "Notes"};
     private final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July",
             "August", "September", "October", "November", "December"};
 
@@ -225,6 +223,10 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TITLES[0] = getResources().getString(R.string.events_tab_title);
+        TITLES[1] = getResources().getString(R.string.notes_tab_title);
+        TITLES[2] = getResources().getString(R.string.reminders_tab_title);
 
         // set up the toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
