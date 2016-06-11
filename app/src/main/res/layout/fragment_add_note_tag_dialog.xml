@@ -16,7 +16,7 @@
         android:hint="@string/add_note_tag_hint"
         android:lines="1"
         android:maxLines="1"
-        android:singleLine="true" />
+        android:imeOptions="actionDone"/>
 
     <Button
         android:id="@+id/accept_tag_button"

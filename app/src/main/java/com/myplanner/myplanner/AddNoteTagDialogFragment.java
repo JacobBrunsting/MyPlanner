@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +81,7 @@ public class AddNoteTagDialogFragment extends DialogFragment {
 
     private void setUpDialog() {
         final AutoCompleteTextView tagSelect = (AutoCompleteTextView) dialogView.findViewById(R.id.tag_edit_text);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, possibleTags);
+        final TagSelectAdapter adapter = new TagSelectAdapter(getContext(), R.layout.auto_complete_list_item, possibleTags);
         tagSelect.showDropDown();
         tagSelect.setAdapter(adapter);
         tagSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -105,5 +108,59 @@ public class AddNoteTagDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+    }
+
+    private class TagSelectAdapter extends ArrayAdapter<String> {
+        private List<String> possibleTags;
+        private int resourceID;
+
+        private TagSelectAdapter(final Context context, final int listResourceID, final List<String> possibleTagsList) {
+            super(context, listResourceID, possibleTagsList);
+            resourceID = listResourceID;
+            possibleTags = possibleTagsList;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(resourceID, null);
+            }
+            if (possibleTags != null && !possibleTags.isEmpty()) {
+                ((TextView) convertView.findViewById(R.id.text)).setText(possibleTags.get(position));
+            }
+            return convertView;
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    final List<String> filterResultsList = new ArrayList<>();
+                    for (String tag : possibleTags) {
+                        if (tag.toUpperCase().startsWith(constraint.toString().toUpperCase())) {
+                            filterResultsList.add(tag);
+                        }
+                    }
+                    final FilterResults filterResults = new FilterResults();
+                    if (!filterResultsList.isEmpty()) {
+                        filterResults.values = filterResultsList;
+                        filterResults.count = filterResultsList.size();
+                    }
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    final List<String> resultList = (List<String>) results.values;
+                    clear();
+                    if (resultList != null) {
+                        for (String result : resultList) {
+                            add(result);
+                        }
+                        notifyDataSetChanged();
+                    }
+                }
+            };
+        }
     }
 }
