@@ -67,7 +67,7 @@ public class EditEvent extends AppCompatActivity {
 
         // get the id of the event being edited from the previous activity
         Bundle passedData = getIntent().getExtras();
-        id = passedData.getInt("id");
+        id = passedData.getInt(Main.ID_TAG);
 
         // get the information about the event being edited from the provided id
         final PlannerEvent oldEvent = userData.getEventByID(id);

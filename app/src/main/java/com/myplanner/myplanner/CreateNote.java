@@ -88,8 +88,8 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
 
         // retrieve the data passed from the previous activity
         Bundle passedData = getIntent().getExtras();
-        id = passedData.getInt("ID");
-        possibleTags = (ArrayList<String>) passedData.getSerializable("possibleTags");
+        id = passedData.getInt(Main.ID_TAG);
+        possibleTags = (ArrayList<String>) passedData.getSerializable(Main.POSSIBLE_TAGS_TAG);
         userData = DataRetriever.getInstance();
 
         // configure the add tag button
@@ -103,7 +103,7 @@ public class CreateNote extends AppCompatActivity implements AddNoteTagDialogFra
 
         // set up the toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Create Note");
+        toolbar.setTitle(getResources().getString(R.string.create_note_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

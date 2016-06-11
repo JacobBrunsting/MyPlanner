@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 public class PlannerReminder {
-    Calendar cal = Calendar.getInstance();
-    String title;
-    String message;
-    int id;
+    private Calendar cal = Calendar.getInstance();
+    private String title;
+    private String message;
+    private int id;
 
     public PlannerReminder (long timeInMills, String ntitle, String nmessage, int nID) {
         cal.setTimeInMillis(timeInMills);
@@ -19,8 +19,6 @@ public class PlannerReminder {
     //----------------------------------------------------------------------------------------------
     //------------------------------------------ Getters -------------------------------------------
     // ---------------------------------------------------------------------------------------------
-
-    public int getAMOrPM() {return cal.get(Calendar.AM_PM);}
 
     public int getMinute() {return cal.get(Calendar.MINUTE);}
 

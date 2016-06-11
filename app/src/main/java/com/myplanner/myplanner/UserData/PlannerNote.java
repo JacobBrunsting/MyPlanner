@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlannerNote {
-    String title;
-    String body;
-    List<String> tags = new ArrayList<>();
-    int id;
+    private String title;
+    private String body;
+    private List<String> tags = new ArrayList<>();
+    private int id;
 
     public PlannerNote(List<String> ntags, String ntitle, String nbody, int nID) {
         title = ntitle;

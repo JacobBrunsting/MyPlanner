@@ -51,7 +51,7 @@ public class EditReminder extends AppCompatActivity {
 
         // get the id of the reminder being edited
         Bundle passedData = getIntent().getExtras();
-        id = passedData.getInt("id");
+        id = passedData.getInt(Main.ID_TAG);
 
         // get the information about the reminder being edited from the provided id
         final PlannerReminder oldReminder = userData.getReminderByID(id);

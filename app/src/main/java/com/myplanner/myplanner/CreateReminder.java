@@ -65,7 +65,6 @@ public class CreateReminder extends AppCompatActivity {
         final String body = bodyEditTxt.getText().toString();
         final PlannerReminder newReminder = new PlannerReminder(reminderMills, title, body, reminderID);
         DataRetriever.getInstance().addReminder(newReminder);
-Log.i("CreateReminder", "Diff is " + ((reminderMills - System.currentTimeMillis()) / 1000) + " seconds");
         // create the notification
         final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         NotificationCreator.addNotification(alarmManager, reminderID, title, body, R.drawable.ic_add_black_24dp, reminderMills, getApplicationContext());
@@ -82,8 +81,8 @@ Log.i("CreateReminder", "Diff is " + ((reminderMills - System.currentTimeMillis(
 
         // get the information passed from the previous activity
         Bundle passedData = getIntent().getExtras();
-        reminderID = passedData.getInt("ID");
-        final long dateInMills = passedData.getLong("dateInMills");
+        reminderID = passedData.getInt(Main.ID_TAG);
+        final long dateInMills = passedData.getLong(Main.DATE_IN_MILLS_TAG);
 
         // get the initial date
         final Calendar cal = Calendar.getInstance();
@@ -100,7 +99,7 @@ Log.i("CreateReminder", "Diff is " + ((reminderMills - System.currentTimeMillis(
 
         // set up the toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Create Reminder");
+        toolbar.setTitle(getResources().getString(R.string.create_reminder_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

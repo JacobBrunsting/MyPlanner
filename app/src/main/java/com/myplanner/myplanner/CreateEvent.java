@@ -52,8 +52,8 @@ public class CreateEvent extends AppCompatActivity {
         // get the date information
         Bundle passedData = getIntent().getExtras();
 
-        eventID = passedData.getInt("ID");
-        final long dateInMills = passedData.getLong("dateInMills");
+        eventID = passedData.getInt(Main.ID_TAG);
+        final long dateInMills = passedData.getLong(Main.DATE_IN_MILLS_TAG);
 
         // save the editable elements
         scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
@@ -68,7 +68,7 @@ public class CreateEvent extends AppCompatActivity {
 
         // set up the toolbar
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Create Event");
+        toolbar.setTitle(getResources().getString(R.string.create_event_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

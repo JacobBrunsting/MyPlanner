@@ -1,15 +1,13 @@
 package com.myplanner.myplanner.UserData;
 
-import android.util.Log;
-
 import java.util.Calendar;
 
 public class PlannerEvent {
-    Calendar startCal = Calendar.getInstance();
-    Calendar endCal = Calendar.getInstance();
-    String title;
-    String message;
-    int id;
+    private Calendar startCal = Calendar.getInstance();
+    private Calendar endCal = Calendar.getInstance();
+    private String title;
+    private String message;
+    private int id;
 
     public PlannerEvent (long startTimeInMills, long endTimeInMills, String ntitle, String nmessage, int nID) {
         startCal.setTimeInMillis(startTimeInMills);
@@ -23,8 +21,6 @@ public class PlannerEvent {
     //------------------------------------------ Getters -------------------------------------------
     // ---------------------------------------------------------------------------------------------
 
-    public int getStartAMOrPM() {return startCal.get(Calendar.AM_PM);}
-
     public int getStartMinute() {return startCal.get(Calendar.MINUTE);}
 
     public int getStartHour() {return startCal.get(Calendar.HOUR_OF_DAY);}
@@ -36,8 +32,6 @@ public class PlannerEvent {
     public int getStartYear() {return startCal.get(Calendar.YEAR);}
 
     public long getStartMills() {return startCal.getTimeInMillis();}
-
-    public int getEndAMOrPM() {return endCal.get(Calendar.AM_PM);}
 
     public int getEndMinute() {return endCal.get(Calendar.MINUTE);}
 

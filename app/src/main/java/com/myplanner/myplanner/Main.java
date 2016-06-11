@@ -30,8 +30,19 @@ import java.util.Calendar;
 
 public class Main extends AppCompatActivity implements Events.EventInterface,
         Reminders.ReminderInterface, Notes.NotesInterface, CalendarDialogFragment.CalendarInterface {
+    public static final String ID_TAG = "id";
+    public static final String TAB_TAG = "tab";
+    public static final String POSSIBLE_TAGS_TAG = "possibleTags";
+    public static final String DATE_IN_MILLS_TAG = "dateInMills";
+    public static final String NEXT_EVENT_ID_TAG = "nextEventID";
+    public static final String NEXT_NOTE_ID_TAG = "nextNoteID";
+    public static final String NEXT_REMINDER_ID_TAG = "nextReminderID";
+
     private final int NUM_FRAGMENTS = 3;
-    private final String[] TITLES = {"Events", "Notes", "Reminders"};
+    private final String[] TITLES = {
+            getResources().getString(R.string.events_tab_title),
+            getResources().getString(R.string.notes_tab_title),
+            getResources().getString(R.string.reminders_tab_title)};
     private final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July",
             "August", "September", "October", "November", "December"};
 
@@ -62,7 +73,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             // start the edit event activity to create a new event from the old data
             Intent intentBundle = new Intent(Main.this, EditEvent.class);
             Bundle bundle = new Bundle();
-            bundle.putInt("id", eventID);
+            bundle.putInt(ID_TAG, eventID);
             intentBundle.putExtras(bundle);
             startActivity(intentBundle);
         }
@@ -79,8 +90,8 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             // start the edit note activity to create a new note from the old data
             Intent intentBundle = new Intent(Main.this, EditNote.class);
             Bundle bundle = new Bundle();
-            bundle.putInt("id", noteID);
-            bundle.putSerializable("possibleTags", possibleTags);
+            bundle.putInt(ID_TAG, noteID);
+            bundle.putSerializable(POSSIBLE_TAGS_TAG, possibleTags);
             intentBundle.putExtras(bundle);
             startActivity(intentBundle);
         }
@@ -97,7 +108,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             // start the edit reminder activity to create a new reminder from the old data
             Intent intentBundle = new Intent(Main.this, EditReminder.class);
             Bundle bundle = new Bundle();
-            bundle.putInt("id", eventID);
+            bundle.putInt(ID_TAG, eventID);
             intentBundle.putExtras(bundle);
             startActivity(intentBundle);
         }
@@ -139,8 +150,8 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     private void addEvent() {
         Intent intentBundle = new Intent(Main.this, CreateEvent.class);
         Bundle bundle = new Bundle();
-        bundle.putLong("dateInMills", cal.getTimeInMillis());
-        bundle.putInt("ID", nextEventID++);
+        bundle.putLong(Main.DATE_IN_MILLS_TAG, cal.getTimeInMillis());
+        bundle.putInt(ID_TAG, nextEventID++);
         intentBundle.putExtras(bundle);
         startActivity(intentBundle);
     }
@@ -148,8 +159,8 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     private void addNote() {
         Intent intentBundle = new Intent(Main.this, CreateNote.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("ID", nextNoteID++);
-        bundle.putSerializable("possibleTags", possibleTags);
+        bundle.putInt(ID_TAG, nextNoteID++);
+        bundle.putSerializable(POSSIBLE_TAGS_TAG, possibleTags);
         intentBundle.putExtras(bundle);
         startActivity(intentBundle);
     }
@@ -157,8 +168,8 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     private void addReminder() {
         Intent intentBundle = new Intent(Main.this, CreateReminder.class);
         Bundle bundle = new Bundle();
-        bundle.putLong("dateInMills", cal.getTimeInMillis());
-        bundle.putInt("ID", nextReminderID++);
+        bundle.putLong(DATE_IN_MILLS_TAG, cal.getTimeInMillis());
+        bundle.putInt(ID_TAG, nextReminderID++);
         intentBundle.putExtras(bundle);
         startActivity(intentBundle);
     }
@@ -244,7 +255,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
         // open to a certain tab if required
         if (getIntent() != null && getIntent().getExtras() != null) {
-            final int tab = getIntent().getExtras().getInt("tab");
+            final int tab = getIntent().getExtras().getInt(TAB_TAG);
             viewPager.setCurrentItem(tab);
         }
     }
@@ -323,9 +334,9 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     public void onSaveInstanceState(final Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        savedInstanceState.putInt("nextEventID", nextEventID);
-        savedInstanceState.putInt("nextNoteID", nextNoteID);
-        savedInstanceState.putInt("nextReminderID", nextReminderID);
+        savedInstanceState.putInt(NEXT_EVENT_ID_TAG, nextEventID);
+        savedInstanceState.putInt(NEXT_NOTE_ID_TAG, nextNoteID);
+        savedInstanceState.putInt(NEXT_REMINDER_ID_TAG, nextReminderID);
     }
 
     // retrieve the saved data from when the activity was closed
@@ -333,9 +344,9 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     protected void onRestoreInstanceState(final Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        nextEventID = savedInstanceState.getInt("nextEventID");
-        nextNoteID = savedInstanceState.getInt("nextNoteID");
-        nextReminderID = savedInstanceState.getInt("nextReminderID");
+        nextEventID = savedInstanceState.getInt(NEXT_EVENT_ID_TAG);
+        nextNoteID = savedInstanceState.getInt(NEXT_NOTE_ID_TAG);
+        nextReminderID = savedInstanceState.getInt(NEXT_REMINDER_ID_TAG);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -545,9 +556,9 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             case 0:
                 return MONTHS[curMonth] + " " + curDate + " " +  curYear;
             case 1:
-                return "Notes";
+                return getResources().getString(R.string.notes_tab_title);
             case 2:
-                return "Reminders";
+                return getResources().getString(R.string.reminders_tab_title);
             default:
                 return "";
         }

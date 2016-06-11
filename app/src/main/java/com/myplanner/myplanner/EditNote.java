@@ -107,8 +107,8 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
 
         // get the information passed from the previous activity
         Bundle passedData = getIntent().getExtras();
-        id = passedData.getInt("id");
-        possibleTags = (ArrayList<String>) passedData.getSerializable("possibleTags");
+        id = passedData.getInt(Main.ID_TAG);
+        possibleTags = (ArrayList<String>) passedData.getSerializable(Main.POSSIBLE_TAGS_TAG);
 
         // display the different elements of the note being edited in the activity elements
         final PlannerNote note = userData.getNoteByID(id);
@@ -125,7 +125,7 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
 
         // set up the toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("View Note");
+        toolbar.setTitle(getResources().getString(R.string.view_note_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -182,7 +182,7 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
                 // show the tag holder in case it was hidden
                 setTagHolderVisible(true);
 
-                toolbar.setTitle("Edit Note");
+                toolbar.setTitle(getResources().getString(R.string.edit_note_title));
                 toolbar.invalidate();
                 break;
             case R.id.exit_edit_mode_button:
@@ -202,7 +202,7 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
                     setTagHolderVisible(false);
                 }
 
-                toolbar.setTitle("View Note");
+                toolbar.setTitle(getResources().getString(R.string.view_note_title));
                 toolbar.invalidate();
                 saveChanges();
                 break;

@@ -48,7 +48,7 @@ public class DataRetriever {
             return null;
         }
         for (int i = 0; i < events.size(); ++i) {
-            if (events.get(i).id == id) {
+            if (events.get(i).getID() == id) {
                 return events.get(i);
             }
         }
@@ -69,7 +69,7 @@ public class DataRetriever {
             return null;
         }
         for (int i = 0; i < notes.size(); ++i) {
-            if (notes.get(i).id == id) {
+            if (notes.get(i).getID() == id) {
                 return notes.get(i);
             }
         }
@@ -90,7 +90,7 @@ public class DataRetriever {
             return null;
         }
         for (int i = 0; i < reminders.size(); ++i) {
-            if (reminders.get(i).id == id) {
+            if (reminders.get(i).getID() == id) {
                 return reminders.get(i);
             }
         }
@@ -131,7 +131,6 @@ public class DataRetriever {
                 dayEvents.add(newPos++, tempEvent);
             } else if (curEvent.getEndYear() >= year && curEvent.getEndMonth() >= month
                     && curEvent.getEndDate() >= date) {
-                Log.i("DataRetriever", "adding in event that passes over the whole day, start/end date " + curEvent.getStartDate() + ", " + curEvent.getEndDate());
                 long midnightInMills = curEvent.getStartMills() - (curEvent.getStartHour() * millsPerHour + curEvent.getStartMinute() * millsPerMinute);
                 long lastMinuteInMills = midnightInMills + 24 * millsPerHour - millsPerMinute;
                 PlannerEvent tempEvent = new PlannerEvent(midnightInMills, lastMinuteInMills, curEvent.getTitle(), curEvent.getMessage(), curEvent.getID());
@@ -250,8 +249,6 @@ public class DataRetriever {
 
         for (int x = 0; x < events.size(); ++x) {
             PlannerEvent e = events.get(x);
-            Log.i("CreateEvent12data post", "aEvent number " + x + " has id " + e.getID() + " and starts at " + e.getStartDate() + " at hour " + e.getStartHour() + " at minute " + e.getStartMinute());
-            Log.i("CreateEvent12data pre", "         and ends at " + e.getEndDate() + " at hour " + e.getEndHour() + " at minute " + e.getEndMinute());
         }
     }
 
@@ -295,7 +292,7 @@ public class DataRetriever {
         if (events != null) {
             int i = 0;
             while (i < events.size()) {
-                if (events.get(i).id == id) {
+                if (events.get(i).getID() == id) {
                     events.remove(i);
                     return;
                 }
@@ -309,7 +306,7 @@ public class DataRetriever {
         if  (notes != null) {
             int i = 0;
             while (i < notes.size()) {
-                if (notes.get(i).id == id) {
+                if (notes.get(i).getID() == id) {
                     notes.remove(i);
                     return;
                 }
@@ -323,7 +320,7 @@ public class DataRetriever {
         if (reminders != null) {
             int i = 0;
             while (i < reminders.size()) {
-                if (reminders.get(i).id == id) {
+                if (reminders.get(i).getID() == id) {
                     reminders.remove(i);
                     return;
                 }

@@ -11,4 +11,12 @@
     <string name="add_note_tag_prompt">Tag</string>
     <string name="add_note_tag_hint">Tag</string>
     <string name="accept_note_tag_btn_txt">Accept</string>
+    <string name="create_event_title">Create Event</string>
+    <string name="create_note_title">Create Note</string>
+    <string name="create_reminder_title">Create Reminder</string>
+    <string name="view_note_title">View Note</string>
+    <string name="edit_note_title">Edit Note</string>
+    <string name="events_tab_title">Events</string>
+    <string name="notes_tab_title">Notes</string>
+    <string name="reminders_tab_title">Reminders</string>
 </resources>
