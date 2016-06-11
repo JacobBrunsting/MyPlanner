@@ -19,4 +19,22 @@
     <string name="events_tab_title">Events</string>
     <string name="notes_tab_title">Notes</string>
     <string name="reminders_tab_title">Reminders</string>
+    <string name="delete_item_title">Delete Item</string>
+    <string name="enter_edit_mode_title">Enter Edit Mode</string>
+    <string name="previous_day_title">Previous Day</string>
+    <string name="next_day_title">Next Day</string>
+    <string name="settings_title">Settings</string>
+    <string name="exit_edit_mode_title">Exit Edit Mode</string>
+    <string name="delete_title">Delete</string>
+    <string name="tag_selector_title">Tag:</string>
+    <string name="title_hint">Title</string>
+    <string name="body_hint">Body</string>
+    <string name="duration_title">Duration</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="save_button_text">Save</string>
+    <string name="body_button_text">Body</string>
+    <string name="date_title">Date</string>
+    <string name="start_time_title">Start Time</string>
+    <string name="title_selector_title">Title</string>
+    <string name="event_timed_title">Event Timed</string>
 </resources>

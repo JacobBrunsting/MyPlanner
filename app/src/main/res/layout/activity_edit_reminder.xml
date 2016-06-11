@@ -68,7 +68,7 @@
                         android:layout_marginTop="@dimen/text_element_vertical_margin"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:text="Start Time"
+                        android:text="@string/start_time_title"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </RelativeLayout>
@@ -85,7 +85,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginLeft="@dimen/text_element_horizontal_margin"
                         android:layout_marginRight="@dimen/text_element_horizontal_margin"
-                        android:hint="Title"
+                        android:hint="@string/title_hint"
                         android:singleLine="true" />
                 </RelativeLayout>
 
@@ -101,7 +101,7 @@
                         android:layout_marginLeft="@dimen/text_element_horizontal_margin"
                         android:layout_marginRight="@dimen/text_element_horizontal_margin"
                         android:ems="10"
-                        android:hint="Body"
+                        android:hint="@string/body_hint"
                         android:inputType="textMultiLine"
                         android:minHeight="50dp" />
                 </RelativeLayout>
@@ -125,13 +125,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="Cancel" />
+            android:text="@string/cancel_button_text" />
 
         <Button
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:text="Save" />
+            android:text="@string/save_button_text" />
     </LinearLayout>
 </RelativeLayout>

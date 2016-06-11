@@ -5,15 +5,15 @@
     <item
         android:id="@+id/back_button"
         android:icon="@drawable/ic_arrow_back_black_48dp"
-        android:title="Previous Day"
+        android:title="@string/previous_day_title"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/forward_button"
         android:icon="@drawable/ic_arrow_forward_black_48dp"
-        android:title="Next Day"
+        android:title="@string/next_day_title"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/settings_button"
-        android:title="Settings"
+        android:title="@string/settings_title"
         app:showAsAction="never" />
 </menu>

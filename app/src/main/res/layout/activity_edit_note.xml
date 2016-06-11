@@ -43,7 +43,7 @@
                     android:layout_marginTop="@dimen/notes_edit_title_top_margin"
                     android:background="@android:color/transparent"
                     android:enabled="false"
-                    android:hint="Title"
+                    android:hint="@string/title_hint"
                     android:inputType="textAutoCorrect"
                     android:text="TITLE"
                     android:textColor="@drawable/edit_note_text_color"
@@ -95,8 +95,8 @@
                     android:layout_marginTop="@dimen/text_element_vertical_margin"
                     android:background="@android:color/transparent"
                     android:enabled="false"
-                    android:hint="Body"
-                    android:text="lorum iti kjhfkjhfkjhfkjhfkjhfjhfjkhfsituatoria si skfs ksk ladd lsi liaaaa"
+                    android:hint="@string/body_hint"
+                    android:text="Body text here"
                     android:textAlignment="textStart"
                     android:textColor="@drawable/edit_note_text_color"
                     android:textSize="@dimen/abc_text_size_small_material"
@@ -131,13 +131,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="Cancel"/>
+            android:text="@string/cancel_button_text"/>
 
         <Button
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:text="Save"/>
+            android:text="@string/save_button_text"/>
     </LinearLayout>
 </RelativeLayout>
