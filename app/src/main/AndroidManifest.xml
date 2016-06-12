@@ -25,6 +25,7 @@
         <activity android:name=".EditReminder" />
         <activity android:name=".CreateNote" />
         <activity android:name=".EditNote"></activity>
+        <uses-sdk android:minSdkVersion="21" />
         <receiver android:name=".NotificationCreator$NotificationReceiver"/>
     </application>
 </manifest>

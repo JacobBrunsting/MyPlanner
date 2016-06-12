@@ -1,5 +1,6 @@
 package com.myplanner.myplanner;
 
+import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -14,8 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 
-import com.myplanner.myplanner.MainScreenFragments.CalendarDialogFragment;
 import com.myplanner.myplanner.MainScreenFragments.Events;
 import com.myplanner.myplanner.MainScreenFragments.Notes;
 import com.myplanner.myplanner.MainScreenFragments.Reminders;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Calendar;
 
 public class Main extends AppCompatActivity implements Events.EventInterface,
-        Reminders.ReminderInterface, Notes.NotesInterface, CalendarDialogFragment.CalendarInterface {
+        Reminders.ReminderInterface, Notes.NotesInterface {
     public static final String ID_TAG = "id";
     public static final String TAB_TAG = "tab";
     public static final String POSSIBLE_TAGS_TAG = "possibleTags";
@@ -113,21 +114,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     }
 
     // ---------------------------------------------------------------------------------------------
-    // ------------------------ Calendar DialogFragment Interface Functions ------------------------
-    // ---------------------------------------------------------------------------------------------
-
-    // this is called when a date is selected in the Calendar dialog (which opens after the user
-    //   taps the toolbar), and changes the date. The dialog automatically closes immediately after
-    //   this is called
-    public void onDateSelected(int year, int month, int date) {
-        goToDate(year, month, date);
-    }
-
-    public long getCurrentSelectedDate() {
-        return cal.getTimeInMillis();
-    }
-
-    // ---------------------------------------------------------------------------------------------
     // ----------------------------------- User Action Functions -----------------------------------
     // ---------------------------------------------------------------------------------------------
 
@@ -176,8 +162,12 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     //   is not, meaning the toolbar was clicked near where the date is shown
     private void toolbarClicked(){
         if (viewPager.getCurrentItem() == 0) {
-            DialogFragment calDialog = new CalendarDialogFragment();
-            calDialog.show(getFragmentManager(), "DateSelect");
+            new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    goToDate(year, monthOfYear, dayOfMonth);
+                }
+            }, curYear, curMonth, curDate).show();
         }
     }
 
