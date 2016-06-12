@@ -1,6 +1,8 @@
 package com.myplanner.myplanner;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -130,7 +132,7 @@ public class EditReminder extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
 
     // insert an reminder into the userData
-    public void insertReminder() {
+    private void insertReminder() {
         final int newDayTimeMills = startTime.getCurrentHour() * MILLS_PER_HOUR + startTime.getCurrentMinute() * MILLS_PER_MINUTE;
         final int dayTimeChangeMills = newDayTimeMills - oldDayTimeMills;
 
@@ -145,18 +147,22 @@ public class EditReminder extends AppCompatActivity {
         userData.addReminder(newReminder);
 
         // update the notification (the ID of each notification is the reminder ID)
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(id);
+        final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        final Intent actionIntent = new Intent(this, Main.class);
+        final PendingIntent actionPendingIntent = PendingIntent.getActivity(this, 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        actionIntent.putExtra(Main.TAB_TAG, 2);
+        NotificationCreator.addNotification(alarmManager, id, title, body, R.drawable.ic_add_black_24dp, timeMills, getApplicationContext(), actionPendingIntent);
+
 
     }
 
     // delete the reminder being edited
-    public void removeOldReminder() {
+    private void removeOldReminder() {
         userData.removeReminder(id);
     }
 
     // go back to the home screen
-    public void returnToHome() {
+    private void returnToHome() {
         Intent intentBundle = new Intent(EditReminder.this, Main.class);
         startActivity(intentBundle);
     }

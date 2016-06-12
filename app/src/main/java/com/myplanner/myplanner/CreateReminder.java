@@ -1,44 +1,33 @@
 package com.myplanner.myplanner;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 
-import com.myplanner.myplanner.MainScreenFragments.Reminders;
 import com.myplanner.myplanner.UserData.DataRetriever;
 import com.myplanner.myplanner.UserData.PlannerReminder;
 
 import java.util.Calendar;
 
 public class CreateReminder extends AppCompatActivity {
-    private CalendarView dateSelect;
+    private DatePicker dateSelect;
     private TimePicker startTime;
     private EditText titleEditTxt;
     private EditText bodyEditTxt;
     private int reminderID;
-    private int reminderYear;
-    private int reminderMonth;
-    private int reminderDate;
-    private Notification notification;
 
     // ---------------------------------------------------------------------------------------------
     // -------------------------------------- Public Functions -------------------------------------
@@ -51,9 +40,9 @@ public class CreateReminder extends AppCompatActivity {
 
         // create a calendar object at the reminder time
         final Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, reminderYear);
-        cal.set(Calendar.MONTH, reminderMonth);
-        cal.set(Calendar.DATE, reminderDate);
+        cal.set(Calendar.YEAR, dateSelect.getYear());
+        cal.set(Calendar.MONTH, dateSelect.getMonth());
+        cal.set(Calendar.DATE, dateSelect.getDayOfMonth());
         cal.set(Calendar.HOUR_OF_DAY, 0);//24 hour time here, so 0 is the first hour of the day
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.MILLISECOND, 0);
@@ -65,6 +54,7 @@ public class CreateReminder extends AppCompatActivity {
         final String body = bodyEditTxt.getText().toString();
         final PlannerReminder newReminder = new PlannerReminder(reminderMills, title, body, reminderID);
         DataRetriever.getInstance().addReminder(newReminder);
+
         // create the notification
         final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         final Intent actionIntent = new Intent(this, Main.class);
@@ -87,15 +77,8 @@ public class CreateReminder extends AppCompatActivity {
         reminderID = passedData.getInt(Main.ID_TAG);
         final long dateInMills = passedData.getLong(Main.DATE_IN_MILLS_TAG);
 
-        // get the initial date
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(dateInMills);
-        reminderYear = cal.get(Calendar.YEAR);
-        reminderMonth = cal.get(Calendar.MONTH);
-        reminderDate = cal.get(Calendar.DATE);
-
         // get the editable elements of the activity
-        dateSelect = (CalendarView) findViewById(R.id.date_selector);
+        dateSelect = (DatePicker) findViewById(R.id.date_selector);
         startTime = (TimePicker) findViewById(R.id.time_selector);
         titleEditTxt = (EditText) findViewById(R.id.title_edit_text);
         bodyEditTxt = (EditText) findViewById(R.id.body_edit_text);
@@ -106,20 +89,22 @@ public class CreateReminder extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // get the initial date
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(dateInMills);
+        final int startYear = cal.get(Calendar.YEAR);
+        final int startMonth = cal.get(Calendar.MONTH);
+        final int startDate = cal.get(Calendar.DATE);
+
         // set up the date selector, making it skip to the time selector when a date is chosen
-        dateSelect.setDate(dateInMills);
-        dateSelect.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        dateSelect.init(startYear, startMonth, startDate, new DatePicker.OnDateChangedListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 final NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
                 final RelativeLayout calendarLayout = (RelativeLayout) findViewById(R.id.date_selector_layout);
-                final int margin = ((int)getResources().getDimension(R.dimen.activity_vertical_margin)) * 2;
+                final int margin = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
                 int offset = margin + calendarLayout.getHeight();
                 nestedScrollView.smoothScrollTo(0, offset);
-
-                reminderYear = year;
-                reminderMonth = month;
-                reminderDate = dayOfMonth;
             }
         });
 

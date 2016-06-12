@@ -1,7 +1,6 @@
 package com.myplanner.myplanner;
 
-import android.content.Context;
-import android.content.res.Resources;
+import android.content.Intent;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -27,7 +26,7 @@ import java.util.Calendar;
 
 public class CreateEvent extends AppCompatActivity {
     private NestedScrollView scrollView;
-    private CalendarView dateSelect;
+    private DatePicker dateSelect;
     private TimePicker startTime;
     private NumberPicker durationHours;
     private NumberPicker durationMinutes;
@@ -39,10 +38,8 @@ public class CreateEvent extends AppCompatActivity {
     private final int millsPerMinute = 60000;
 
     private int eventID;
-    private int startYear;
-    private int startMonth;
-    private int startDate;
     private float durationContainerHeight = -1;
+    private long startMills = System.currentTimeMillis();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +51,11 @@ public class CreateEvent extends AppCompatActivity {
 
         eventID = passedData.getInt(Main.ID_TAG);
         final long dateInMills = passedData.getLong(Main.DATE_IN_MILLS_TAG);
+        startMills = dateInMills;
 
         // save the editable elements
         scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
-        dateSelect = (CalendarView) findViewById(R.id.date_selector);
+        dateSelect = (DatePicker) findViewById(R.id.date_selector);
         startTime = (TimePicker) findViewById(R.id.time_selector);
         durationHours = (NumberPicker) findViewById(R.id.duration_hour_selector);
         durationMinutes = (NumberPicker) findViewById(R.id.duration_minute_selector);
@@ -75,23 +73,18 @@ public class CreateEvent extends AppCompatActivity {
         // get the initial date
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(dateInMills);
-        startYear = cal.get(Calendar.YEAR);
-        startMonth = cal.get(Calendar.MONTH);
-        startDate = cal.get(Calendar.DATE);
+        final int startYear = cal.get(Calendar.YEAR);
+        final int startMonth = cal.get(Calendar.MONTH);
+        final int startDate = cal.get(Calendar.DATE);
 
         // set up the date selector, making it skip to the time select when a date is chosen
-        dateSelect.setDate(dateInMills);
-        dateSelect.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        dateSelect.init(startYear, startMonth, startDate, new DatePicker.OnDateChangedListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 final RelativeLayout calendarLayout = (RelativeLayout) findViewById(R.id.date_selector_layout);
-                final int margin = ((int)getResources().getDimension(R.dimen.activity_vertical_margin)) * 2;
+                final int margin = (int)getResources().getDimension(R.dimen.activity_vertical_margin);
                 int offset = margin + calendarLayout.getHeight();
                 scrollView.smoothScrollTo(0, offset);
-
-                startYear = year;
-                startMonth = month;
-                startDate = dayOfMonth;
             }
         });
 
@@ -167,7 +160,7 @@ public class CreateEvent extends AppCompatActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                returnToHome();
             }
         });
 
@@ -175,7 +168,7 @@ public class CreateEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 insertEvent();
-                finish();
+                returnToHome();
             }
         });
 
@@ -210,14 +203,14 @@ public class CreateEvent extends AppCompatActivity {
 
         switch (id) {
             case android.R.id.home:
-                finish();
+                returnToHome();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void insertEvent() {
+    private void insertEvent() {
         final int newDayTimeMills = startTime.getCurrentHour() * millsPerHour + startTime.getCurrentMinute() * millsPerMinute;
         int eventDurationMills = (99 - durationHours.getValue()) * millsPerHour + (59 - durationMinutes.getValue()) * millsPerMinute;
 
@@ -226,20 +219,28 @@ public class CreateEvent extends AppCompatActivity {
         }
 
         final Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, startYear);
-        cal.set(Calendar.MONTH, startMonth);
-        cal.set(Calendar.DATE, startDate);
+        cal.set(Calendar.YEAR, dateSelect.getYear());
+        cal.set(Calendar.MONTH, dateSelect.getMonth());
+        cal.set(Calendar.DATE, dateSelect.getDayOfMonth());
         cal.set(Calendar.HOUR_OF_DAY, 0);//24 hour time here, so 0 is the first hour of the day
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.MILLISECOND, 0);
 
-        final long startMills = cal.getTimeInMillis() + newDayTimeMills;
+        startMills = cal.getTimeInMillis() + newDayTimeMills;
         final long endMills = startMills + eventDurationMills;
         final String title = titleEditTxt.getText().toString();
         final String body = bodyEditTxt.getText().toString();
 
         final PlannerEvent newEvent = new PlannerEvent(startMills, endMills, title, body, eventID);
         DataRetriever.getInstance().addEvent(newEvent);
+    }
+
+    // go back to the home screen
+    private void returnToHome() {
+        final Intent intentBundle = new Intent(CreateEvent.this, Main.class);
+        intentBundle.putExtra(Main.TAB_TAG, 0);
+        intentBundle.putExtra(Main.DATE_IN_MILLS_TAG, startMills);
+        startActivity(intentBundle);
     }
 
     private void hideDurationLayout(final RelativeLayout durationLayout) {

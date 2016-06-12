@@ -34,9 +34,9 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     public static final String TAB_TAG = "tab";
     public static final String POSSIBLE_TAGS_TAG = "possibleTags";
     public static final String DATE_IN_MILLS_TAG = "dateInMills";
-    public static final String NEXT_EVENT_ID_TAG = "nextEventID";
-    public static final String NEXT_NOTE_ID_TAG = "nextNoteID";
-    public static final String NEXT_REMINDER_ID_TAG = "nextReminderID";
+    private static final String NEXT_EVENT_ID_TAG = "nextEventID";
+    private static final String NEXT_NOTE_ID_TAG = "nextNoteID";
+    private static final String NEXT_REMINDER_ID_TAG = "nextReminderID";
 
     private final int NUM_FRAGMENTS = 3;
     // these values are overwritten in onCreate with the string resource values
@@ -199,11 +199,20 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         curDate = cal.get(Calendar.DATE);
         curMonth = cal.get(Calendar.MONTH);
         curYear = cal.get(Calendar.YEAR);
-
-        reloadData(0);
-    }
+        if (userData != null) {
+            reloadData(0);
+        }    }
 
     // change the date being looked at, and refresh all the fragments to reflect the change
+    private void goToDate(final long timeInMills) {
+        cal.setTimeInMillis(timeInMills);
+        curYear = cal.get(Calendar.YEAR);
+        curMonth = cal.get(Calendar.MONTH);
+        curDate = cal.get(Calendar.DATE);
+        if (userData != null) {
+            reloadData(0);
+        }
+    }
     private void goToDate(final int year, final int month, final int date) {
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
@@ -211,9 +220,9 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         curDate = date;
         curMonth = month;
         curYear = year;
-
-        reloadData(0);
-    }
+        if (userData != null) {
+            reloadData(0);
+        }    }
 
     // ---------------------------------------------------------------------------------------------
     // ------------------------------------ Override Functions -------------------------------------
@@ -257,8 +266,11 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
         // open to a certain tab if required
         if (getIntent() != null && getIntent().getExtras() != null) {
-            final int tab = getIntent().getExtras().getInt(TAB_TAG);
+            Bundle extras = getIntent().getExtras();
+            final int tab = extras.getInt(TAB_TAG, 0);
             viewPager.setCurrentItem(tab);
+            final long dateInMills = extras.getLong(DATE_IN_MILLS_TAG, System.currentTimeMillis());
+            goToDate(dateInMills);
         }
     }
 

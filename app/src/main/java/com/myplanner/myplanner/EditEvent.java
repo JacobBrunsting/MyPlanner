@@ -183,7 +183,7 @@ public class EditEvent extends AppCompatActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                returnToHome();
             }
         });
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +191,7 @@ public class EditEvent extends AppCompatActivity {
             public void onClick(View v) {
                 removeOldEvent();
                 insertEvent();
-                finish();
+                returnToHome();
             }
         });
 
@@ -235,7 +235,7 @@ public class EditEvent extends AppCompatActivity {
                 returnToHome();
                 break;
             case android.R.id.home:
-                finish();
+                returnToHome();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -275,6 +275,8 @@ public class EditEvent extends AppCompatActivity {
     // go back to the home screen
     private void returnToHome() {
         final Intent intentBundle = new Intent(EditEvent.this, Main.class);
+        intentBundle.putExtra(Main.TAB_TAG, 0);
+        intentBundle.putExtra(Main.DATE_IN_MILLS_TAG, startMills);
         startActivity(intentBundle);
     }
 
