@@ -16,7 +16,9 @@
         android:hint="@string/add_note_tag_hint"
         android:lines="1"
         android:maxLines="1"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionDone"
+        android:dropDownHeight="wrap_content"
+        android:dropDownWidth="match_parent"/>
 
     <Button
         android:id="@+id/accept_tag_button"
@@ -24,5 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:background="@color/colorAccent"
         android:text="@string/accept_note_tag_btn_txt" />
 </RelativeLayout>

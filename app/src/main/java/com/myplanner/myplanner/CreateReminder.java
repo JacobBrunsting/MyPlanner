@@ -67,7 +67,10 @@ public class CreateReminder extends AppCompatActivity {
         DataRetriever.getInstance().addReminder(newReminder);
         // create the notification
         final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        NotificationCreator.addNotification(alarmManager, reminderID, title, body, R.drawable.ic_add_black_24dp, reminderMills, getApplicationContext(), 2);
+        final Intent actionIntent = new Intent(this, Main.class);
+        final PendingIntent actionPendingIntent = PendingIntent.getActivity(this, 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        actionIntent.putExtra(Main.TAB_TAG, 2);
+        NotificationCreator.addNotification(alarmManager, reminderID, title, body, R.drawable.ic_add_black_24dp, reminderMills, getApplicationContext(), actionPendingIntent);
     }
 
     // ---------------------------------------------------------------------------------------------

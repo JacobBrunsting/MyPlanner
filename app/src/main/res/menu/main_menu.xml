@@ -12,8 +12,4 @@
         android:icon="@drawable/ic_arrow_forward_black_48dp"
         android:title="@string/next_day_title"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/settings_button"
-        android:title="@string/settings_title"
-        app:showAsAction="never" />
 </menu>
