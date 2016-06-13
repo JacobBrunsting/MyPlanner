@@ -1,7 +1,14 @@
 package com.myplanner.myplanner.UserData;
 
-import android.util.Log;
+import android.content.Context;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +17,11 @@ public class DataRetriever {
     private static List<PlannerNote> notes;
     private static List<PlannerReminder> reminders;
 
-    int currentTab = 0;
+    private int currentTab = 0;
 
-    final int millsPerHour = 3600000;
-    final int millsPerMinute = 60000;
+    private final int MILLS_PER_HOUR = 3600000;
+    private final int MILLS_PER_MINUTE = 60000;
+    private final String SAVE_FILE_NAME = "MyPlannerSaveFile";
 
     //----------------------------------------------------------------------------------------------
     //-------------------------------- Singleton Class Declarations --------------------------------
@@ -126,13 +134,13 @@ public class DataRetriever {
 
             if (curEvent.getEndYear() == year && curEvent.getEndMonth() == month
                     && curEvent.getEndDate() == date) {
-                long midnightInMills = curEvent.getStartMills() - (curEvent.getStartHour() * millsPerHour + curEvent.getStartMinute() * millsPerMinute);
+                long midnightInMills = curEvent.getStartMills() - (curEvent.getStartHour() * MILLS_PER_HOUR + curEvent.getStartMinute() * MILLS_PER_MINUTE);
                 PlannerEvent tempEvent = new PlannerEvent(midnightInMills, curEvent.getEndMills(), curEvent.getTitle(), curEvent.getMessage(), curEvent.getID());
                 dayEvents.add(newPos++, tempEvent);
             } else if (curEvent.getEndYear() >= year && curEvent.getEndMonth() >= month
                     && curEvent.getEndDate() >= date) {
-                long midnightInMills = curEvent.getStartMills() - (curEvent.getStartHour() * millsPerHour + curEvent.getStartMinute() * millsPerMinute);
-                long lastMinuteInMills = midnightInMills + 24 * millsPerHour - millsPerMinute;
+                long midnightInMills = curEvent.getStartMills() - (curEvent.getStartHour() * MILLS_PER_HOUR + curEvent.getStartMinute() * MILLS_PER_MINUTE);
+                long lastMinuteInMills = midnightInMills + 24 * MILLS_PER_HOUR - MILLS_PER_MINUTE;
                 PlannerEvent tempEvent = new PlannerEvent(midnightInMills, lastMinuteInMills, curEvent.getTitle(), curEvent.getMessage(), curEvent.getID());
                 dayEvents.add(newPos++, tempEvent);
             }
@@ -150,7 +158,7 @@ public class DataRetriever {
             if (curEvent.getEndYear() == year && curEvent.getEndMonth() == month && curEvent.getEndDate() == date) {
                 dayEvents.add(newPos++, curEvent);
             } else {
-                long lastMinuteInMills = curEvent.getStartMills() + (23 - curEvent.getStartHour()) * millsPerHour + (59 - curEvent.getStartMinute()) * millsPerMinute;
+                long lastMinuteInMills = curEvent.getStartMills() + (23 - curEvent.getStartHour()) * MILLS_PER_HOUR + (59 - curEvent.getStartMinute()) * MILLS_PER_MINUTE;
                 PlannerEvent tempEvent = new PlannerEvent(curEvent.getStartMills(), lastMinuteInMills, curEvent.getTitle(), curEvent.getMessage(), curEvent.getID());
                 dayEvents.add(newPos++, tempEvent);
             }
@@ -334,5 +342,56 @@ public class DataRetriever {
     //------------------------------------ Save/Load Functions -------------------------------------
     // ---------------------------------------------------------------------------------------------
 
+    public void SaveData(Context context) {
+        String saveString = "E{";
+        for (PlannerEvent event : events) {
+            saveString += "{" + event.getStartMills() + "," + event.getEndMills() + ","
+                          + event.getTitle() + "," + event.getMessage() + ","
+                          + event.getID() + "}";
+        }
+        saveString += "}N{";
+        for (PlannerNote note : notes) {
+            saveString += "{{";
+            for (int i = 0; i < note.getNumTags(); ++i) {
+                if (i != 0) {
+                    saveString += ",";
+                }
+                saveString += note.getTag(i);
+            }
+            saveString += "}" + note.getTitle() + "," + note.getBody() + "," + note.getID() + "}";
+        }
+        saveString += "}R{";
+        for (PlannerReminder reminder : reminders) {
+            saveString += "{" + reminder.getMills() + "," + reminder.getTitle() + ","
+                          + reminder.getMessage() + "," + reminder.getID() + "}";
+        }
+        saveString += "}";
+        try {
+            FileOutputStream outputStream = context.openFileOutput(SAVE_FILE_NAME, Context.MODE_PRIVATE);
+            outputStream.write(saveString.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void LoadData(Context context) {
+        String saveString;
+        try {
+            File file = new File(context.getCacheDir(), SAVE_FILE_NAME);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            String saveData = "";
+            String line = bufferedReader.readLine();
+            StringBuffer stringBuffer = new StringBuffer();
+            while (line != null) {
+                stringBuffer.append(line);
+                line = bufferedReader.readLine();
+            }
+            saveString = stringBuffer.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveString = "";
+        }
+        // add code to extract the data from the string
+    }
 }

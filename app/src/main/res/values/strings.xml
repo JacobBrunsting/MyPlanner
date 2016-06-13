@@ -37,4 +37,5 @@
     <string name="start_time_title">Start Time</string>
     <string name="title_selector_title">Title</string>
     <string name="event_timed_title">Event Timed</string>
+    <string name="safe_digits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
 </resources>
