@@ -22,6 +22,41 @@ public class DataRetriever {
     private final int MILLS_PER_HOUR = 3600000;
     private final int MILLS_PER_MINUTE = 60000;
     private final String SAVE_FILE_NAME = "MyPlannerSaveFile";
+    private final char SPLIT_CHARACTER = (char) 1;
+    private final char OPENING_CHARACTER = (char) 2;
+    private final char CLOSING_CHARACTER = (char) 3;
+
+    private enum TYPE_CODES {
+        INT, LONG, STRING, STR_ARR
+    }
+
+    //----------------------------------------------------------------------------------------------
+    //--------------------------------- Type Codes Lists for Loading -------------------------------
+    //----------------------------------------------------------------------------------------------
+
+    final static List<TYPE_CODES> eventTypeCodes = new ArrayList<>();
+    final static List<TYPE_CODES> noteTypeCodes = new ArrayList<>();
+    final static List<TYPE_CODES> reminderTypeCodes = new ArrayList<>();
+
+    // these lists are used to decode the save data. The order they are in is the order the
+    //   information is stored in inside of the text file
+    private static void setupTypeCodes() {
+        eventTypeCodes.add(0,TYPE_CODES.LONG);
+        eventTypeCodes.add(1, TYPE_CODES.LONG);
+        eventTypeCodes.add(2, TYPE_CODES.STRING);
+        eventTypeCodes.add(3, TYPE_CODES.STRING);
+        eventTypeCodes.add(4, TYPE_CODES.INT);
+
+        noteTypeCodes.add(0, TYPE_CODES.STR_ARR);
+        noteTypeCodes.add(1, TYPE_CODES.STRING);
+        noteTypeCodes.add(2, TYPE_CODES.STRING);
+        noteTypeCodes.add(3, TYPE_CODES.INT);
+
+        reminderTypeCodes.add(0,TYPE_CODES.LONG);
+        reminderTypeCodes.add(1, TYPE_CODES.STRING);
+        reminderTypeCodes.add(2, TYPE_CODES.STRING);
+        reminderTypeCodes.add(3, TYPE_CODES.INT);
+    }
 
     //----------------------------------------------------------------------------------------------
     //-------------------------------- Singleton Class Declarations --------------------------------
@@ -37,6 +72,7 @@ public class DataRetriever {
             notes = new ArrayList<>();
             reminders = new ArrayList<>();
             instance = new DataRetriever();
+            setupTypeCodes();
             return instance;
         } else {
             return instance;
@@ -343,29 +379,35 @@ public class DataRetriever {
     // ---------------------------------------------------------------------------------------------
 
     public void SaveData(Context context) {
-        String saveString = "E{";
+        final String split = Character.toString(SPLIT_CHARACTER);
+        final String open = Character.toString(OPENING_CHARACTER);
+        final String close = Character.toString(CLOSING_CHARACTER);
+        // events
+        String saveString = open;
         for (PlannerEvent event : events) {
-            saveString += "{" + event.getStartMills() + "," + event.getEndMills() + ","
-                          + event.getTitle() + "," + event.getMessage() + ","
-                          + event.getID() + "}";
+            saveString += open + event.getStartMills() + split + event.getEndMills() + split
+                          + event.getTitle() + split + event.getMessage() + split
+                          + event.getID() + close;
         }
-        saveString += "}N{";
+        // reminders
+        saveString +=  close + open;
         for (PlannerNote note : notes) {
-            saveString += "{{";
+            saveString += open + open;
             for (int i = 0; i < note.getNumTags(); ++i) {
                 if (i != 0) {
-                    saveString += ",";
+                    saveString += split;
                 }
                 saveString += note.getTag(i);
             }
-            saveString += "}" + note.getTitle() + "," + note.getBody() + "," + note.getID() + "}";
+            saveString +=  close + note.getTitle() + split + note.getBody() + split + note.getID() + close;
         }
-        saveString += "}R{";
+        // notes
+        saveString +=  close + open;
         for (PlannerReminder reminder : reminders) {
-            saveString += "{" + reminder.getMills() + "," + reminder.getTitle() + ","
-                          + reminder.getMessage() + "," + reminder.getID() + "}";
+            saveString += open + reminder.getMills() + split + reminder.getTitle() + split
+                          + reminder.getMessage() + split + reminder.getID() +  close;
         }
-        saveString += "}";
+        saveString += close;
         try {
             FileOutputStream outputStream = context.openFileOutput(SAVE_FILE_NAME, Context.MODE_PRIVATE);
             outputStream.write(saveString.getBytes());
@@ -376,11 +418,13 @@ public class DataRetriever {
     }
 
     public void LoadData(Context context) {
+        events.clear();
+        notes.clear();
+        reminders.clear();
         String saveString;
         try {
             File file = new File(context.getCacheDir(), SAVE_FILE_NAME);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-            String saveData = "";
             String line = bufferedReader.readLine();
             StringBuffer stringBuffer = new StringBuffer();
             while (line != null) {
@@ -392,6 +436,113 @@ public class DataRetriever {
             e.printStackTrace();
             saveString = "";
         }
-        // add code to extract the data from the string
+        Integer i = 0;
+        final char[] saveData = saveString.toCharArray();
+        // Events
+        for (; i < saveData.length; ++i) {
+            List eventData = decode(eventTypeCodes, saveData, i);
+            if (eventData != null) {
+                PlannerEvent event = new PlannerEvent((long) eventData.get(0), (long) eventData.get(1),
+                        (String) eventData.get(2), (String) eventData.get(3), (int) eventData.get(4));
+                events.add(event);
+            }
+            if (i >= saveData.length) {
+                return;
+            } else if (saveData[i] == CLOSING_CHARACTER) {
+                ++i;
+                break;
+            }
+        }
+        // Notes
+        for (; i < saveData.length; ++i) {
+            List noteData = decode(noteTypeCodes, saveData, i);
+            if (noteData != null) {
+                PlannerNote note = new PlannerNote((ArrayList<String>) noteData.get(0),
+                        (String) noteData.get(1), (String) noteData.get(2), (int) noteData.get(3));
+                notes.add(note);
+            }
+            if (i >= saveData.length) {
+                return;
+            } else if (saveData[i] == CLOSING_CHARACTER) {
+                ++i;
+                break;
+            }
+        }
+        // Reminders
+        for (; i < saveData.length; ++i) {
+            List reminderData = decode(reminderTypeCodes, saveData, i);
+            if (reminderData != null) {
+                PlannerReminder reminder = new PlannerReminder((long) reminderData.get(0),
+                        (String) reminderData.get(1), (String) reminderData.get(2), (int) reminderData.get(3));
+                reminders.add(reminder);
+            }
+            if (i >= saveData.length || saveData[i] == CLOSING_CHARACTER) {
+                return;
+            }
+        }
+    }
+
+    // decodes until all fields are filled, so excess trailing characters are OK. It makes
+    //   startingIndex point to the character after the closing character of the last chunk
+    private List decode(List<TYPE_CODES> typeCodes,  char[] cArr, Integer startingIndex) {
+        int i = startingIndex.intValue();
+        List decodedData = new ArrayList();
+        int intVal = 0;
+        long longVal = 0;
+        String stringVal = "";
+
+        for (int t = 0; t < typeCodes.size(); ++t) {
+            for (; i < cArr.length && cArr[i] == OPENING_CHARACTER; ++i);
+            switch (typeCodes.get(t)) {
+                case INT:
+                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                        if (cArr[i] >= '0' && cArr[i] <= '9') {
+                            intVal = intVal * 10 + (cArr[i] - '0');
+                        } else {
+                            return null;
+                        }
+                    }
+                    decodedData.add(t, intVal);
+                    intVal = 0;
+                    break;
+                case LONG:
+                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                        if (cArr[i] >= '0' && cArr[i] <= '9') {
+                            longVal = longVal * 10 + (cArr[i] - '0');
+                        } else {
+                            return null;
+                        }
+                    }
+                    decodedData.add(t, longVal);
+                    longVal = 0;
+                    break;
+                case STRING:
+                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                        stringVal += cArr[i];
+                    }
+                    decodedData.add(t, stringVal);
+                    stringVal = "";
+                    break;
+                case STR_ARR:
+                    List<String> strings = new ArrayList<>();
+                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                        String string = "";
+                        for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                            if (cArr[i] == SPLIT_CHARACTER) {
+                                if (!"".equals(string)) {
+                                    strings.add(string);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    decodedData.add(strings);
+                    break;
+            }
+        }
+        if (i + 1 < cArr.length) {
+            ++i;
+        }
+        return decodedData;
     }
 }
