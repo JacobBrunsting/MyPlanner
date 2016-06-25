@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.myplanner.myplanner">
+          package="com.myplanner.myplanner">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <application
@@ -12,20 +12,29 @@
         android:label="Planner"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Main">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".Main"/>
+        <activity android:name=".EditEvent"/>
+        <activity android:name=".CreateEvent"/>
+        <activity android:name=".CreateReminder"/>
+        <activity android:name=".EditReminder"/>
+        <activity android:name=".CreateNote"/>
+        <activity android:name=".EditNote"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        <uses-sdk android:minSdkVersion="21"/>
+
+        <receiver android:name=".NotificationCreator$NotificationReceiver"/>
+
+        <activity
+            android:name=".SplashActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_splash"
+            android:theme="@style/FullscreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".EditEvent" />
-        <activity android:name=".CreateEvent" />
-        <activity android:name=".CreateReminder" />
-        <activity android:name=".EditReminder" />
-        <activity android:name=".CreateNote" />
-        <activity android:name=".EditNote"></activity>
-        <uses-sdk android:minSdkVersion="21" />
-        <receiver android:name=".NotificationCreator$NotificationReceiver"/>
     </application>
+
 </manifest>

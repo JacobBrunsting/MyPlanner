@@ -1,7 +1,6 @@
 package com.myplanner.myplanner;
 
 import android.app.DatePickerDialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -262,6 +261,16 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             final long dateInMills = extras.getLong(DATE_IN_MILLS_TAG, System.currentTimeMillis());
             goToDate(dateInMills);
         }
+
+        Thread loadingThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (DataRetriever.getInstance().LoadData(getApplicationContext())) {
+                    reloadData();
+                }
+            }
+        });
+        loadingThread.start();
     }
 
     // set the toolbar to follow the main_menu layout
@@ -316,6 +325,12 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         // retrieve the user data from the singleton class DataRetriever
         userData = DataRetriever.getInstance();
         reloadData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DataRetriever.getInstance().saveData(getApplicationContext());
     }
 
     // override for when a toolbar button is clicked

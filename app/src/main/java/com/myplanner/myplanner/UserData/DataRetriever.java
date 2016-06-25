@@ -19,12 +19,12 @@ public class DataRetriever {
 
     private int currentTab = 0;
 
-    private final int MILLS_PER_HOUR = 3600000;
-    private final int MILLS_PER_MINUTE = 60000;
-    private final String SAVE_FILE_NAME = "MyPlannerSaveFile";
-    private final char SPLIT_CHARACTER = (char) 1;
-    private final char OPENING_CHARACTER = (char) 2;
-    private final char CLOSING_CHARACTER = (char) 3;
+    private static final int MILLS_PER_HOUR = 3600000;
+    private static final int MILLS_PER_MINUTE = 60000;
+    private static final String SAVE_FILE_NAME = "MyPlannerSaveFile";
+    private static final char SPLIT_CHARACTER = (char) 1;
+    private static final char OPENING_CHARACTER = (char) 2;
+    private static final char CLOSING_CHARACTER = (char) 3;
 
     private enum TYPE_CODES {
         INT, LONG, STRING, STR_ARR
@@ -378,7 +378,7 @@ public class DataRetriever {
     //------------------------------------ Save/Load Functions -------------------------------------
     // ---------------------------------------------------------------------------------------------
 
-    public void SaveData(Context context) {
+    public void saveData(Context context) {
         final String split = Character.toString(SPLIT_CHARACTER);
         final String open = Character.toString(OPENING_CHARACTER);
         final String close = Character.toString(CLOSING_CHARACTER);
@@ -417,7 +417,7 @@ public class DataRetriever {
         }
     }
 
-    public void LoadData(Context context) {
+    public boolean LoadData(Context context) {
         events.clear();
         notes.clear();
         reminders.clear();
@@ -434,7 +434,7 @@ public class DataRetriever {
             saveString = stringBuffer.toString();
         } catch (Exception e) {
             e.printStackTrace();
-            saveString = "";
+            return false;
         }
         Integer i = 0;
         final char[] saveData = saveString.toCharArray();
@@ -447,7 +447,7 @@ public class DataRetriever {
                 events.add(event);
             }
             if (i >= saveData.length) {
-                return;
+                return true;
             } else if (saveData[i] == CLOSING_CHARACTER) {
                 ++i;
                 break;
@@ -462,7 +462,7 @@ public class DataRetriever {
                 notes.add(note);
             }
             if (i >= saveData.length) {
-                return;
+                return true;
             } else if (saveData[i] == CLOSING_CHARACTER) {
                 ++i;
                 break;
@@ -477,9 +477,10 @@ public class DataRetriever {
                 reminders.add(reminder);
             }
             if (i >= saveData.length || saveData[i] == CLOSING_CHARACTER) {
-                return;
+                return true;
             }
         }
+        return true;
     }
 
     // decodes until all fields are filled, so excess trailing characters are OK. It makes
