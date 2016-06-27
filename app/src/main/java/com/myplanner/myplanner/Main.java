@@ -261,16 +261,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             final long dateInMills = extras.getLong(DATE_IN_MILLS_TAG, System.currentTimeMillis());
             goToDate(dateInMills);
         }
-
-        Thread loadingThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (DataRetriever.getInstance().LoadData(getApplicationContext())) {
-                    reloadData();
-                }
-            }
-        });
-        loadingThread.start();
     }
 
     // set the toolbar to follow the main_menu layout
@@ -329,8 +319,8 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         DataRetriever.getInstance().saveData(getApplicationContext());
+        super.onDestroy();
     }
 
     // override for when a toolbar button is clicked

@@ -1,6 +1,7 @@
 package com.myplanner.myplanner.UserData;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -408,9 +409,10 @@ public class DataRetriever {
                           + reminder.getMessage() + split + reminder.getID() +  close;
         }
         saveString += close;
+        Log.i("DataRetriever", "Saving " + saveString);
         try {
-            FileOutputStream outputStream = context.openFileOutput(SAVE_FILE_NAME, Context.MODE_PRIVATE);
-            outputStream.write(saveString.getBytes());
+            OutputStreamWriter outputStream = new OutputStreamWriter(context.openFileOutput(SAVE_FILE_NAME, Context.MODE_PRIVATE));
+            outputStream.write(saveString);
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -422,20 +424,24 @@ public class DataRetriever {
         notes.clear();
         reminders.clear();
         String saveString;
+        Log.i("DataRetriever", "Trying to load");
         try {
-            File file = new File(context.getCacheDir(), SAVE_FILE_NAME);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            InputStream stream = context.openFileInput(SAVE_FILE_NAME);
+            InputStreamReader reader = new InputStreamReader(stream);
+            BufferedReader bufferedReader = new BufferedReader(reader);
             String line = bufferedReader.readLine();
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             while (line != null) {
                 stringBuffer.append(line);
                 line = bufferedReader.readLine();
             }
+            stream.close();
             saveString = stringBuffer.toString();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        Log.i("DataRetriever", "Loading " + saveString);
         Integer i = 0;
         final char[] saveData = saveString.toCharArray();
         // Events
@@ -496,7 +502,7 @@ public class DataRetriever {
             for (; i < cArr.length && cArr[i] == OPENING_CHARACTER; ++i);
             switch (typeCodes.get(t)) {
                 case INT:
-                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                    for (; i < cArr.length && cArr[i] != SPLIT_CHARACTER && cArr[i] != CLOSING_CHARACTER; ++i) {
                         if (cArr[i] >= '0' && cArr[i] <= '9') {
                             intVal = intVal * 10 + (cArr[i] - '0');
                         } else {
@@ -507,7 +513,7 @@ public class DataRetriever {
                     intVal = 0;
                     break;
                 case LONG:
-                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                    for (; i < cArr.length && cArr[i] != SPLIT_CHARACTER && cArr[i] != CLOSING_CHARACTER; ++i) {
                         if (cArr[i] >= '0' && cArr[i] <= '9') {
                             longVal = longVal * 10 + (cArr[i] - '0');
                         } else {
@@ -518,7 +524,7 @@ public class DataRetriever {
                     longVal = 0;
                     break;
                 case STRING:
-                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                    for (; i < cArr.length && cArr[i] != SPLIT_CHARACTER && cArr[i] != CLOSING_CHARACTER; ++i) {
                         stringVal += cArr[i];
                     }
                     decodedData.add(t, stringVal);
@@ -526,7 +532,8 @@ public class DataRetriever {
                     break;
                 case STR_ARR:
                     List<String> strings = new ArrayList<>();
-                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
+                    for (; i < cArr.length && cArr[i] == OPENING_CHARACTER; ++i);
+                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER && cArr[i] != CLOSING_CHARACTER; ++i) {
                         String string = "";
                         for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
                             if (cArr[i] == SPLIT_CHARACTER) {
@@ -535,6 +542,9 @@ public class DataRetriever {
                                 }
                                 break;
                             }
+                        }
+                        if (cArr[i] == CLOSING_CHARACTER) {
+                            break;
                         }
                     }
                     decodedData.add(strings);
