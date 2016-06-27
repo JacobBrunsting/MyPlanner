@@ -118,6 +118,7 @@ public class EditReminder extends AppCompatActivity {
         switch (id) {
             case R.id.delete_button:
                 removeOldReminder();
+                cancelNotification();
                 returnToHome();
                 break;
             case android.R.id.home:
@@ -152,13 +153,17 @@ public class EditReminder extends AppCompatActivity {
         final PendingIntent actionPendingIntent = PendingIntent.getActivity(this, 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         actionIntent.putExtra(Main.TAB_TAG, 2);
         NotificationCreator.addNotification(alarmManager, id, title, body, R.drawable.ic_add_black_24dp, timeMills, getApplicationContext(), actionPendingIntent);
-
-
     }
 
     // delete the reminder being edited
     private void removeOldReminder() {
         userData.removeReminder(id);
+    }
+
+    // cancel the reminders notification
+    private void cancelNotification() {
+        final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        NotificationCreator.removeNotification(alarmManager, id, getApplicationContext());
     }
 
     // go back to the home screen

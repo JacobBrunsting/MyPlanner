@@ -37,6 +37,13 @@ public class NotificationCreator {
         }
     }
 
+    public static void removeNotification(final AlarmManager alarmManager, final int id, final Context context) {
+        final Intent notificationIntent = new Intent(context, NotificationReceiver.class);
+        notificationIntent.putExtra(ID, id);
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
+    }
+
     public static class NotificationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
