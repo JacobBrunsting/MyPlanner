@@ -11,7 +11,13 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataRetriever.getInstance().LoadData(getApplicationContext());
-        startActivity(new Intent(SplashActivity.this, Main.class));
+        Thread loadThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DataRetriever.getInstance().LoadData(getApplicationContext());
+                startActivity(new Intent(SplashActivity.this, Main.class));
+            }
+        });
+        loadThread.start();
     }
 }

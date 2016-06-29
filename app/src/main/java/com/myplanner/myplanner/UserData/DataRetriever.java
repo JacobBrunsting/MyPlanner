@@ -19,13 +19,17 @@ public class DataRetriever {
     private static List<PlannerReminder> reminders;
 
     private int currentTab = 0;
+    private int ioCounter = 0;
 
     private static final int MILLS_PER_HOUR = 3600000;
     private static final int MILLS_PER_MINUTE = 60000;
     private static final String SAVE_FILE_NAME = "MyPlannerSaveFile";
-    private static final char SPLIT_CHARACTER = (char) 1;
-    private static final char OPENING_CHARACTER = (char) 2;
-    private static final char CLOSING_CHARACTER = (char) 3;
+    //private static final char SPLIT_CHARACTER = (char) 1;
+    //private static final char OPENING_CHARACTER = (char) 2;
+    //private static final char CLOSING_CHARACTER = (char) 3;
+    private static final char SPLIT_CHARACTER = (char) ',';
+    private static final char OPENING_CHARACTER = (char) '{';
+    private static final char CLOSING_CHARACTER = (char) '}';
 
     private enum TYPE_CODES {
         INT, LONG, STRING, STR_ARR
@@ -442,118 +446,144 @@ public class DataRetriever {
             return false;
         }
         Log.i("DataRetriever", "Loading " + saveString);
-        Integer i = 0;
         final char[] saveData = saveString.toCharArray();
+        Log.i("DataRetriever", "Loading events");
+        // the io counter starts at 1 to skip over the opening section bracket for the events
+        ioCounter = 1;
         // Events
-        for (; i < saveData.length; ++i) {
-            List eventData = decode(eventTypeCodes, saveData, i);
+        for (; ioCounter < saveData.length; ++ioCounter) {
+            List eventData = decode(eventTypeCodes, saveData);
             if (eventData != null) {
                 PlannerEvent event = new PlannerEvent((long) eventData.get(0), (long) eventData.get(1),
                         (String) eventData.get(2), (String) eventData.get(3), (int) eventData.get(4));
                 events.add(event);
+                Log.i("DataRetrievier", "Added event " + " IO counter is at " + ioCounter);
             }
-            if (i >= saveData.length) {
+            if (ioCounter >= saveData.length) {
                 return true;
-            } else if (saveData[i] == CLOSING_CHARACTER) {
-                ++i;
+            } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
+                ++ioCounter;
                 break;
             }
         }
+        Log.i("DataRetriever", "Loading notes");
+        // we increment the io counter to skip over the opening section bracket for the notes
+        ++ioCounter;
         // Notes
-        for (; i < saveData.length; ++i) {
-            List noteData = decode(noteTypeCodes, saveData, i);
+        for (; ioCounter < saveData.length; ++ioCounter) {
+            List noteData = decode(noteTypeCodes, saveData);
             if (noteData != null) {
                 PlannerNote note = new PlannerNote((ArrayList<String>) noteData.get(0),
                         (String) noteData.get(1), (String) noteData.get(2), (int) noteData.get(3));
                 notes.add(note);
+                Log.i("DataRetrievier", "Added note " + " IO counter is at " + ioCounter);
             }
-            if (i >= saveData.length) {
+            if (ioCounter >= saveData.length) {
                 return true;
-            } else if (saveData[i] == CLOSING_CHARACTER) {
-                ++i;
+            } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
+                ++ioCounter;
                 break;
             }
         }
+        Log.i("DataRetriever", "Loading reminders");
+        // we increment the io counter to skip over the opening section bracket for the reminders
+        ++ioCounter;
         // Reminders
-        for (; i < saveData.length; ++i) {
-            List reminderData = decode(reminderTypeCodes, saveData, i);
+        for (; ioCounter < saveData.length; ++ioCounter) {
+            List reminderData = decode(reminderTypeCodes, saveData);
             if (reminderData != null) {
                 PlannerReminder reminder = new PlannerReminder((long) reminderData.get(0),
                         (String) reminderData.get(1), (String) reminderData.get(2), (int) reminderData.get(3));
                 reminders.add(reminder);
+                Log.i("DataRetrievier", "Added reminder " + " IO counter is at " + ioCounter);
             }
-            if (i >= saveData.length || saveData[i] == CLOSING_CHARACTER) {
+            if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
                 return true;
             }
         }
         return true;
     }
 
-    // decodes until all fields are filled, so excess trailing characters are OK. It makes
-    //   startingIndex point to the character after the closing character of the last chunk
-    private List decode(List<TYPE_CODES> typeCodes,  char[] cArr, Integer startingIndex) {
-        int i = startingIndex.intValue();
+    // decodes until all fields are filled, so excess trailing characters are OK
+    private List decode(List<TYPE_CODES> typeCodes,  char[] cArr) {
         List decodedData = new ArrayList();
         int intVal = 0;
         long longVal = 0;
         String stringVal = "";
 
+        // if the body is empty
+        if (ioCounter < cArr.length && cArr[ioCounter] == CLOSING_CHARACTER) {
+            return null;
+        }
+
         for (int t = 0; t < typeCodes.size(); ++t) {
-            for (; i < cArr.length && cArr[i] == OPENING_CHARACTER; ++i);
             switch (typeCodes.get(t)) {
                 case INT:
-                    for (; i < cArr.length && cArr[i] != SPLIT_CHARACTER && cArr[i] != CLOSING_CHARACTER; ++i) {
-                        if (cArr[i] >= '0' && cArr[i] <= '9') {
-                            intVal = intVal * 10 + (cArr[i] - '0');
+                    for (; ioCounter < cArr.length && cArr[ioCounter] != SPLIT_CHARACTER && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
+                        if (cArr[ioCounter] >= '0' && cArr[ioCounter] <= '9') {
+                            intVal = intVal * 10 + (cArr[ioCounter] - '0');
                         } else {
                             return null;
                         }
                     }
+                    Log.i("DataRetriever", "Adding int " + intVal + " IO counter is at " + ioCounter);
                     decodedData.add(t, intVal);
                     intVal = 0;
                     break;
                 case LONG:
-                    for (; i < cArr.length && cArr[i] != SPLIT_CHARACTER && cArr[i] != CLOSING_CHARACTER; ++i) {
-                        if (cArr[i] >= '0' && cArr[i] <= '9') {
-                            longVal = longVal * 10 + (cArr[i] - '0');
+                    for (; ioCounter < cArr.length && cArr[ioCounter] != SPLIT_CHARACTER && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
+                        if (cArr[ioCounter] >= '0' && cArr[ioCounter] <= '9') {
+                            longVal = longVal * 10 + (cArr[ioCounter] - '0');
                         } else {
                             return null;
                         }
                     }
+                    Log.i("DataRetriever", "Adding long " + longVal + " IO counter is at " + ioCounter);
                     decodedData.add(t, longVal);
                     longVal = 0;
                     break;
                 case STRING:
-                    for (; i < cArr.length && cArr[i] != SPLIT_CHARACTER && cArr[i] != CLOSING_CHARACTER; ++i) {
-                        stringVal += cArr[i];
+                    for (; ioCounter < cArr.length && cArr[ioCounter] != SPLIT_CHARACTER && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
+                        stringVal += cArr[ioCounter];
                     }
+                    Log.i("DataRetriever", "Adding string " + stringVal + " IO counter is at " + ioCounter);
                     decodedData.add(t, stringVal);
                     stringVal = "";
                     break;
                 case STR_ARR:
                     List<String> strings = new ArrayList<>();
-                    for (; i < cArr.length && cArr[i] == OPENING_CHARACTER; ++i);
-                    for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER && cArr[i] != CLOSING_CHARACTER; ++i) {
+                    // we increment the io counter to skip over the opening character at the start
+                    //   of the array
+                    ++ioCounter;
+                    for (; ioCounter < cArr.length && cArr[ioCounter] != CLOSING_CHARACTER && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
                         String string = "";
-                        for (; i < cArr.length && cArr[i] != CLOSING_CHARACTER; ++i) {
-                            if (cArr[i] == SPLIT_CHARACTER) {
+                        for (; ioCounter < cArr.length && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
+                            if (cArr[ioCounter] == SPLIT_CHARACTER) {
                                 if (!"".equals(string)) {
                                     strings.add(string);
                                 }
                                 break;
                             }
                         }
-                        if (cArr[i] == CLOSING_CHARACTER) {
+                        if (cArr[ioCounter] == CLOSING_CHARACTER) {
                             break;
                         }
                     }
+                    Log.i("DataRetriever", "Adding string arr " + strings + " IO counter is at " + ioCounter);
                     decodedData.add(strings);
+                    // we increment the io counter to skip over the closing character at the end of
+                    //   the array
+                    ++ioCounter;
                     break;
             }
+            // we always increment the io counter to skip over the split/closing character that
+            //   seperates the data chunks
+            ++ioCounter;
         }
-        if (i + 1 < cArr.length) {
-            ++i;
-        }
+        // we add one to the io counter because the 'for' loop breaks when the closing bracket is
+        //   reached, so we want to skip over the closing bracket to make the io counter point to
+        //   the  start of the next section
+        ++ioCounter;
         return decodedData;
     }
 }
