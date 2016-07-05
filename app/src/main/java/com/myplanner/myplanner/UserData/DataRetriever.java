@@ -451,47 +451,71 @@ public class DataRetriever {
         // the io counter starts at 1 to skip over the opening section bracket for the events
         ioCounter = 1;
         // Events
-        for (; ioCounter < saveData.length; ++ioCounter) {
-            List eventData = decode(eventTypeCodes, saveData);
-            if (eventData != null) {
-                PlannerEvent event = new PlannerEvent((long) eventData.get(0), (long) eventData.get(1),
-                        (String) eventData.get(2), (String) eventData.get(3), (int) eventData.get(4));
-                events.add(event);
-                Log.i("DataRetrievier", "Added event " + " IO counter is at " + ioCounter);
-            }
-            if (ioCounter >= saveData.length) {
-                return true;
-            } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
-                ++ioCounter;
-                break;
+        if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
+            // if the section is empty, skip over the closing character and look at the next section
+            ioCounter ++;
+        } else {
+            while (ioCounter < saveData.length) {
+                if (saveData[ioCounter] == CLOSING_CHARACTER) {
+                    ++ioCounter;
+                    break;
+                }
+                List eventData = decode(eventTypeCodes, saveData);
+                if (eventData == null) {
+                    break;
+                } else {
+                    PlannerEvent event = new PlannerEvent((long) eventData.get(0), (long) eventData.get(1),
+                            (String) eventData.get(2), (String) eventData.get(3), (int) eventData.get(4));
+                    events.add(event);
+                    Log.i("DataRetrievier", "Added event " + " IO counter is at " + ioCounter);
+                }
+                if (ioCounter >= saveData.length) {
+                    return true;
+                } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
+                    break;
+                }
             }
         }
         Log.i("DataRetriever", "Loading notes");
-        // we increment the io counter to skip over the opening section bracket for the notes
-        ++ioCounter;
+        // we increment the io counter twice; once to skip over the closing bracket of the events
+        //   section, and once to skip over the opening section bracket for the notes
+        ioCounter += 2;
         // Notes
-        for (; ioCounter < saveData.length; ++ioCounter) {
-            List noteData = decode(noteTypeCodes, saveData);
-            if (noteData != null) {
-                PlannerNote note = new PlannerNote((ArrayList<String>) noteData.get(0),
-                        (String) noteData.get(1), (String) noteData.get(2), (int) noteData.get(3));
-                notes.add(note);
-                Log.i("DataRetrievier", "Added note " + " IO counter is at " + ioCounter);
-            }
-            if (ioCounter >= saveData.length) {
-                return true;
-            } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
-                ++ioCounter;
-                break;
+        if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
+            // if the section is empty, skip over the closing character and look at the next section
+            ioCounter ++;
+        } else {
+            while (ioCounter < saveData.length) {
+                List noteData = decode(noteTypeCodes, saveData);
+                if (noteData == null) {
+                    break;
+                } else {
+                    PlannerNote note = new PlannerNote((ArrayList<String>) noteData.get(0),
+                            (String) noteData.get(1), (String) noteData.get(2), (int) noteData.get(3));
+                    notes.add(note);
+                    Log.i("DataRetrievier", "Added note " + " IO counter is at " + ioCounter);
+                }
+                if (ioCounter >= saveData.length) {
+                    return true;
+                } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
+                    break;
+                }
             }
         }
         Log.i("DataRetriever", "Loading reminders");
-        // we increment the io counter to skip over the opening section bracket for the reminders
-        ++ioCounter;
+        // we increment the io counter twice; once to skip over the closing bracket of the notes
+        //   section, and once to skip over the opening section bracket for the reminders
+        ioCounter += 2;
         // Reminders
-        for (; ioCounter < saveData.length; ++ioCounter) {
+        if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
+            // if the section is empty, we are done, since this is the last section
+            return true;
+        }
+        while (ioCounter < saveData.length) {
             List reminderData = decode(reminderTypeCodes, saveData);
-            if (reminderData != null) {
+            if (reminderData == null) {
+                break;
+            } else {
                 PlannerReminder reminder = new PlannerReminder((long) reminderData.get(0),
                         (String) reminderData.get(1), (String) reminderData.get(2), (int) reminderData.get(3));
                 reminders.add(reminder);
@@ -510,6 +534,9 @@ public class DataRetriever {
         int intVal = 0;
         long longVal = 0;
         String stringVal = "";
+
+        // increment ioCounter to skip over the opening bracket
+        ioCounter++;
 
         // if the body is empty
         if (ioCounter < cArr.length && cArr[ioCounter] == CLOSING_CHARACTER) {
@@ -577,13 +604,10 @@ public class DataRetriever {
                     break;
             }
             // we always increment the io counter to skip over the split/closing character that
-            //   seperates the data chunks
+            //   separates the data chunks. This also will skip over the closing character, making
+            //   ioCounter point to the next chunk of data to be loaded.
             ++ioCounter;
         }
-        // we add one to the io counter because the 'for' loop breaks when the closing bracket is
-        //   reached, so we want to skip over the closing bracket to make the io counter point to
-        //   the  start of the next section
-        ++ioCounter;
         return decodedData;
     }
 }
