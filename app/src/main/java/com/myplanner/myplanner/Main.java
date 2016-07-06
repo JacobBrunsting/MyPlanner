@@ -59,6 +59,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     private int nextEventID = 0;
     private int nextNoteID = 0;
     private int nextReminderID = 0;
+    private boolean shouldSaveOnPause = true;
 
     // ---------------------------------------------------------------------------------------------
     // ---------------------------- Events Fragment Interface Functions ----------------------------
@@ -68,6 +69,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     //   is clicked, and it opens an activity to edit the event that was clicked
     public void eventClickedAction(int eventID) {
         if (userData.getEventByID(eventID) != null) {
+            shouldSaveOnPause = false;
             // start the edit event activity to create a new event from the old data
             Intent intentBundle = new Intent(Main.this, EditEvent.class);
             Bundle bundle = new Bundle();
@@ -85,6 +87,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     //   fragment is clicked, and it opens an activity to edit the event that was clicked
     public void noteClickedAction(int noteID) {
         if (userData.getNoteByID(noteID) != null) {
+            shouldSaveOnPause = false;
             // start the edit note activity to create a new note from the old data
             Intent intentBundle = new Intent(Main.this, EditNote.class);
             Bundle bundle = new Bundle();
@@ -103,6 +106,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     //   fragment is clicked, and it opens an activity to edit the event that was clicked
     public void reminderClickedAction(int eventID) {
         if (userData.getReminderByID(eventID) != null) {
+            shouldSaveOnPause = false;
             // start the edit reminder activity to create a new reminder from the old data
             Intent intentBundle = new Intent(Main.this, EditReminder.class);
             Bundle bundle = new Bundle();
@@ -131,6 +135,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     }
 
     private void addEvent() {
+        shouldSaveOnPause = false;
         Intent intentBundle = new Intent(Main.this, CreateEvent.class);
         Bundle bundle = new Bundle();
         bundle.putLong(Main.DATE_IN_MILLS_TAG, cal.getTimeInMillis());
@@ -140,6 +145,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     }
 
     private void addNote() {
+        shouldSaveOnPause = false;
         Intent intentBundle = new Intent(Main.this, CreateNote.class);
         Bundle bundle = new Bundle();
         bundle.putInt(ID_TAG, nextNoteID++);
@@ -149,6 +155,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     }
 
     private void addReminder() {
+        shouldSaveOnPause = false;
         Intent intentBundle = new Intent(Main.this, CreateReminder.class);
         Bundle bundle = new Bundle();
         bundle.putLong(DATE_IN_MILLS_TAG, cal.getTimeInMillis());
@@ -315,12 +322,15 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         // retrieve the user data from the singleton class DataRetriever
         userData = DataRetriever.getInstance();
         reloadData();
+        shouldSaveOnPause = true;
     }
 
     @Override
-    protected void onDestroy() {
-        DataRetriever.getInstance().saveData(getApplicationContext());
-        super.onDestroy();
+    protected void onPause() {
+        if (shouldSaveOnPause) {
+            DataRetriever.getInstance().saveData(getApplicationContext());
+        }
+        super.onPause();
     }
 
     // override for when a toolbar button is clicked

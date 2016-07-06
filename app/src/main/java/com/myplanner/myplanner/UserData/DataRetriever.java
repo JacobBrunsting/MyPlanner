@@ -451,10 +451,7 @@ public class DataRetriever {
         // the io counter starts at 1 to skip over the opening section bracket for the events
         ioCounter = 1;
         // Events
-        if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
-            // if the section is empty, skip over the closing character and look at the next section
-            ioCounter ++;
-        } else {
+        if (ioCounter < saveData.length && saveData[ioCounter] != CLOSING_CHARACTER) {
             while (ioCounter < saveData.length) {
                 if (saveData[ioCounter] == CLOSING_CHARACTER) {
                     ++ioCounter;
@@ -481,10 +478,7 @@ public class DataRetriever {
         //   section, and once to skip over the opening section bracket for the notes
         ioCounter += 2;
         // Notes
-        if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
-            // if the section is empty, skip over the closing character and look at the next section
-            ioCounter ++;
-        } else {
+        if (ioCounter < saveData.length && saveData[ioCounter] != CLOSING_CHARACTER) {
             while (ioCounter < saveData.length) {
                 List noteData = decode(noteTypeCodes, saveData);
                 if (noteData == null) {
