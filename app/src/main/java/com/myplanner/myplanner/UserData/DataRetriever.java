@@ -394,19 +394,21 @@ public class DataRetriever {
                           + event.getTitle() + split + event.getMessage() + split
                           + event.getID() + close;
         }
-        // reminders
+        // notes
         saveString +=  close + open;
         for (PlannerNote note : notes) {
             saveString += open + open;
             for (int i = 0; i < note.getNumTags(); ++i) {
-                if (i != 0) {
-                    saveString += split;
+                if (!note.getTag(i).equals("")) {
+                    if (i != 0) {
+                        saveString += split;
+                    }
+                    saveString += note.getTag(i);
                 }
-                saveString += note.getTag(i);
             }
-            saveString +=  close + note.getTitle() + split + note.getBody() + split + note.getID() + close;
+            saveString += close + note.getTitle() + split + note.getBody() + split + note.getID() + close;
         }
-        // notes
+        // reminders
         saveString +=  close + open;
         for (PlannerReminder reminder : reminders) {
             saveString += open + reminder.getMills() + split + reminder.getTitle() + split
@@ -576,22 +578,23 @@ public class DataRetriever {
                     // we increment the io counter to skip over the opening character at the start
                     //   of the array
                     ++ioCounter;
-                    for (; ioCounter < cArr.length && cArr[ioCounter] != CLOSING_CHARACTER && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
+                    for (; ioCounter < cArr.length && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
                         String string = "";
-                        for (; ioCounter < cArr.length && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
-                            if (cArr[ioCounter] == SPLIT_CHARACTER) {
+                        for (; ioCounter < cArr.length; ++ioCounter) {
+                            if (cArr[ioCounter] == SPLIT_CHARACTER || cArr[ioCounter] == CLOSING_CHARACTER) {
                                 if (!"".equals(string)) {
                                     strings.add(string);
                                 }
                                 break;
                             }
+                            string += cArr[ioCounter];
                         }
                         if (cArr[ioCounter] == CLOSING_CHARACTER) {
                             break;
                         }
                     }
                     Log.i("DataRetriever", "Adding string arr " + strings + " IO counter is at " + ioCounter);
-                    decodedData.add(strings);
+                    decodedData.add(t, strings);
                     // we increment the io counter to skip over the closing character at the end of
                     //   the array
                     ++ioCounter;
