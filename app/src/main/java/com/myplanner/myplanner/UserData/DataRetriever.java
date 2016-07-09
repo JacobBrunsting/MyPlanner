@@ -395,6 +395,7 @@ public class DataRetriever {
                         + event.getTitle() + split + event.getMessage() + split
                         + event.getID() + close;
             }
+            eventsSave += close;
 
             try {
                 OutputStreamWriter outputStream = new OutputStreamWriter(context.openFileOutput(EVENTS_SAVE_FILE, Context.MODE_PRIVATE));
@@ -420,6 +421,7 @@ public class DataRetriever {
                 }
                 notesSave += close + note.getTitle() + split + note.getBody() + split + note.getID() + close;
             }
+            notesSave += close;
 
             try {
                 OutputStreamWriter outputStream = new OutputStreamWriter(context.openFileOutput(NOTES_SAVE_FILE, Context.MODE_PRIVATE));
@@ -447,7 +449,7 @@ public class DataRetriever {
                 e.printStackTrace();
             }
         }
-        
+
         shouldSaveEvents = shouldSaveNotes = shouldSaveReminders = false;
     }
 
@@ -455,9 +457,7 @@ public class DataRetriever {
         events.clear();
         notes.clear();
         reminders.clear();
-        String saveString = OPENING_CHARACTER + loadFile(EVENTS_SAVE_FILE, context) + CLOSING_CHARACTER
-                + OPENING_CHARACTER + loadFile(NOTES_SAVE_FILE, context) + CLOSING_CHARACTER
-                + OPENING_CHARACTER + loadFile(REMINDERS_SAVE_FILE, context) + CLOSING_CHARACTER;
+        String saveString = loadFile(EVENTS_SAVE_FILE, context) + loadFile(NOTES_SAVE_FILE, context) + loadFile(REMINDERS_SAVE_FILE, context);
         Log.i("DataRetriever", "Loading " + saveString);
         final char[] saveData = saveString.toCharArray();
         Log.i("DataRetriever", "Loading events");

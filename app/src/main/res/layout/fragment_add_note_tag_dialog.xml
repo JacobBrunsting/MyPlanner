@@ -18,7 +18,6 @@
         android:lines="1"
         android:maxLines="1"
         android:imeOptions="actionDone"
-        android:digits="@string/safe_digits"
         android:dropDownHeight="wrap_content"
         android:dropDownWidth="match_parent"/>
 

@@ -45,7 +45,6 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="@dimen/text_element_horizontal_margin"
                         android:layout_marginRight="@dimen/text_element_horizontal_margin"
-                        android:digits="@string/safe_digits"
                         android:hint="@string/create_note_title_hint"
                         android:inputType="textCapWords"
                         android:lines="1"
