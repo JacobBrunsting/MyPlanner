@@ -4,9 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -23,13 +20,15 @@ public class DataRetriever {
 
     private static final int MILLS_PER_HOUR = 3600000;
     private static final int MILLS_PER_MINUTE = 60000;
-    private static final String SAVE_FILE_NAME = "MyPlannerSaveFile";
-    //private static final char SPLIT_CHARACTER = (char) 1;
-    //private static final char OPENING_CHARACTER = (char) 2;
-    //private static final char CLOSING_CHARACTER = (char) 3;
-    private static final char SPLIT_CHARACTER = (char) ',';
-    private static final char OPENING_CHARACTER = (char) '{';
-    private static final char CLOSING_CHARACTER = (char) '}';
+    private static final String EVENTS_SAVE_FILE = "EventsSaveFile";
+    private static final String NOTES_SAVE_FILE = "NotesSaveFile";
+    private static final String REMINDERS_SAVE_FILE = "RemindersSaveFile";
+    private static final char SPLIT_CHARACTER = (char) 1;
+    private static final char OPENING_CHARACTER = (char) 2;
+    private static final char CLOSING_CHARACTER = (char) 3;
+    private static boolean shouldSaveEvents = true;
+    private static boolean shouldSaveNotes = true;
+    private static boolean shouldSaveReminders = true;
 
     private enum TYPE_CODES {
         INT, LONG, STRING, STR_ARR
@@ -267,7 +266,6 @@ public class DataRetriever {
 
     public void addEvent(PlannerEvent event) {
         if (events == null) {
-            events.add(event);
             return;
         }
         for (int k = 0; k < events.size(); ++k) {
@@ -282,6 +280,7 @@ public class DataRetriever {
             ++insertPos;
         }
 
+        shouldSaveEvents = true;
         // insert the event into the List. The items must be shifted manually because the add()
         //   function in List may not preserve order.
         if (events.size() == 0) {
@@ -295,19 +294,18 @@ public class DataRetriever {
 
             events.set(insertPos, event);
         }
-
-        for (int x = 0; x < events.size(); ++x) {
-            PlannerEvent e = events.get(x);
-        }
     }
 
     public void addNote(PlannerNote note) {
+        if (notes == null) {
+            return;
+        }
+        shouldSaveNotes = true;
         notes.add(note);
     }
 
     public void addReminder(PlannerReminder reminder) {
         if (reminders == null) {
-            reminders.add(reminder);
             return;
         }
 
@@ -318,6 +316,7 @@ public class DataRetriever {
             ++insertPos;
         }
 
+        shouldSaveReminders = true;
         // insert the reminder into the List. The items must be shifted manually because the
         //   add() function in List may not preserve order. THIS MIGHT NOT ACTUALLY BE TRUE
         if (reminders.size() == 0) {
@@ -387,66 +386,78 @@ public class DataRetriever {
         final String split = Character.toString(SPLIT_CHARACTER);
         final String open = Character.toString(OPENING_CHARACTER);
         final String close = Character.toString(CLOSING_CHARACTER);
+
         // events
-        String saveString = open;
-        for (PlannerEvent event : events) {
-            saveString += open + event.getStartMills() + split + event.getEndMills() + split
-                          + event.getTitle() + split + event.getMessage() + split
-                          + event.getID() + close;
-        }
-        // notes
-        saveString +=  close + open;
-        for (PlannerNote note : notes) {
-            saveString += open + open;
-            for (int i = 0; i < note.getNumTags(); ++i) {
-                if (!note.getTag(i).equals("")) {
-                    if (i != 0) {
-                        saveString += split;
-                    }
-                    saveString += note.getTag(i);
-                }
+        if (shouldSaveEvents) {
+            String eventsSave = open;
+            for (PlannerEvent event : events) {
+                eventsSave += open + event.getStartMills() + split + event.getEndMills() + split
+                        + event.getTitle() + split + event.getMessage() + split
+                        + event.getID() + close;
             }
-            saveString += close + note.getTitle() + split + note.getBody() + split + note.getID() + close;
+
+            try {
+                OutputStreamWriter outputStream = new OutputStreamWriter(context.openFileOutput(EVENTS_SAVE_FILE, Context.MODE_PRIVATE));
+                outputStream.write(eventsSave);
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+        // notes
+        if (shouldSaveNotes) {
+            String notesSave = open;
+            for (PlannerNote note : notes) {
+                notesSave += open + open;
+                for (int i = 0; i < note.getNumTags(); ++i) {
+                    if (!note.getTag(i).equals("")) {
+                        if (i != 0) {
+                            notesSave += split;
+                        }
+                        notesSave += note.getTag(i);
+                    }
+                }
+                notesSave += close + note.getTitle() + split + note.getBody() + split + note.getID() + close;
+            }
+
+            try {
+                OutputStreamWriter outputStream = new OutputStreamWriter(context.openFileOutput(NOTES_SAVE_FILE, Context.MODE_PRIVATE));
+                outputStream.write(notesSave);
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         // reminders
-        saveString +=  close + open;
-        for (PlannerReminder reminder : reminders) {
-            saveString += open + reminder.getMills() + split + reminder.getTitle() + split
-                          + reminder.getMessage() + split + reminder.getID() +  close;
+        if (shouldSaveReminders) {
+            String remindersSave = open;
+            for (PlannerReminder reminder : reminders) {
+                remindersSave += open + reminder.getMills() + split + reminder.getTitle() + split
+                        + reminder.getMessage() + split + reminder.getID() + close;
+            }
+            remindersSave += close;
+
+            try {
+                OutputStreamWriter outputStream = new OutputStreamWriter(context.openFileOutput(REMINDERS_SAVE_FILE, Context.MODE_PRIVATE));
+                outputStream.write(remindersSave);
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        saveString += close;
-        Log.i("DataRetriever", "Saving " + saveString);
-        try {
-            OutputStreamWriter outputStream = new OutputStreamWriter(context.openFileOutput(SAVE_FILE_NAME, Context.MODE_PRIVATE));
-            outputStream.write(saveString);
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
+        shouldSaveEvents = shouldSaveNotes = shouldSaveReminders = false;
     }
 
     public boolean LoadData(Context context) {
         events.clear();
         notes.clear();
         reminders.clear();
-        String saveString;
-        Log.i("DataRetriever", "Trying to load");
-        try {
-            InputStream stream = context.openFileInput(SAVE_FILE_NAME);
-            InputStreamReader reader = new InputStreamReader(stream);
-            BufferedReader bufferedReader = new BufferedReader(reader);
-            String line = bufferedReader.readLine();
-            StringBuilder stringBuffer = new StringBuilder();
-            while (line != null) {
-                stringBuffer.append(line);
-                line = bufferedReader.readLine();
-            }
-            stream.close();
-            saveString = stringBuffer.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        String saveString = OPENING_CHARACTER + loadFile(EVENTS_SAVE_FILE, context) + CLOSING_CHARACTER
+                + OPENING_CHARACTER + loadFile(NOTES_SAVE_FILE, context) + CLOSING_CHARACTER
+                + OPENING_CHARACTER + loadFile(REMINDERS_SAVE_FILE, context) + CLOSING_CHARACTER;
         Log.i("DataRetriever", "Loading " + saveString);
         final char[] saveData = saveString.toCharArray();
         Log.i("DataRetriever", "Loading events");
@@ -606,5 +617,24 @@ public class DataRetriever {
             ++ioCounter;
         }
         return decodedData;
+    }
+
+    private String loadFile(String file, Context context) {
+        try {
+            InputStream stream = context.openFileInput(file);
+            InputStreamReader reader = new InputStreamReader(stream);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            String line = bufferedReader.readLine();
+            StringBuilder stringBuffer = new StringBuilder();
+            while (line != null) {
+                stringBuffer.append(line);
+                line = bufferedReader.readLine();
+            }
+            stream.close();
+            return stringBuffer.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
