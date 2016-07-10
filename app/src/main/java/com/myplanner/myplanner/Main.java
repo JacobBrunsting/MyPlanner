@@ -34,9 +34,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     public static final String TAB_TAG = "tab";
     public static final String POSSIBLE_TAGS_TAG = "possibleTags";
     public static final String DATE_IN_MILLS_TAG = "dateInMills";
-    private static final String NEXT_EVENT_ID_TAG = "nextEventID";
-    private static final String NEXT_NOTE_ID_TAG = "nextNoteID";
-    private static final String NEXT_REMINDER_ID_TAG = "nextReminderID";
 
     private final int NUM_FRAGMENTS = 3;
     // these values are overwritten in onCreate with the string resource values
@@ -56,9 +53,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
     private Toolbar toolbar;
     private ViewPager viewPager;
     private DataRetriever userData;
-    private int nextEventID = 0;
-    private int nextNoteID = 0;
-    private int nextReminderID = 0;
     private boolean shouldSaveOnPause = true;
 
     // ---------------------------------------------------------------------------------------------
@@ -139,7 +133,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         Intent intentBundle = new Intent(Main.this, CreateEvent.class);
         Bundle bundle = new Bundle();
         bundle.putLong(Main.DATE_IN_MILLS_TAG, cal.getTimeInMillis());
-        bundle.putInt(ID_TAG, nextEventID++);
+        bundle.putInt(ID_TAG, userData.getNextEventID());
         intentBundle.putExtras(bundle);
         startActivity(intentBundle);
     }
@@ -148,7 +142,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         shouldSaveOnPause = false;
         Intent intentBundle = new Intent(Main.this, CreateNote.class);
         Bundle bundle = new Bundle();
-        bundle.putInt(ID_TAG, nextNoteID++);
+        bundle.putInt(ID_TAG, userData.getNextNoteID());
         bundle.putSerializable(POSSIBLE_TAGS_TAG, possibleTags);
         intentBundle.putExtras(bundle);
         startActivity(intentBundle);
@@ -159,7 +153,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
         Intent intentBundle = new Intent(Main.this, CreateReminder.class);
         Bundle bundle = new Bundle();
         bundle.putLong(DATE_IN_MILLS_TAG, cal.getTimeInMillis());
-        bundle.putInt(ID_TAG, nextReminderID++);
+        bundle.putInt(ID_TAG, userData.getNextReminderID());
         intentBundle.putExtras(bundle);
         startActivity(intentBundle);
     }
@@ -346,26 +340,6 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // save the activity information when it is closed
-    @Override
-    public void onSaveInstanceState(final Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-
-        savedInstanceState.putInt(NEXT_EVENT_ID_TAG, nextEventID);
-        savedInstanceState.putInt(NEXT_NOTE_ID_TAG, nextNoteID);
-        savedInstanceState.putInt(NEXT_REMINDER_ID_TAG, nextReminderID);
-    }
-
-    // retrieve the saved data from when the activity was closed
-    @Override
-    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        nextEventID = savedInstanceState.getInt(NEXT_EVENT_ID_TAG);
-        nextNoteID = savedInstanceState.getInt(NEXT_NOTE_ID_TAG);
-        nextReminderID = savedInstanceState.getInt(NEXT_REMINDER_ID_TAG);
     }
 
     // ---------------------------------------------------------------------------------------------

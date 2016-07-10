@@ -28,6 +28,9 @@ public class DataRetriever {
     private static boolean shouldSaveEvents = true;
     private static boolean shouldSaveNotes = true;
     private static boolean shouldSaveReminders = true;
+    private int nextEventID = 0;
+    private int nextNoteID = 0;
+    private int nextReminderID = 0;
 
     private enum TYPE_CODES {
         INT, LONG, STRING, STR_ARR
@@ -40,6 +43,7 @@ public class DataRetriever {
     final static List<TYPE_CODES> eventTypeCodes = new ArrayList<>();
     final static List<TYPE_CODES> noteTypeCodes = new ArrayList<>();
     final static List<TYPE_CODES> reminderTypeCodes = new ArrayList<>();
+    final static List<TYPE_CODES> nextIdTypeCodes = new ArrayList<>();
 
     // these lists are used to decode the save data. The order they are in is the order the
     //   information is stored in inside of the text file
@@ -59,6 +63,8 @@ public class DataRetriever {
         reminderTypeCodes.add(1, TYPE_CODES.STRING);
         reminderTypeCodes.add(2, TYPE_CODES.STRING);
         reminderTypeCodes.add(3, TYPE_CODES.INT);
+
+        nextIdTypeCodes.add(0, TYPE_CODES.INT);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -149,6 +155,18 @@ public class DataRetriever {
             return 0;
         }
         return reminders.size();
+    }
+
+    public int getNextEventID() {
+        return nextEventID;
+    }
+
+    public int getNextNoteID() {
+        return nextNoteID;
+    }
+
+    public int getNextReminderID() {
+        return nextReminderID;
     }
 
     //----------------------------------------------------------------------------------------------
@@ -267,9 +285,6 @@ public class DataRetriever {
         if (events == null) {
             return;
         }
-        for (int k = 0; k < events.size(); ++k) {
-            PlannerEvent e = events.get(k);
-        }
 
         int insertPos = 0;
         while (insertPos < events.size() &&
@@ -299,6 +314,7 @@ public class DataRetriever {
         if (notes == null) {
             return;
         }
+
         shouldSaveNotes = true;
         notes.add(note);
     }
@@ -309,7 +325,6 @@ public class DataRetriever {
         }
 
         int insertPos = 0;
-
         while (insertPos + 1 < reminders.size()
                 && reminders.get(insertPos).getMills() < reminder.getMills()) {
             ++insertPos;
@@ -388,7 +403,7 @@ public class DataRetriever {
 
         // events
         if (shouldSaveEvents) {
-            String eventsSave = open;
+            String eventsSave = open + open + nextEventID + close;
             for (PlannerEvent event : events) {
                 eventsSave += open + event.getStartMills() + split + event.getEndMills() + split
                         + event.getTitle() + split + event.getMessage() + split
@@ -407,7 +422,7 @@ public class DataRetriever {
 
         // notes
         if (shouldSaveNotes) {
-            String notesSave = open;
+            String notesSave = open + open + nextNoteID + close;
             for (PlannerNote note : notes) {
                 notesSave += open + open;
                 for (int i = 0; i < note.getNumTags(); ++i) {
@@ -433,7 +448,7 @@ public class DataRetriever {
 
         // reminders
         if (shouldSaveReminders) {
-            String remindersSave = open;
+            String remindersSave = open + open + nextReminderID + close;
             for (PlannerReminder reminder : reminders) {
                 remindersSave += open + reminder.getMills() + split + reminder.getTitle() + split
                         + reminder.getMessage() + split + reminder.getID() + close;
@@ -462,6 +477,12 @@ public class DataRetriever {
         ioCounter = 1;
         // Events
         if (ioCounter < saveData.length && saveData[ioCounter] != CLOSING_CHARACTER) {
+            List nextId = decode(nextIdTypeCodes, saveData);
+            if (nextId != null && nextId.size() == 1 && nextId.get(0).getClass().equals(Integer.class)) {
+                nextEventID = (int) nextId.get(0);
+            } else {
+                nextEventID = 0;
+            }
             while (ioCounter < saveData.length) {
                 if (saveData[ioCounter] == CLOSING_CHARACTER) {
                     ++ioCounter;
@@ -487,6 +508,12 @@ public class DataRetriever {
         ioCounter += 2;
         // Notes
         if (ioCounter < saveData.length && saveData[ioCounter] != CLOSING_CHARACTER) {
+            List nextId = decode(nextIdTypeCodes, saveData);
+            if (nextId != null && nextId.size() == 1 && nextId.get(0).getClass().equals(Integer.class)) {
+                nextNoteID = (int) nextId.get(0);
+            } else {
+                nextNoteID = 0;
+            }
             while (ioCounter < saveData.length) {
                 List noteData = decode(noteTypeCodes, saveData);
                 if (noteData == null) {
@@ -510,6 +537,12 @@ public class DataRetriever {
         if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
             // if the section is empty, we are done, since this is the last section
             return true;
+        }
+        List nextId = decode(nextIdTypeCodes, saveData);
+        if (nextId != null && nextId.size() == 1 && nextId.get(0).getClass().equals(Integer.class)) {
+            nextReminderID = (int) nextId.get(0);
+        } else {
+            nextReminderID = 0;
         }
         while (ioCounter < saveData.length) {
             List reminderData = decode(reminderTypeCodes, saveData);
