@@ -1,6 +1,7 @@
 package com.myplanner.myplanner.UserData;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -472,7 +473,9 @@ public class DataRetriever {
         notes.clear();
         reminders.clear();
         String saveString = loadFile(EVENTS_SAVE_FILE, context) + loadFile(NOTES_SAVE_FILE, context) + loadFile(REMINDERS_SAVE_FILE, context);
+        Log.i("DataRetriever", "Loading " + saveString);
         final char[] saveData = saveString.toCharArray();
+        Log.i("DataRetriever", "Loading events");
         // the io counter starts at 1 to skip over the opening section bracket for the events
         ioCounter = 1;
         // Events
@@ -495,6 +498,7 @@ public class DataRetriever {
                     PlannerEvent event = new PlannerEvent((long) eventData.get(0), (long) eventData.get(1),
                             (String) eventData.get(2), (String) eventData.get(3), (int) eventData.get(4));
                     events.add(event);
+                    Log.i("DataRetrievier", "Added event " + " IO counter is at " + ioCounter);
                 }
                 if (ioCounter >= saveData.length) {
                     return true;
@@ -503,6 +507,7 @@ public class DataRetriever {
                 }
             }
         }
+        Log.i("DataRetriever", "Loading notes");
         // we increment the io counter twice; once to skip over the closing bracket of the events
         //   section, and once to skip over the opening section bracket for the notes
         ioCounter += 2;
@@ -522,6 +527,7 @@ public class DataRetriever {
                     PlannerNote note = new PlannerNote((ArrayList<String>) noteData.get(0),
                             (String) noteData.get(1), (String) noteData.get(2), (int) noteData.get(3));
                     notes.add(note);
+                    Log.i("DataRetrievier", "Added note " + " IO counter is at " + ioCounter);
                 }
                 if (ioCounter >= saveData.length) {
                     return true;
@@ -530,6 +536,7 @@ public class DataRetriever {
                 }
             }
         }
+        Log.i("DataRetriever", "Loading reminders");
         // we increment the io counter twice; once to skip over the closing bracket of the notes
         //   section, and once to skip over the opening section bracket for the reminders
         ioCounter += 2;
@@ -552,6 +559,7 @@ public class DataRetriever {
                 PlannerReminder reminder = new PlannerReminder((long) reminderData.get(0),
                         (String) reminderData.get(1), (String) reminderData.get(2), (int) reminderData.get(3));
                 reminders.add(reminder);
+                Log.i("DataRetrievier", "Added reminder " + " IO counter is at " + ioCounter);
             }
             if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
                 return true;
@@ -585,6 +593,7 @@ public class DataRetriever {
                             return null;
                         }
                     }
+                    Log.i("DataRetriever", "Adding int " + intVal + " IO counter is at " + ioCounter);
                     decodedData.add(t, intVal);
                     intVal = 0;
                     break;
@@ -596,6 +605,7 @@ public class DataRetriever {
                             return null;
                         }
                     }
+                    Log.i("DataRetriever", "Adding long " + longVal + " IO counter is at " + ioCounter);
                     decodedData.add(t, longVal);
                     longVal = 0;
                     break;
@@ -603,6 +613,7 @@ public class DataRetriever {
                     for (; ioCounter < cArr.length && cArr[ioCounter] != SPLIT_CHARACTER && cArr[ioCounter] != CLOSING_CHARACTER; ++ioCounter) {
                         stringVal += cArr[ioCounter];
                     }
+                    Log.i("DataRetriever", "Adding string " + stringVal + " IO counter is at " + ioCounter);
                     decodedData.add(t, stringVal);
                     stringVal = "";
                     break;
@@ -626,6 +637,7 @@ public class DataRetriever {
                             break;
                         }
                     }
+                    Log.i("DataRetriever", "Adding string arr " + strings + " IO counter is at " + ioCounter);
                     decodedData.add(t, strings);
                     // we increment the io counter to skip over the closing character at the end of
                     //   the array
