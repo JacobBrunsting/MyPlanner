@@ -152,7 +152,7 @@ public class EditReminder extends AppCompatActivity {
         final Intent actionIntent = new Intent(this, Main.class);
         final PendingIntent actionPendingIntent = PendingIntent.getActivity(this, 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         actionIntent.putExtra(Main.TAB_TAG, 2);
-        NotificationCreator.addNotification(alarmManager, id, title, body, R.drawable.ic_event_note_black_48dp, timeMills, getApplicationContext(), actionPendingIntent);
+        NotificationCreator.addNotification(alarmManager, id, title, body, R.drawable.ic_event_note_white_48dp, timeMills, getApplicationContext(), actionPendingIntent);
     }
 
     // delete the reminder being edited

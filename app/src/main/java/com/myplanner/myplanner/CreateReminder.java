@@ -60,7 +60,7 @@ public class CreateReminder extends AppCompatActivity {
         final Intent actionIntent = new Intent(this, Main.class);
         final PendingIntent actionPendingIntent = PendingIntent.getActivity(this, 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         actionIntent.putExtra(Main.TAB_TAG, 2);
-        NotificationCreator.addNotification(alarmManager, reminderID, title, body, R.drawable.ic_event_note_black_48dp, reminderMills, getApplicationContext(), actionPendingIntent);
+        NotificationCreator.addNotification(alarmManager, reminderID, title, body, R.drawable.ic_event_note_white_48dp, reminderMills, getApplicationContext(), actionPendingIntent);
     }
 
     // ---------------------------------------------------------------------------------------------

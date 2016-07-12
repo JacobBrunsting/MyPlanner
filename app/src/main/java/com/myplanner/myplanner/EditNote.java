@@ -102,7 +102,7 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
         titleEditText = (EditText) findViewById(R.id.title_edit_text);
         bodyEditText = (EditText) findViewById(R.id.body_edit_text);
         tagHolder = (LinearLayout) findViewById(R.id.tag_holder);
-        bottomButtonHolder = (LinearLayout) findViewById(R.id.bottom_menu_layout);
+        bottomButtonHolder = (LinearLayout) findViewById(R.id.bottom_bar_layout);
         addTagBtn = (Button) findViewById(R.id.add_tag_button);
 
         // get the information passed from the previous activity

@@ -7,7 +7,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_bar_layout">
+        android:layout_above="@id/bottom_bar_layout">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="fill_parent"
@@ -110,28 +110,7 @@
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
 
-    <LinearLayout
-        android:id="@+id/bottom_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:gravity="right"
-        android:orientation="horizontal">
-
-
-        <Button
-            android:id="@+id/cancel_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="@string/cancel_button_text" />
-
-        <Button
-            android:id="@+id/save_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:text="@string/save_button_text" />
-    </LinearLayout>
+    <include
+        layout="@layout/cancel_save_toolbar"
+        android:id="@+id/bottom_bar_layout"/>
 </RelativeLayout>

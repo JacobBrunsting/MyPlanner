@@ -23,9 +23,9 @@ public class DataRetriever {
     private static final String EVENTS_SAVE_FILE = "EventsSaveFile";
     private static final String NOTES_SAVE_FILE = "NotesSaveFile";
     private static final String REMINDERS_SAVE_FILE = "RemindersSaveFile";
-    private static final char SPLIT_CHARACTER = (char) 1;
-    private static final char OPENING_CHARACTER = (char) 2;
-    private static final char CLOSING_CHARACTER = (char) 3;
+    private static final char SPLIT_CHARACTER = ',';//(char) 1;
+    private static final char OPENING_CHARACTER = '{';//(char) 2;
+    private static final char CLOSING_CHARACTER = '}';//(char) 3;
     private static boolean shouldSaveEvents = true;
     private static boolean shouldSaveNotes = true;
     private static boolean shouldSaveReminders = true;
@@ -287,6 +287,7 @@ public class DataRetriever {
             return;
         }
 
+        ++nextEventID;
         int insertPos = 0;
         while (insertPos < events.size() &&
                 (events.get(insertPos).getStartMills() < event.getStartMills() ||
@@ -316,6 +317,7 @@ public class DataRetriever {
             return;
         }
 
+        ++nextNoteID;
         shouldSaveNotes = true;
         notes.add(note);
     }
@@ -325,6 +327,7 @@ public class DataRetriever {
             return;
         }
 
+        ++nextReminderID;
         int insertPos = 0;
         while (insertPos + 1 < reminders.size()
                 && reminders.get(insertPos).getMills() < reminder.getMills()) {
@@ -434,7 +437,7 @@ public class DataRetriever {
                         notesSave += note.getTag(i);
                     }
                 }
-                notesSave += close + note.getTitle() + split + note.getBody() + split + note.getID() + close;
+                notesSave += close + split + note.getTitle() + split + note.getBody() + split + note.getID() + close;
             }
             notesSave += close;
 
@@ -633,7 +636,7 @@ public class DataRetriever {
                             }
                             string += cArr[ioCounter];
                         }
-                        if (cArr[ioCounter] == CLOSING_CHARACTER) {
+                        if (ioCounter >= cArr.length || cArr[ioCounter] == CLOSING_CHARACTER) {
                             break;
                         }
                     }

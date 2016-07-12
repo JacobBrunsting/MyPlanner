@@ -154,8 +154,8 @@ public class CreateEvent extends AppCompatActivity {
 
 
         // configure the bottom buttons
-        final Button cancelBtn = (Button) findViewById(R.id.cancel_button);
-        final Button saveBtn = (Button) findViewById(R.id.save_button);
+        final Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
+        final Button saveBtn = (Button) findViewById(R.id.save_btn);
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
