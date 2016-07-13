@@ -489,24 +489,27 @@ public class DataRetriever {
             } else {
                 nextEventID = 0;
             }
-            while (ioCounter < saveData.length) {
-                if (saveData[ioCounter] == CLOSING_CHARACTER) {
-                    ++ioCounter;
-                    break;
-                }
-                List eventData = decode(eventTypeCodes, saveData);
-                if (eventData == null) {
-                    break;
-                } else {
-                    PlannerEvent event = new PlannerEvent((long) eventData.get(0), (long) eventData.get(1),
-                            (String) eventData.get(2), (String) eventData.get(3), (int) eventData.get(4));
-                    events.add(event);
-                    Log.i("DataRetrievier", "Added event " + " IO counter is at " + ioCounter);
-                }
-                if (ioCounter >= saveData.length) {
-                    return true;
-                } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
-                    break;
+            Log.i("DataRetriever", "Next event ID is " + nextEventID);
+            if (ioCounter < saveData.length && saveData[ioCounter] != CLOSING_CHARACTER) {
+                while (ioCounter < saveData.length) {
+                    if (saveData[ioCounter] == CLOSING_CHARACTER) {
+                        ++ioCounter;
+                        break;
+                    }
+                    List eventData = decode(eventTypeCodes, saveData);
+                    if (eventData == null) {
+                        break;
+                    } else {
+                        PlannerEvent event = new PlannerEvent((long) eventData.get(0), (long) eventData.get(1),
+                                (String) eventData.get(2), (String) eventData.get(3), (int) eventData.get(4));
+                        events.add(event);
+                        Log.i("DataRetrievier", "Added event IO counter is at " + ioCounter);
+                    }
+                    if (ioCounter >= saveData.length) {
+                        return true;
+                    } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
+                        break;
+                    }
                 }
             }
         }
@@ -522,20 +525,23 @@ public class DataRetriever {
             } else {
                 nextNoteID = 0;
             }
-            while (ioCounter < saveData.length) {
-                List noteData = decode(noteTypeCodes, saveData);
-                if (noteData == null) {
-                    break;
-                } else {
-                    PlannerNote note = new PlannerNote((ArrayList<String>) noteData.get(0),
-                            (String) noteData.get(1), (String) noteData.get(2), (int) noteData.get(3));
-                    notes.add(note);
-                    Log.i("DataRetrievier", "Added note " + " IO counter is at " + ioCounter);
-                }
-                if (ioCounter >= saveData.length) {
-                    return true;
-                } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
-                    break;
+            Log.i("DataRetriever", "Next note ID is " + nextNoteID);
+            if (ioCounter < saveData.length && saveData[ioCounter] != CLOSING_CHARACTER) {
+                while (ioCounter < saveData.length) {
+                    List noteData = decode(noteTypeCodes, saveData);
+                    if (noteData == null) {
+                        break;
+                    } else {
+                        PlannerNote note = new PlannerNote((ArrayList<String>) noteData.get(0),
+                                (String) noteData.get(1), (String) noteData.get(2), (int) noteData.get(3));
+                        notes.add(note);
+                        Log.i("DataRetrievier", "Added note IO counter is at " + ioCounter);
+                    }
+                    if (ioCounter >= saveData.length) {
+                        return true;
+                    } else if (saveData[ioCounter] == CLOSING_CHARACTER) {
+                        break;
+                    }
                 }
             }
         }
@@ -554,18 +560,21 @@ public class DataRetriever {
         } else {
             nextReminderID = 0;
         }
-        while (ioCounter < saveData.length) {
-            List reminderData = decode(reminderTypeCodes, saveData);
-            if (reminderData == null) {
-                break;
-            } else {
-                PlannerReminder reminder = new PlannerReminder((long) reminderData.get(0),
-                        (String) reminderData.get(1), (String) reminderData.get(2), (int) reminderData.get(3));
-                reminders.add(reminder);
-                Log.i("DataRetrievier", "Added reminder " + " IO counter is at " + ioCounter);
-            }
-            if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
-                return true;
+        Log.i("DataRetriever", "Next reminder ID is " + nextReminderID);
+        if (ioCounter < saveData.length && saveData[ioCounter] != CLOSING_CHARACTER) {
+            while (ioCounter < saveData.length) {
+                List reminderData = decode(reminderTypeCodes, saveData);
+                if (reminderData == null) {
+                    break;
+                } else {
+                    PlannerReminder reminder = new PlannerReminder((long) reminderData.get(0),
+                            (String) reminderData.get(1), (String) reminderData.get(2), (int) reminderData.get(3));
+                    reminders.add(reminder);
+                    Log.i("DataRetriever", "Added reminder IO counter is at " + ioCounter);
+                }
+                if (ioCounter >= saveData.length || saveData[ioCounter] == CLOSING_CHARACTER) {
+                    return true;
+                }
             }
         }
         return true;
