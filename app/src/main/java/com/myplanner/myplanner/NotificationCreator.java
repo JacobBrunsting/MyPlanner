@@ -14,6 +14,7 @@ import android.support.v7.app.NotificationCompat;
 public class NotificationCreator {
     private static String NOTIFICATION = "notification";
     private static String ID = "id";
+    private static int COLOR = 0xFFC282;
 
     public static void addNotification(final AlarmManager alarmManager, final int id, final String title, final String body, final int drawableID, final long timeInMills, final Context context, final PendingIntent actionIntent) {
         // generate the notification
@@ -22,6 +23,7 @@ public class NotificationCreator {
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setContentText(body);
         notificationBuilder.setContentIntent(actionIntent);
+        notificationBuilder.setColor(COLOR);
         final Notification notification = notificationBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
