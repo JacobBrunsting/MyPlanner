@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.TextView;
 
@@ -81,6 +82,8 @@ public class AddNoteTagDialogFragment extends DialogFragment {
     // ---------------------------------------------------------------------------------------------
 
     private void setUpDialog() {
+        final EditText tagSelect = (EditText) dialogView.findViewById(R.id.tag_edit_text);
+        /* commented out because the suggestions show behind the dialog and cannot be clicked
         final AutoCompleteTextView tagSelect = (AutoCompleteTextView) dialogView.findViewById(R.id.tag_edit_text);
         final TagSelectAdapter adapter = new TagSelectAdapter(getContext(), R.layout.auto_complete_list_item, possibleTags);
         tagSelect.showDropDown();
@@ -97,7 +100,7 @@ public class AddNoteTagDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-
+        */
         final Button acceptTag = (Button) dialogView.findViewById(R.id.accept_tag_button);
         acceptTag.setOnClickListener(new View.OnClickListener() {
             @Override

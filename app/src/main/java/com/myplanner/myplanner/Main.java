@@ -491,6 +491,7 @@ public class Main extends AppCompatActivity implements Events.EventInterface,
             // for each tag, add it to the list, and add it to the list of possible tags, which
             //   contains all of the tags currently on a note
             final List<String> tags = new ArrayList<>();
+            possibleTags.clear();
             for (int t = 0; t < note.getNumTags(); ++t) {
                 final String newTag = note.getTag(t);
                 tags.add(newTag);

@@ -194,8 +194,9 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
                 titleEditText.setEnabled(false);
                 bodyEditText.setEnabled(false);
 
-                // hide the save, and cancel buttons
+                // hide the save, cancel, and add tag buttons
                 bottomButtonHolder.setVisibility(View.INVISIBLE);
+                addTagBtn.setVisibility(View.GONE);
 
                 // collapse the tag holder if there are no tags to show
                 if (tags.isEmpty()) {
@@ -244,7 +245,6 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
 
         if (visible && (tagHolderScrollView.getVisibility() == View.GONE || tagHolderScrollView.getVisibility() == View.INVISIBLE)) {
             tagHolderScrollView.setVisibility(View.VISIBLE);
-            addTagBtn.setVisibility(View.VISIBLE);
 
             final float marginChange = getResources().getDimension(R.dimen.notes_edit_title_top_margin)
                                      - getResources().getDimension(R.dimen.activity_vertical_margin);
@@ -274,7 +274,6 @@ public class EditNote extends AppCompatActivity implements AddNoteTagDialogFragm
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     tagHolderScrollView.setVisibility(View.GONE);
-                    addTagBtn.setVisibility(View.GONE);
 
                     final float marginChange = -(getResources().getDimension(R.dimen.notes_edit_title_top_margin)
                                              - getResources().getDimension(R.dimen.activity_vertical_margin));
