@@ -38,7 +38,7 @@
     <string name="title_selector_title">Title</string>
     <string name="event_timed_title">Event Timed</string>
 
-    <string name="title_activity_splash">Portable Planner</string>
+    <string name="title_activity_splash">Planner</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
