@@ -360,6 +360,7 @@ public class DataRetriever {
             while (i < events.size()) {
                 if (events.get(i).getID() == id) {
                     events.remove(i);
+                    shouldSaveEvents = true;
                     return;
                 }
 
@@ -374,6 +375,7 @@ public class DataRetriever {
             while (i < notes.size()) {
                 if (notes.get(i).getID() == id) {
                     notes.remove(i);
+                    shouldSaveNotes = true;
                     return;
                 }
 
@@ -388,6 +390,7 @@ public class DataRetriever {
             while (i < reminders.size()) {
                 if (reminders.get(i).getID() == id) {
                     reminders.remove(i);
+                    shouldSaveReminders = true;
                     return;
                 }
 
